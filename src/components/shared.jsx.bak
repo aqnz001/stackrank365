@@ -1,0 +1,137 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { useApp } from '../context/AppContext.jsx';
+import { getRankTier, SPECIALISMS } from '../data/data.js';
+import { CheckCircle, Info, AlertCircle, Sparkles } from 'lucide-react';
+
+// ── TOASTS ──
+export function ToastContainer() {
+  const { toasts } = useApp();
+  if (!toasts.length) return null;
+  return (
+    <div className="toast-container">
+      {toasts.map(t => (
+        <div key={t.id} className="toast">
+          {t.type==='error'
+            ? <AlertCircle size={18} color="var(--red)" style={{flexShrink:0,marginTop:2}}/>
+            : t.type==='info'
+            ? <Info size={18} color="var(--blue-bright)" style={{flexShrink:0,marginTop:2}}/>
+            : <CheckCircle size={18} color="var(--green-bright)" style={{flexShrink:0,marginTop:2}}/>}
+          <div>
+            <div className="toast-title">{t.type==='error'?'Error':t.type==='info'?'Info':'Done'}</div>
+            <div className="toast-msg">{t.message}</div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ── FOOTER ──
+export function Footer() {
+  return (
+    <footer style={{ background:'var(--bg2)', borderTop:'1px solid var(--border)', padding:'3.5rem 2rem 2rem' }}>
+      <div style={{ maxWidth:1280, margin:'0 auto' }}>
+        <div style={{ display:'grid', gridTemplateColumns:'1.4fr 1fr 1fr 1fr', gap:'3rem', marginBottom:'3rem' }}>
+          <div>
+            <div style={{ display:'flex', alignItems:'center', gap:'0.6rem', marginBottom:'1rem' }}>
+              <div style={{ width:32, height:32, borderRadius:8, background:'linear-gradient(135deg,var(--blue),var(--purple))', display:'flex', alignItems:'center', justifyContent:'center' }}>
+                <Sparkles size={16} color="white"/>
+              </div>
+              <span style={{ fontFamily:'var(--font-display)', fontWeight:700, fontSize:'1.3rem', letterSpacing:'0.02em' }}>
+                Stack<span style={{ background:'linear-gradient(90deg,var(--blue-bright),var(--purple-bright))', WebkitBackgroundClip:'text', WebkitTextFillColor:'transparent' }}>Rank</span>365
+              </span>
+            </div>
+            <p style={{ fontSize:'0.85rem', color:'var(--muted2)', lineHeight:1.7, maxWidth:240 }}>
+              The verified ranking platform for Microsoft Power Ecosystem professionals.
+            </p>
+          </div>
+          {[
+            { title:'Platform', links:[['How It Works','/how-it-works'],['Scoring System','/scoring'],['Leaderboard','/leaderboard'],['For Recruiters','/for-recruiters']] },
+            { title:'Company',  links:[['About','/about'],['Sign Up','/signup'],['Sign In','/signin']] },
+            { title:'Legal',    links:[['Privacy Policy','/privacy'],['Terms of Service','/terms'],['Cookie Policy','/cookies']] },
+          ].map(col => (
+            <div key={col.title}>
+              <div className="label" style={{ marginBottom:'1rem' }}>{col.title}</div>
+              <div style={{ display:'flex', flexDirection:'column', gap:'0.55rem' }}>
+                {col.links.map(([label,to]) => (
+                  <Link key={to} to={to} style={{ fontSize:'0.88rem', color:'var(--muted2)', textDecoration:'none', transition:'color 0.15s' }}
+                    onMouseEnter={e=>e.target.style.color='var(--blue-bright)'}
+                    onMouseLeave={e=>e.target.style.color='var(--muted2)'}
+                  >{label}</Link>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+        <div style={{ borderTop:'1px solid var(--border)', paddingTop:'1.5rem', display:'flex', justifyContent:'space-between', alignItems:'center', flexWrap:'wrap', gap:'1rem' }}>
+          <span style={{ fontFamily:'var(--font-mono)', fontSize:'0.62rem', color:'var(--muted)', opacity:0.6 }}>
+            © 2026 StackRank365 · The Verified Microsoft Talent Network
+          </span>
+          <div style={{ display:'flex', gap:'0.4rem', flexWrap:'wrap' }}>
+            {['D365','Power Platform','Copilot AI','Azure OpenAI'].map(t => (
+              <span key={t} className="tag tag-blue" style={{ fontSize:'0.52rem' }}>{t}</span>
+            ))}
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+// ── LEADERBOARD ROW ──
+export function LeaderboardRow({ user, rank, isCurrentUser }) {
+  const spec  = SPECIALISMS.find(s => s.id === user.specialism);
+  const tier  = getRankTier(user.points || 0);
+  const name  = user.firstName ? `${user.firstName} ${user.lastName}` : user.name || '—';
+  const inits = user.initials || `${user.firstName?.[0]||''}${user.lastName?.[0]||'?'}`;
+
+  const medal = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : null;
+
+  return (
+    <div style={{
+      display:'grid', gridTemplateColumns:'3.5rem 3rem 1fr 1fr auto',
+      gap:'1rem', alignItems:'center',
+      padding:'0.9rem 1.4rem',
+      background: isCurrentUser ? 'rgba(59,130,246,0.06)' : 'transparent',
+      borderBottom:'1px solid rgba(255,255,255,0.04)',
+      borderLeft: isCurrentUser ? '2px solid var(--blue)' : '2px solid transparent',
+      transition:'background 0.15s',
+    }}
+    onMouseEnter={e=>{ if(!isCurrentUser) e.currentTarget.style.background='rgba(255,255,255,0.025)'; }}
+    onMouseLeave={e=>{ if(!isCurrentUser) e.currentTarget.style.background='transparent'; }}
+    >
+      {/* Rank */}
+      <div style={{ textAlign:'center', fontFamily:'var(--font-mono)', fontSize:'0.8rem', color: rank<=3?'var(--gold-bright)':'var(--muted)', fontWeight:600 }}>
+        {medal || `#${rank}`}
+      </div>
+      {/* Avatar */}
+      <div className="avatar avatar-sm" style={{ background:`linear-gradient(135deg, ${spec?.color||'var(--blue)'}, var(--purple))`, fontSize:'0.65rem' }}>
+        {inits}
+      </div>
+      {/* Name + role */}
+      <div style={{ minWidth:0 }}>
+        <div style={{ fontFamily:'var(--font-display)', fontWeight:600, fontSize:'0.95rem', display:'flex', alignItems:'center', gap:'0.4rem', flexWrap:'wrap' }}>
+          {name}
+          {isCurrentUser && <span className="tag tag-blue" style={{fontSize:'0.5rem'}}>You</span>}
+          {user.isMVP && <span className="tag tag-gold" style={{fontSize:'0.5rem'}}>MVP</span>}
+        </div>
+        <div style={{ fontSize:'0.76rem', color:'var(--muted2)', marginTop:'0.1rem' }}>
+          {user.role || '—'}{user.location ? ` · ${user.location}` : ''}
+        </div>
+      </div>
+      {/* Specialism + rank tier */}
+      <div style={{ display:'flex', alignItems:'center', gap:'0.5rem', flexWrap:'wrap' }}>
+        {spec && <span className="tag" style={{ background:`${spec.color}18`, color:spec.color, border:`1px solid ${spec.color}30`, fontSize:'0.57rem' }}>{spec.icon} {spec.label}</span>}
+        <span className={`rank-badge ${tier.cls}`} style={{ fontSize:'0.57rem', padding:'0.12rem 0.5rem' }}>{tier.icon} {tier.name}</span>
+      </div>
+      {/* Points */}
+      <div style={{ textAlign:'right' }}>
+        <div style={{ fontFamily:'var(--font-display)', fontWeight:700, fontSize:'1.1rem', color:'var(--blue-bright)' }}>
+          {(user.points||0).toLocaleString()}
+        </div>
+        <div className="label" style={{ fontSize:'0.52rem' }}>pts</div>
+      </div>
+    </div>
+  );
+}

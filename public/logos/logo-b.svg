@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 80" width="200" height="80">
+  <defs>
+    <filter id="glowB">
+      <feGaussianBlur stdDeviation="1.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <!-- Left bar — blue (rank 2) -->
+  <rect x="10" y="38" width="16" height="28" rx="3" fill="#0078d4" filter="url(#glowB)"/>
+  <!-- Middle bar — gold (rank 1, tallest) -->
+  <rect x="30" y="22" width="16" height="44" rx="3" fill="#f59e0b" filter="url(#glowB)"/>
+  <!-- Right bar — purple (rank 3) -->
+  <rect x="50" y="46" width="16" height="20" rx="3" fill="#7030a0" filter="url(#glowB)"/>
+  <!-- Crown above middle bar -->
+  <polygon points="38,8 34,16 30,12 30,20 46,20 46,12 42,16" fill="#f59e0b"/>
+  <rect x="30" y="18" width="16" height="4" rx="1" fill="#f59e0b"/>
+  <!-- Wordmark -->
+  <text x="76" y="36" font-family="'Segoe UI',system-ui,sans-serif" font-weight="700" font-size="22" fill="#ffffff">StackRank<tspan fill="#00a2e8">365</tspan></text>
+  <text x="77" y="54" font-family="'Segoe UI',system-ui,sans-serif" font-weight="400" font-size="9" fill="#64748b">The Verified Microsoft Talent Network</text>
+</svg>
