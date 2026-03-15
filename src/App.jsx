@@ -77,6 +77,7 @@ function AppInner() {
       // Supabase OAuth/magic link callback — token arrives in the hash fragment
       if (fullHash.includes('access_token=') || fullHash.includes('refresh_token=')) {
         // Let Supabase SDK handle it, then go to dashboard
+        console.log('[App] OAuth redirect detected, navigating to dashboard');
         setPage('dashboard');
         window.history.replaceState({}, '', '/');
         return;

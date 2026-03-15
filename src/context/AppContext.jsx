@@ -26,46 +26,60 @@ export function AppProvider({ children }) {
   };
 
   const loadProfile = async (sb, userId, email) => {
-    const { data: profile } = await sb.from('profiles').select('*').eq('id', userId).single();
-    const { data: certs } = await sb.from('certifications').select('*').eq('user_id', userId).order('created_at');
-    const { data: projects } = await sb.from('projects').select('*').eq('user_id', userId).order('created_at');
+    try {
+      // Use maybeSingle() instead of single() to avoid errors on empty results
+      const { data: profile, error: profileError } = await sb.from('profiles').select('*').eq('id', userId).maybeSingle();
 
-    // If profile exists, use it; otherwise create default profile from email
-    const profileData = profile || {
-      name: email?.split('@')[0] || 'User',
-      username: email?.split('@')[0]?.toLowerCase().replace(/[^a-z0-9._-]/g, '.') || 'user',
-      headline: '',
-      bio: '',
-      location: '',
-      specialism: 'Dynamics 365',
-      years_exp: 0,
-    };
+      if (profileError) {
+        console.error('Error loading profile:', profileError);
+      }
 
-    setUserState({
-      id: userId,
-      name: profileData.name,
-      email,
-      username: profileData.username,
-      headline: profileData.headline || '',
-      bio: profileData.bio || '',
-      location: profileData.location || '',
-      specialism: profileData.specialism || 'Dynamics 365',
-      yearsExp: profileData.years_exp || 0,
-      isMVP: profileData.is_mvp,
-      foundingMember: profileData.founding_member,
-      msAccountId: profileData.ms_account_id,
-      certifications: (certs || []).map(c => ({
-        code: c.code, name: c.name, tier: c.tier, specialism: c.specialism,
-        points: c.points, issueDate: c.issue_date,
-        verified: c.verified, verifiedVia: c.verified_via, verifyUrl: c.verify_url,
-        scarcityMultiplier: c.scarcity_multiplier, dbId: c.id,
-      })),
-      projects: (projects || []).map(p => ({
-        id: p.id, title: p.title, role: p.role, description: p.description,
-        industry: p.industry, privacy_mode: p.privacy_mode,
-        enterprise: p.enterprise, validated: p.validated, points: p.points,
-      })),
-    });
+      // Load certifications and projects but don't fail if empty
+      const { data: certs = [], error: certsError } = await sb.from('certifications').select('*').eq('user_id', userId).order('created_at');
+      const { data: projects = [], error: projectsError } = await sb.from('projects').select('*').eq('user_id', userId).order('created_at');
+
+      if (certsError) console.error('Error loading certs:', certsError);
+      if (projectsError) console.error('Error loading projects:', projectsError);
+
+      // If profile exists, use it; otherwise create default profile from email
+      const profileData = profile || {
+        name: email?.split('@')[0] || 'User',
+        username: email?.split('@')[0]?.toLowerCase().replace(/[^a-z0-9._-]/g, '.') || 'user',
+        headline: '',
+        bio: '',
+        location: '',
+        specialism: 'Dynamics 365',
+        years_exp: 0,
+      };
+
+      setUserState({
+        id: userId,
+        name: profileData.name,
+        email,
+        username: profileData.username,
+        headline: profileData.headline || '',
+        bio: profileData.bio || '',
+        location: profileData.location || '',
+        specialism: profileData.specialism || 'Dynamics 365',
+        yearsExp: profileData.years_exp || 0,
+        isMVP: profileData.is_mvp,
+        foundingMember: profileData.founding_member,
+        msAccountId: profileData.ms_account_id,
+        certifications: (certs || []).map(c => ({
+          code: c.code, name: c.name, tier: c.tier, specialism: c.specialism,
+          points: c.points, issueDate: c.issue_date,
+          verified: c.verified, verifiedVia: c.verified_via, verifyUrl: c.verify_url,
+          scarcityMultiplier: c.scarcity_multiplier, dbId: c.id,
+        })),
+        projects: (projects || []).map(p => ({
+          id: p.id, title: p.title, role: p.role, description: p.description,
+          industry: p.industry, privacy_mode: p.privacy_mode,
+          enterprise: p.enterprise, validated: p.validated, points: p.points,
+        })),
+      });
+    } catch (err) {
+      console.error('loadProfile error:', err);
+    }
   };
 
   useEffect(() => {
@@ -75,7 +89,9 @@ export function AppProvider({ children }) {
       if (sb) {
         // 1. Immediately grab any existing session (covers page refresh + OAuth return)
         const { data: { session } } = await sb.auth.getSession();
+        console.log('[AppContext] Session check:', session?.user?.id ? 'User found' : 'No user session');
         if (session?.user) {
+          console.log('[AppContext] Loading profile for user:', session.user.email);
           setAuthUser(session.user);
           await loadProfile(sb, session.user.id, session.user.email);
         }
@@ -83,6 +99,7 @@ export function AppProvider({ children }) {
 
         // 2. Also listen for future auth changes (sign in, sign out, token refresh)
         const { data: { subscription } } = sb.auth.onAuthStateChange(async (event, session) => {
+          console.log('[AppContext] Auth state changed:', event, session?.user?.email);
           setAuthUser(session?.user ?? null);
           if (session?.user) {
             await loadProfile(sb, session.user.id, session.user.email);
