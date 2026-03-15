@@ -71,46 +71,92 @@ function ProjectModal({ onClose, onAdd, project }) {
   const [form, setForm] = useState(project || {
     title: '', role: '', description: '', industry: '',
     privacy_mode: 'public', enterprise: false,
+    org_name: '', colleague_name: '', colleague_role: '', relationship: '', colleague_email: '',
   });
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
   const pts = form.enterprise ? 2000 : 800;
   return (
     <div className="modal-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
-      <div className="modal">
+      <div className="modal" style={{ maxHeight: '90vh', overflowY: 'auto' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
           <h3 style={{ margin: 0 }}>{project ? 'Edit Project' : 'Add Project'}</h3>
           <button className="btn btn-ghost btn-sm" onClick={onClose}>✕</button>
         </div>
-        <div className="form-group">
-          <label className="label">Project Title</label>
-          <input className="input" placeholder="D365 F&O Finance Implementation" value={form.title} onChange={e => set('title', e.target.value)} />
-        </div>
-        <div className="form-group">
-          <label className="label">Your Role</label>
-          <input className="input" placeholder="Solution Architect" value={form.role} onChange={e => set('role', e.target.value)} />
-        </div>
-        <div className="form-group">
-          <label className="label">Description</label>
-          <textarea className="input" placeholder="Brief description of the project..." value={form.description} onChange={e => set('description', e.target.value)} style={{ minHeight: 72 }} />
-        </div>
-        <div className="form-group">
-          <label className="label">Privacy Mode</label>
-          <div style={{ display: 'flex', gap: '0.5rem' }}>
-            {[['public', '🌍 Public'], ['anonymised', '👤 Anonymised'], ['confidential', '🔒 Confidential']].map(([val, label]) => (
-              <button key={val} type="button" className={`btn btn-sm ${form.privacy_mode === val ? 'btn-primary' : 'btn-outline'}`}
-                onClick={() => set('privacy_mode', val)} style={{ flex: 1, justifyContent: 'center', fontSize: '0.75rem' }}>
-                {label}
-              </button>
-            ))}
+
+        {/* Project Details Section */}
+        <div style={{ paddingBottom: '1.25rem', borderBottom: '1px solid var(--border)', marginBottom: '1.25rem' }}>
+          <h4 style={{ fontSize: '0.9rem', color: 'var(--muted2)', marginBottom: '1rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Project Details</h4>
+          <div className="form-group">
+            <label className="label">Project Title</label>
+            <input className="input" placeholder="D365 F&O Finance Implementation" value={form.title} onChange={e => set('title', e.target.value)} />
           </div>
-          <div style={{ fontSize: '0.75rem', color: 'var(--muted)', marginTop: '0.4rem' }}>
-            {form.privacy_mode === 'anonymised' ? 'Client name hidden, details shown' : form.privacy_mode === 'confidential' ? 'Only project title shown publicly' : 'All details visible'}
+          <div className="form-group">
+            <label className="label">Your Role</label>
+            <input className="input" placeholder="Solution Architect" value={form.role} onChange={e => set('role', e.target.value)} />
+          </div>
+          <div className="form-group">
+            <label className="label">Description</label>
+            <textarea className="input" placeholder="Brief description of the project..." value={form.description} onChange={e => set('description', e.target.value)} style={{ minHeight: 72 }} />
+          </div>
+          <div className="form-group">
+            <label className="label">Privacy Mode</label>
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
+              {[['public', '🌍 Public'], ['anonymised', '👤 Anonymised'], ['confidential', '🔒 Confidential']].map(([val, label]) => (
+                <button key={val} type="button" className={`btn btn-sm ${form.privacy_mode === val ? 'btn-primary' : 'btn-outline'}`}
+                  onClick={() => set('privacy_mode', val)} style={{ flex: 1, justifyContent: 'center', fontSize: '0.75rem' }}>
+                  {label}
+                </button>
+              ))}
+            </div>
+            <div style={{ fontSize: '0.75rem', color: 'var(--muted)', marginTop: '0.4rem' }}>
+              {form.privacy_mode === 'anonymised' ? 'Client name hidden, details shown' : form.privacy_mode === 'confidential' ? 'Only project title shown publicly' : 'All details visible'}
+            </div>
+          </div>
+          <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', fontSize: '0.88rem', color: 'var(--text)' }}>
+            <input type="checkbox" checked={form.enterprise} onChange={e => set('enterprise', e.target.checked)} />
+            Enterprise project (+2,000 pts)
+          </label>
+        </div>
+
+        {/* Colleague Details Section */}
+        <div style={{ marginBottom: '1.25rem' }}>
+          <h4 style={{ fontSize: '0.9rem', color: 'var(--muted2)', marginBottom: '1rem', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Colleague Details (for validation requests)</h4>
+          <p style={{ fontSize: '0.82rem', color: 'var(--muted2)', marginBottom: '1rem' }}>Add a colleague who worked on this project. You can quickly request validation from them later.</p>
+
+          <div className="form-group">
+            <label className="label">Organisation Name</label>
+            <input className="input" placeholder="Acme Corp" value={form.org_name} onChange={e => set('org_name', e.target.value)} />
+          </div>
+
+          <div className="form-group">
+            <label className="label">Colleague Name</label>
+            <input className="input" placeholder="John Smith" value={form.colleague_name} onChange={e => set('colleague_name', e.target.value)} />
+          </div>
+
+          <div className="form-group">
+            <label className="label">Colleague's Role</label>
+            <input className="input" placeholder="Project Manager" value={form.colleague_role} onChange={e => set('colleague_role', e.target.value)} />
+          </div>
+
+          <div className="form-group">
+            <label className="label">Relationship</label>
+            <select className="input" value={form.relationship} onChange={e => set('relationship', e.target.value)}>
+              <option value="">Select relationship...</option>
+              <option value="manager">Manager</option>
+              <option value="peer">Peer</option>
+              <option value="team-member">Team Member</option>
+              <option value="client">Client</option>
+              <option value="stakeholder">Stakeholder</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+
+          <div className="form-group">
+            <label className="label">Colleague Email</label>
+            <input className="input" type="email" placeholder="john.smith@example.com" value={form.colleague_email} onChange={e => set('colleague_email', e.target.value)} />
           </div>
         </div>
-        <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', fontSize: '0.88rem', color: 'var(--text)', marginBottom: '1.25rem' }}>
-          <input type="checkbox" checked={form.enterprise} onChange={e => set('enterprise', e.target.checked)} />
-          Enterprise project (+2,000 pts)
-        </label>
+
         <div className="card" style={{ background: 'var(--green-dim)', border: '1px solid rgba(0,229,160,0.2)', padding: '0.75rem', marginBottom: '1.25rem' }}>
           <div style={{ fontSize: '0.82rem', color: 'var(--green)', fontWeight: 600 }}>This project will earn +{pts.toLocaleString()} Stack Points</div>
         </div>
@@ -437,6 +483,11 @@ export default function Dashboard({ onNavigate }) {
         description: proj.description, industry: proj.industry,
         privacy_mode: proj.privacy_mode, enterprise: proj.enterprise,
         validated: false, points: proj.points,
+        org_name: proj.org_name || null,
+        colleague_name: proj.colleague_name || null,
+        colleague_role: proj.colleague_role || null,
+        relationship: proj.relationship || null,
+        colleague_email: proj.colleague_email || null,
       }).select().single();
       if (data) id = data.id;
     }
@@ -830,7 +881,7 @@ function ChangePasswordSection({ email, showToast }) {
 }
 
 function ValidationModal({ project, user, authUser, onClose, showToast }) {
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState(project?.colleague_email || '');
   const [message, setMessage] = useState('');
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
@@ -908,8 +959,19 @@ function ValidationModal({ project, user, authUser, onClose, showToast }) {
               {project.role && <div style={{ fontSize: '0.8rem', color: 'var(--blue)', marginTop: '0.2rem' }}>{project.role}</div>}
             </div>
 
+            {/* Colleague Details Summary */}
+            {project.colleague_name && (
+              <div className="card" style={{ background: 'var(--blue-dim)', border: '1px solid var(--border-blue)', padding: '0.85rem 1rem', marginBottom: '1.25rem' }}>
+                <div style={{ fontSize: '0.72rem', color: 'var(--muted2)', textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: '0.4rem' }}>Colleague</div>
+                <div style={{ fontWeight: 600, fontSize: '0.95rem', marginBottom: '0.4rem' }}>{project.colleague_name}</div>
+                {project.colleague_role && <div style={{ fontSize: '0.78rem', color: 'var(--muted2)', marginBottom: '0.2rem' }}>{project.colleague_role}</div>}
+                {project.org_name && <div style={{ fontSize: '0.78rem', color: 'var(--muted2)', marginBottom: '0.2rem' }}>{project.org_name}</div>}
+                {project.relationship && <div style={{ fontSize: '0.78rem', color: 'var(--muted2)' }}>{project.relationship === 'team-member' ? 'Team Member' : project.relationship.charAt(0).toUpperCase() + project.relationship.slice(1)}</div>}
+              </div>
+            )}
+
             <div className="form-group">
-              <label className="label">Colleague's email address</label>
+              <label className="label">Email Address</label>
               <input className="input" type="email" placeholder="colleague@company.com"
                 value={email} onChange={e => setEmail(e.target.value)} autoFocus />
               <div style={{ fontSize: '0.75rem', color: 'var(--muted)', marginTop: '0.3rem' }}>
@@ -919,7 +981,7 @@ function ValidationModal({ project, user, authUser, onClose, showToast }) {
 
             <div className="form-group">
               <label className="label">Personal message (optional)</label>
-              <textarea className="input" placeholder={`Hi! I've listed our work on "${project.title}" on StackRank365. Would you be able to confirm my involvement?`}
+              <textarea className="input" placeholder={`Hi ${project.colleague_name || ''}! I've listed our work on "${project.title}" on StackRank365. Would you be able to confirm my involvement?`}
                 value={message} onChange={e => setMessage(e.target.value)}
                 style={{ minHeight: 80, resize: 'vertical' }} />
             </div>

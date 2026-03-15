@@ -116,3 +116,14 @@ create policy "Anyone read validation by token"
 -- Validator can update status when accepting/declining
 create policy "Validators can respond"
   on public.validations for update using (true);
+
+-- ─── Colleague Details for Projects ────────────────────────────────────────
+-- Add these columns if they don't exist already
+-- Run this migration to add colleague information to projects
+alter table public.projects
+add column if not exists org_name text,
+add column if not exists colleague_name text,
+add column if not exists colleague_role text,
+add column if not exists relationship text,
+add column if not exists colleague_email text;
+
