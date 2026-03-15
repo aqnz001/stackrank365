@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useApp } from '../context/AppContext';
 import { CERTIFICATIONS, getRankTier, getNextRankTier, SPECIALISMS } from '../data/data';
 
@@ -286,6 +286,97 @@ function VerifyTab({ user, setUser, showToast, authUser }) {
   );
 }
 
+// ─── Validations Tab ──────────────────────────────────────────────────────────
+function ValidationsTab({ authUser }) {
+  const [validations, setValidations] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    (async () => {
+      const sb = await getSupabase();
+      if (sb && authUser) {
+        const { data, error } = await sb
+          .from('validations')
+          .select('*, project:projects(title, role)')
+          .eq('requestor_id', authUser.id)
+          .order('created_at', { ascending: false });
+        if (!error && data) {
+          setValidations(data);
+        }
+      }
+      setLoading(false);
+    })();
+  }, [authUser]);
+
+  const getStatusColor = (status) => {
+    if (status === 'accepted') return { bg: 'var(--green-dim)', text: 'var(--green)', label: '✅ Accepted' };
+    if (status === 'declined') return { bg: 'var(--red-dim)', text: 'var(--red)', label: '👋 Declined' };
+    return { bg: 'var(--gold-dim)', text: 'var(--gold)', label: '⏳ Pending' };
+  };
+
+  const formatDate = (date) => {
+    return new Date(date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  };
+
+  if (loading) {
+    return (
+      <div style={{ textAlign: 'center', padding: '3rem', color: 'var(--muted2)' }}>
+        <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>⏳</div>
+        Loading validations…
+      </div>
+    );
+  }
+
+  if (validations.length === 0) {
+    return (
+      <div className="card" style={{ textAlign: 'center', padding: '3rem', borderStyle: 'dashed' }}>
+        <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>📋</div>
+        <h3 style={{ marginBottom: '0.5rem' }}>No validation requests yet</h3>
+        <p style={{ color: 'var(--muted2)', fontSize: '0.9rem', marginBottom: '1.25rem' }}>Send validation requests for your projects to track their progress here.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+        <h3 style={{ margin: 0 }}>Validation Requests Sent</h3>
+        <span style={{ fontSize: '0.85rem', color: 'var(--muted2)' }}>{validations.length} total</span>
+      </div>
+      {validations.map((val, i) => {
+        const status = getStatusColor(val.status);
+        return (
+          <div key={i} className="card" style={{ padding: '1rem 1.25rem', display: 'flex', alignItems: 'flex-start', gap: '1rem', borderLeft: `3px solid ${status.text}` }}>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '0.4rem' }}>
+                <div style={{ fontWeight: 600, fontSize: '0.95rem', color: '#fff' }}>{val.project?.title || 'Project'}</div>
+                <span className="badge" style={{ background: status.bg, color: status.text, fontSize: '0.65rem', fontWeight: 600 }}>{status.label}</span>
+              </div>
+              <div style={{ fontSize: '0.82rem', color: 'var(--muted2)', marginBottom: '0.3rem' }}>
+                📧 Requested from: <strong style={{ color: '#fff' }}>{val.validator_email}</strong>
+              </div>
+              <div style={{ display: 'flex', gap: '1.5rem', fontSize: '0.75rem', color: 'var(--muted)' }}>
+                <span>Sent: {formatDate(val.created_at)}</span>
+                {val.responded_at && <span>{val.status === 'accepted' ? 'Accepted' : 'Responded'}: {formatDate(val.responded_at)}</span>}
+              </div>
+              {val.message && (
+                <div style={{ marginTop: '0.5rem', padding: '0.6rem', background: 'var(--surface2)', borderRadius: 6, fontSize: '0.8rem', color: 'var(--muted2)', fontStyle: 'italic' }}>
+                  "{val.message}"
+                </div>
+              )}
+            </div>
+            {val.status === 'accepted' && (
+              <div style={{ padding: '0.5rem 0.75rem', background: 'rgba(0,229,160,0.1)', border: '1px solid rgba(0,229,160,0.2)', borderRadius: 6, fontSize: '0.75rem', color: 'var(--green)', fontWeight: 600, flexShrink: 0, whiteSpace: 'nowrap' }}>
+                +300 pts earned
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 // ─── Dashboard ────────────────────────────────────────────────────────────────
 export default function Dashboard({ onNavigate }) {
   const { user, setUser, showToast, calcScore, getTierInfo, authUser } = useApp();
@@ -373,6 +464,7 @@ export default function Dashboard({ onNavigate }) {
     { id: 'certifications', label: '🎓 Certifications' },
     { id: 'verify',         label: '✅ Verify' },
     { id: 'projects',       label: '🏗️ Projects' },
+    { id: 'validations',    label: '📋 Validations' },
     { id: 'settings',       label: '⚙️ Settings' },
   ];
 
@@ -597,6 +689,11 @@ export default function Dashboard({ onNavigate }) {
               </div>
             )}
           </div>
+        )}
+
+        {/* Validations */}
+        {activeTab === 'validations' && (
+          <ValidationsTab authUser={authUser} />
         )}
 
         {/* Settings */}
