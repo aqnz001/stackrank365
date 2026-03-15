@@ -75,11 +75,10 @@ function AppInner() {
       const fullHash = window.location.hash;
 
       // Supabase OAuth/magic link callback — token arrives in the hash fragment
+      // Don't remove the hash here - let Supabase SDK process the tokens first!
       if (fullHash.includes('access_token=') || fullHash.includes('refresh_token=')) {
-        // Let Supabase SDK handle it, then go to dashboard
-        console.log('[App] OAuth redirect detected, navigating to dashboard');
-        setPage('dashboard');
-        window.history.replaceState({}, '', '/');
+        console.log('[App] OAuth redirect detected, waiting for session...');
+        // The AppContext will handle session setup automatically via onAuthStateChange
         return;
       }
       // Supabase password recovery
