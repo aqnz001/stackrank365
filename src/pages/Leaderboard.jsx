@@ -61,9 +61,16 @@ export default function Leaderboard({ onNavigate }) {
     setFilterCountry(country === 'Global' ? '' : country);
   }, []);
 
-  // Load real users from Supabase
+  // Load real users from Supabase ONLY if user is signed in
   useEffect(() => {
     (async () => {
+      if (!user) {
+        // Not signed in - use demo data
+        setLiveUsers([]);
+        setUsingLive(false);
+        return;
+      }
+
       const sb = await getSupabase();
       if (!sb) return;
       try {
@@ -88,12 +95,16 @@ export default function Leaderboard({ onNavigate }) {
           setUsingLive(true);
         } else {
           setLiveUsers([]);
+          setUsingLive(false);
         }
-      } catch { setLiveUsers([]); }
+      } catch {
+        setLiveUsers([]);
+        setUsingLive(false);
+      }
     })();
-  }, []);
+  }, [user]);
 
-  const allUsers = (usingLive && liveUsers?.length > 0) ? liveUsers : SAMPLE_USERS;
+  const allUsers = (user && usingLive && liveUsers?.length > 0) ? liveUsers : SAMPLE_USERS;
 
   // Get available countries from current user set
   const countries = useMemo(() => getCountries(allUsers), [allUsers]);
@@ -154,20 +165,27 @@ export default function Leaderboard({ onNavigate }) {
         <div style={{ marginBottom: '2rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem', flexWrap: 'wrap' }}>
             <div className="badge badge-gold">🏆 Live Rankings</div>
-            {usingLive && (
+            {user && usingLive && (
               <div className="badge badge-green" style={{ fontSize: '0.68rem' }}>
-                ✓ Live · {liveUsers.length} {liveUsers.length === 1 ? 'member' : 'members'}
+                ✓ Live Data · {liveUsers.length} {liveUsers.length === 1 ? 'member' : 'members'}
               </div>
             )}
-            {!usingLive && liveUsers !== null && (
-              <div className="badge badge-muted" style={{ fontSize: '0.68rem' }}>Sample data — sign up to appear here</div>
+            {user && !usingLive && (
+              <div className="badge badge-blue" style={{ fontSize: '0.68rem' }}>
+                Demo data (no members yet)
+              </div>
+            )}
+            {!user && (
+              <div className="badge badge-muted" style={{ fontSize: '0.68rem' }}>
+                📊 Sample data — sign in to see live rankings
+              </div>
             )}
           </div>
           <h1 style={{ marginBottom: '0.4rem' }}>
             <span className="gradient-text-blue">{scopeLabel}</span> Leaderboard
           </h1>
           <p style={{ color: 'var(--muted2)', fontSize: '1rem', maxWidth: 560 }}>
-            Microsoft ecosystem professionals ranked by verified Stack Points.
+            {user ? 'Microsoft ecosystem professionals ranked by verified Stack Points.' : 'Preview the ranking system with sample data. Sign in to see real rankings and add your profile.'}
           </p>
         </div>
 
