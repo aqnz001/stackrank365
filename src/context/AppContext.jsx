@@ -29,33 +29,43 @@ export function AppProvider({ children }) {
     const { data: profile } = await sb.from('profiles').select('*').eq('id', userId).single();
     const { data: certs } = await sb.from('certifications').select('*').eq('user_id', userId).order('created_at');
     const { data: projects } = await sb.from('projects').select('*').eq('user_id', userId).order('created_at');
-    if (profile) {
-      setUserState({
-        id: userId,
-        name: profile.name,
-        email,
-        username: profile.username,
-        headline: profile.headline || '',
-        bio: profile.bio || '',
-        location: profile.location || '',
-        specialism: profile.specialism || 'Dynamics 365',
-        yearsExp: profile.years_exp || 0,
-        isMVP: profile.is_mvp,
-        foundingMember: profile.founding_member,
-        msAccountId: profile.ms_account_id,
-        certifications: (certs || []).map(c => ({
-          code: c.code, name: c.name, tier: c.tier, specialism: c.specialism,
-          points: c.points, issueDate: c.issue_date,
-          verified: c.verified, verifiedVia: c.verified_via, verifyUrl: c.verify_url,
-          scarcityMultiplier: c.scarcity_multiplier, dbId: c.id,
-        })),
-        projects: (projects || []).map(p => ({
-          id: p.id, title: p.title, role: p.role, description: p.description,
-          industry: p.industry, privacy_mode: p.privacy_mode,
-          enterprise: p.enterprise, validated: p.validated, points: p.points,
-        })),
-      });
-    }
+
+    // If profile exists, use it; otherwise create default profile from email
+    const profileData = profile || {
+      name: email?.split('@')[0] || 'User',
+      username: email?.split('@')[0]?.toLowerCase().replace(/[^a-z0-9._-]/g, '.') || 'user',
+      headline: '',
+      bio: '',
+      location: '',
+      specialism: 'Dynamics 365',
+      years_exp: 0,
+    };
+
+    setUserState({
+      id: userId,
+      name: profileData.name,
+      email,
+      username: profileData.username,
+      headline: profileData.headline || '',
+      bio: profileData.bio || '',
+      location: profileData.location || '',
+      specialism: profileData.specialism || 'Dynamics 365',
+      yearsExp: profileData.years_exp || 0,
+      isMVP: profileData.is_mvp,
+      foundingMember: profileData.founding_member,
+      msAccountId: profileData.ms_account_id,
+      certifications: (certs || []).map(c => ({
+        code: c.code, name: c.name, tier: c.tier, specialism: c.specialism,
+        points: c.points, issueDate: c.issue_date,
+        verified: c.verified, verifiedVia: c.verified_via, verifyUrl: c.verify_url,
+        scarcityMultiplier: c.scarcity_multiplier, dbId: c.id,
+      })),
+      projects: (projects || []).map(p => ({
+        id: p.id, title: p.title, role: p.role, description: p.description,
+        industry: p.industry, privacy_mode: p.privacy_mode,
+        enterprise: p.enterprise, validated: p.validated, points: p.points,
+      })),
+    });
   };
 
   useEffect(() => {
