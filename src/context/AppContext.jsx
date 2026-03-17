@@ -72,6 +72,16 @@ export function AppProvider({ children }) {
           enterprise: p.enterprise, validated: p.validated, points: p.points,
         })),
       });
+    } else if (retryCount < 3) {
+      await new Promise(r => setTimeout(r, 500 * Math.pow(2, retryCount)));
+      return loadProfile(sb, userId, email, retryCount + 1);
+    } else {
+      const { data: au } = await sb.auth.getUser();
+      const meta = au?.user?.user_metadata || {};
+      const fallbackName = meta.full_name || meta.name || email?.split('@')[0] || 'User';
+      const fallbackUsername = (meta.preferred_username || email?.split('@')[0] || userId.slice(0,8)).toLowerCase().replace(/[^a-z0-9._-]/g, '');
+      await sb.from('profiles').upsert({ id: userId, name: fallbackName, username: fallbackUsername, ms_account_id: meta.sub || null, founding_member: true });
+      setUserState({ id: userId, name: fallbackName, email, username: fallbackUsername, headline: '', bio: '', location: '', specialism: 'Dynamics 365', yearsExp: 0, foundingMember: true, msAccountId: meta.sub || null, certifications: [], projects: [] });
     }
   };
 
