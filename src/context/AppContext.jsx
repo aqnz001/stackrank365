@@ -25,8 +25,25 @@ export function AppProvider({ children }) {
     setTimeout(() => setToast(null), 3500);
   };
 
-  const loadProfile = async (sb, userId, email) => {
-    const { data: profile } = await sb.from('profiles').select('*').eq('id', userId).single();
+  const loadProfile = async (sb, userId, email, authUser = null) => {
+    let { data: profile } = await sb.from('profiles').select('*').eq('id', userId).single();
+
+    // If profile doesn't exist (e.g., first-time OAuth user), create a default one
+    if (!profile) {
+      const name = authUser?.user_metadata?.full_name || email.split('@')[0];
+      const { data: newProfile } = await sb.from('profiles').insert({
+        id: userId,
+        name,
+        username: name.toLowerCase().replace(/\s+/g, '.').replace(/[^a-z0-9._-]/g, ''),
+        email,
+        headline: '',
+        specialism: 'Dynamics 365',
+        ms_account_id: authUser?.identities?.find(i => i.provider === 'azure')?.identity_data?.oid || null,
+        founding_member: true,
+      }).select().single();
+      profile = newProfile;
+    }
+
     const { data: certs } = await sb.from('certifications').select('*').eq('user_id', userId).order('created_at');
     const { data: projects } = await sb.from('projects').select('*').eq('user_id', userId).order('created_at');
     if (profile) {
@@ -67,7 +84,7 @@ export function AppProvider({ children }) {
         const { data: { session } } = await sb.auth.getSession();
         if (session?.user) {
           setAuthUser(session.user);
-          await loadProfile(sb, session.user.id, session.user.email);
+          await loadProfile(sb, session.user.id, session.user.email, session.user);
         }
         setLoading(false);
 
@@ -75,7 +92,7 @@ export function AppProvider({ children }) {
         const { data: { subscription } } = sb.auth.onAuthStateChange(async (event, session) => {
           setAuthUser(session?.user ?? null);
           if (session?.user) {
-            await loadProfile(sb, session.user.id, session.user.email);
+            await loadProfile(sb, session.user.id, session.user.email, session.user);
           } else {
             setUserState(null);
           }
