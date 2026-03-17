@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 80" width="200" height="80">
+  <defs>
+    <linearGradient id="gBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0078d4"/>
+      <stop offset="100%" stop-color="#00b4f0"/>
+    </linearGradient>
+    <linearGradient id="gPurple" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7030a0"/>
+      <stop offset="100%" stop-color="#b060f0"/>
+    </linearGradient>
+    <linearGradient id="gCyan" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00bcd4"/>
+      <stop offset="100%" stop-color="#64e8ff"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="1.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+  <!-- Hex 1: top-left D365 blue -->
+  <polygon points="22,10 36,10 43,22 36,34 22,34 15,22" fill="url(#gBlue)" filter="url(#glow)" opacity="0.95"/>
+  <circle cx="29" cy="22" r="5" fill="rgba(255,255,255,0.9)"/>
+  <!-- Hex 2: right Power Platform purple -->
+  <polygon points="36,28 47,28 52,37 47,46 36,46 31,37" fill="url(#gPurple)" filter="url(#glow)" opacity="0.95"/>
+  <circle cx="41.5" cy="37" r="4" fill="rgba(255,255,255,0.9)"/>
+  <!-- Hex 3: bottom-left Copilot cyan -->
+  <polygon points="22,46 36,46 43,58 36,70 22,70 15,58" fill="url(#gCyan)" filter="url(#glow)" opacity="0.95"/>
+  <circle cx="29" cy="58" r="5" fill="rgba(255,255,255,0.9)"/>
+  <!-- Wordmark -->
+  <text x="60" y="36" font-family="'Segoe UI',system-ui,sans-serif" font-weight="700" font-size="22" fill="#ffffff">StackRank<tspan fill="#00a2e8">365</tspan></text>
+  <text x="61" y="54" font-family="'Segoe UI',system-ui,sans-serif" font-weight="400" font-size="9" fill="#64748b">Verified Microsoft Talent Rankings</text>
+</svg>
