@@ -29,7 +29,7 @@ function Footer({ onNavigate }) {
             </p>
             <div style={{ marginTop: '1.25rem' }}>
               <button className="btn btn-gold btn-sm" onClick={() => onNavigate('landing')}>
-                🚀 Join the Waitlist
+                ð Join the Waitlist
               </button>
             </div>
           </div>
@@ -53,8 +53,8 @@ function Footer({ onNavigate }) {
           </div>
         </div>
         <div style={{ borderTop: '1px solid var(--border)', paddingTop: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem' }}>
-          <div style={{ fontSize: '0.78rem', color: 'var(--muted)' }}>© 2025 StackRank365. All rights reserved.</div>
-          <div style={{ fontSize: '0.78rem', color: 'var(--muted)' }}>Built for the Microsoft community 💙</div>
+          <div style={{ fontSize: '0.78rem', color: 'var(--muted)' }}>Â© 2025 StackRank365. All rights reserved.</div>
+          <div style={{ fontSize: '0.78rem', color: 'var(--muted)' }}>Built for the Microsoft community ð</div>
         </div>
       </div>
       <style>{`@media(max-width:768px){ footer .container > div:first-child { grid-template-columns: 1fr !important; } }`}</style>
@@ -67,18 +67,17 @@ function AppInner() {
   const [page, setPage] = useState('landing');
   const [pageData, setPageData] = useState(null);
 
-  // ─── Handle URL hash routing for early-adopter links + Supabase callbacks ──
+  // âââ Handle URL hash routing for early-adopter links + Supabase callbacks ââ
   useEffect(() => {
     const handleHash = () => {
       const hash = window.location.hash.replace('#', '');
       const search = window.location.search;
       const fullHash = window.location.hash;
 
-      // Supabase OAuth/magic link callback — token arrives in the hash fragment
+      // Supabase OAuth/magic link callback â token arrives in the hash fragment
       if (fullHash.includes('access_token=') || fullHash.includes('refresh_token=')) {
-        // Let Supabase SDK handle it, then go to dashboard
+        // Do NOT clear URL — Supabase SDK needs the hash to establish session
         setPage('dashboard');
-        window.history.replaceState({}, '', '/');
         return;
       }
       // Supabase password recovery
