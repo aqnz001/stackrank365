@@ -1,7 +1,6 @@
 // supabase/functions/sync-catalog/index.ts
-// Syncs Microsoft Learn certification catalog into cert_catalog table.
-// Endpoint discovered from live MS Learn network traffic:
-// https://learn.microsoft.com/api/contentbrowser/search/credentials
+// Syncs MS Learn certifications into cert_catalog.
+// Schema-aligned: uses actual cert_catalog column names.
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
@@ -9,10 +8,11 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
 const SUPABASE_SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
-const MS_LEARN_URL =
+const MS_BASE =
   "https://learn.microsoft.com/api/contentbrowser/search/credentials" +
   "?locale=en-us&facet=roles&facet=products&facet=levels&facet=subjects" +
-  "&facet=credential_types&credential_types=certification&\$orderBy=title&\$top=100&fuzzySearch=false";
+  "&facet=credential_types&credential_types=certification" +
+  "&\$orderBy=title&fuzzySearch=false";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -25,18 +25,18 @@ serve(async (req) => {
   try {
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
 
-    // Paginate through all certs ($top=100, offset via $skip)
-    let allCerts = [];
+    // Paginate through all certs
+    let allCerts: any[] = [];
     let skip = 0;
     const top = 100;
 
     while (true) {
-      const url = MS_LEARN_URL + `&\$skip=${skip}`;
+      const url = `${MS_BASE}&\$top=${top}&\$skip=${skip}`;
       const res = await fetch(url, { headers: { Accept: "application/json" } });
-      if (!res.ok) throw new Error(`MS Learn API error: ${res.status} at skip=${skip}`);
+      if (!res.ok) throw new Error(`MS Learn API ${res.status} at skip=${skip}`);
 
       const data = await res.json();
-      const items = data.results ?? data.items ?? [];
+      const items: any[] = data.results ?? data.items ?? [];
       if (items.length === 0) break;
 
       allCerts = allCerts.concat(items);
@@ -45,39 +45,42 @@ serve(async (req) => {
     }
 
     if (allCerts.length === 0) {
-      return new Response(JSON.stringify({ synced: 0, message: "No certs returned" }), {
+      return new Response(JSON.stringify({ synced: 0, message: "No certs returned from MS Learn" }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    // Map to cert_catalog schema
-    const rows = allCerts.map((cert) => ({
-      ms_cert_id: cert.uid ?? cert.certificationUid ?? cert.id,
-      name: cert.title ?? cert.certificationTitle,
-      certification_type: cert.credential_types?.[0] ?? cert.certificationType ?? "certification",
-      roles: cert.roles ?? [],
-      domain: cert.products?.[0] ?? cert.subjects?.[0] ?? null,
-      level: cert.levels?.[0] ?? null,
-      url: cert.url ?? `https://learn.microsoft.com/en-us/credentials/certifications/${cert.uid}`,
-      updated_at: new Date().toISOString(),
-    })).filter((r) => r.ms_cert_id && r.name);
+    // Map MS Learn response fields → actual cert_catalog column names
+    const rows = allCerts
+      .map((cert) => ({
+        certification_uid:   cert.uid ?? cert.certificationUid ?? cert.id,
+        certification_name:  cert.title ?? cert.certificationTitle,
+        program:             cert.credential_types?.[0] ?? cert.certificationType ?? "certification",
+        technology_area:     cert.products?.[0] ?? cert.subjects?.[0] ?? cert.roles?.[0] ?? null,
+        level:               cert.levels?.[0] ?? null,
+        official_url:        cert.url ?? `https://learn.microsoft.com/en-us/credentials/certifications/${cert.uid}`,
+        status:              "active",
+        updated_at:          new Date().toISOString(),
+      }))
+      .filter((r) => r.certification_uid && r.certification_name);
 
-    // Upsert into cert_catalog
     const { error, count } = await supabase
       .from("cert_catalog")
-      .upsert(rows, { onConflict: "ms_cert_id", count: "exact" });
+      .upsert(rows, { onConflict: "certification_uid", count: "exact" });
 
     if (error) throw error;
 
-    // Build certification_paths from domain/role matching
-    const { data: allRows } = await supabase.from("cert_catalog").select("id, roles, domain, level");
+    // Build certification_paths from technology_area matching
+    const { data: allRows } = await supabase
+      .from("cert_catalog")
+      .select("id, technology_area, level");
+
     if (allRows && allRows.length > 0) {
-      const pathRows = [];
+      const pathRows: any[] = [];
       for (const cert of allRows) {
+        if (!cert.technology_area) continue;
         const related = allRows.filter(
-          (c) =>
-            c.id !== cert.id &&
-            (c.roles?.some((r) => cert.roles?.includes(r)) || (c.domain && c.domain === cert.domain))
+          (c) => c.id !== cert.id && c.technology_area === cert.technology_area
         );
         for (const rel of related) {
           pathRows.push({ from_cert_id: cert.id, to_cert_id: rel.id });
