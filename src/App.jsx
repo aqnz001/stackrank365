@@ -13,6 +13,7 @@ import ValidatePage from './pages/ValidatePage';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import Pricing from './pages/Pricing';
 import RecruiterDashboard from './pages/RecruiterDashboard';
+import AdminFraud from './pages/AdminFraud';
 
 function Footer({ onNavigate }) {
   return (
@@ -32,7 +33,7 @@ function Footer({ onNavigate }) {
             </p>
             <div style={{ marginTop: '1.25rem' }}>
               <button className="btn btn-gold btn-sm" onClick={() => onNavigate('landing')}>
-                ÃÂ°ÃÂÃÂÃÂ Join the Waitlist
+                ÃÂÃÂ°ÃÂÃÂÃÂÃÂÃÂÃÂ Join the Waitlist
               </button>
             </div>
           </div>
@@ -56,8 +57,8 @@ function Footer({ onNavigate }) {
           </div>
         </div>
         <div style={{ borderTop: '1px solid var(--border)', paddingTop: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem' }}>
-          <div style={{ fontSize: '0.78rem', color: 'var(--muted)' }}>ÃÂÃÂ© 2025 StackRank365. All rights reserved.</div>
-          <div style={{ fontSize: '0.78rem', color: 'var(--muted)' }}>Built for the Microsoft community ÃÂ°ÃÂÃÂÃÂ</div>
+          <div style={{ fontSize: '0.78rem', color: 'var(--muted)' }}>ÃÂÃÂÃÂÃÂ© 2025 StackRank365. All rights reserved.</div>
+          <div style={{ fontSize: '0.78rem', color: 'var(--muted)' }}>Built for the Microsoft community ÃÂÃÂ°ÃÂÃÂÃÂÃÂÃÂÃÂ</div>
         </div>
       </div>
       <style>{`@media(max-width:768px){ footer .container > div:first-child { grid-template-columns: 1fr !important; } }`}</style>
@@ -70,16 +71,16 @@ function AppInner() {
   const [page, setPage] = useState('landing');
   const [pageData, setPageData] = useState(null);
 
-  // ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ Handle URL hash routing for early-adopter links + Supabase callbacks ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ
+  // ÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂ Handle URL hash routing for early-adopter links + Supabase callbacks ÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂ
   useEffect(() => {
     const handleHash = () => {
       const hash = window.location.hash.replace('#', '');
       const search = window.location.search;
       const fullHash = window.location.hash;
 
-      // Supabase OAuth/magic link callback ÃÂ¢ÃÂÃÂ token arrives in the hash fragment
+      // Supabase OAuth/magic link callback ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ token arrives in the hash fragment
       if (fullHash.includes('access_token=') || fullHash.includes('refresh_token=')) {
-        // Do NOT clear URL Ã¢ÂÂ Supabase SDK needs the hash to establish session
+        // Do NOT clear URL ÃÂ¢ÃÂÃÂ Supabase SDK needs the hash to establish session
         setPage('dashboard');
         return;
       }
@@ -133,6 +134,7 @@ function AppInner() {
       case 'signin':          return <Auth mode="signin" onNavigate={navigate} />;
       case 'reset-password':  return <ResetPassword onNavigate={navigate} />;
       case 'validate':        return <ValidatePage token={pageData?.token} onNavigate={navigate} />;
+      case 'admin-fraud':          return <AdminFraud onNavigate={navigate} />;
       case 'pricing':             return <Pricing onNavigate={navigate} />;
       case 'recruiter-dashboard':   return <RecruiterDashboard onNavigate={navigate} />;
       case 'privacy':        return <PrivacyPolicy onNavigate={navigate} />;
