@@ -1,55 +1,82 @@
-// Supabase Edge Function: verify-cert
-// Runs server-side — no CORS issues, no proxy needed.
-// Deploy with: npx supabase functions deploy verify-cert
+// supabase/functions/verify-cert/index.ts
+// Verifies a user's certification claim against MS Learn API
+// and updates the certifications table with the result.
 
-import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const CORS = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, content-type',
+const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
+const SUPABASE_SERVICE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+const MS_LEARN_API = "https://learn.microsoft.com/api/credentials/";
+
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
 serve(async (req) => {
-  if (req.method === 'OPTIONS') return new Response('ok', { headers: CORS });
+  if (req.method === "OPTIONS") {
+    return new Response("ok", { headers: corsHeaders });
+  }
 
   try {
-    const { url, type } = await req.json();
-    if (!url || !type) return new Response(JSON.stringify({ error: 'Missing url or type' }), { status: 400, headers: CORS });
+    const { cert_id, profile_id, ms_cert_id } = await req.json();
 
-    if (type === 'credly') {
-      // Extract slug from any credly badge URL format
-      const match = url.match(/credly\.com\/badges\/([\w-]+)/i);
-      if (!match) return new Response(JSON.stringify({ error: 'Invalid Credly URL' }), { headers: CORS });
-      const slug = match[1].replace(/\/.*$/, '');
-
-      const res = await fetch(`https://www.credly.com/badges/${slug}/embedded`, {
-        headers: { 'User-Agent': 'Mozilla/5.0 (compatible; StackRank365/1.0)' },
-      });
-      const html = await res.text();
-
-      // Parse og:title: "Badge Name was issued by Issuer to Person."
-      const ogTitle = html.match(/og:title[^>]*content="([^"]+)"/i)?.[1] ||
-                      html.match(/content="([^"]+)"[^>]*og:title/i)?.[1] || '';
-
-      return new Response(JSON.stringify({ ogTitle, html: html.substring(0, 2000) }), {
-        headers: { ...CORS, 'Content-Type': 'application/json' }
-      });
+    if (!cert_id || !profile_id || !ms_cert_id) {
+      return new Response(
+        JSON.stringify({ error: "cert_id, profile_id, and ms_cert_id are required" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
     }
 
-    if (type === 'ms_learn') {
-      const res = await fetch(url, {
-        headers: { 'User-Agent': 'Mozilla/5.0 (compatible; StackRank365/1.0)' },
+    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+
+    // Mark as pending immediately so UI shows "Verifying..."
+    await supabase.rpc("mark_cert_pending", { cert_id });
+
+    // Call MS Learn credentials API
+    const msResponse = await fetch(`${MS_LEARN_API}${ms_cert_id}`, {
+      headers: { "Accept": "application/json" },
+    });
+
+    const metadata = msResponse.ok ? await msResponse.json() : null;
+
+    if (msResponse.ok && metadata) {
+      await supabase.rpc("mark_cert_verified", {
+        cert_id,
+        source: "ms_learn_api",
+        metadata,
       });
-      const html = await res.text();
-      // Return enough HTML for cert code parsing
-      return new Response(JSON.stringify({ html: html.substring(0, 50000) }), {
-        headers: { ...CORS, 'Content-Type': 'application/json' }
+
+      return new Response(
+        JSON.stringify({
+          status: "verified",
+          cert_id,
+          cert_name: metadata.title ?? metadata.name ?? ms_cert_id,
+        }),
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    } else {
+      await supabase.rpc("mark_cert_failed", {
+        cert_id,
+        source: "ms_learn_api",
+        metadata: { http_status: msResponse.status, ms_cert_id },
       });
+
+      return new Response(
+        JSON.stringify({
+          status: "failed",
+          cert_id,
+          reason: "Certification not found in Microsoft Learn records",
+        }),
+        { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
     }
-
-    return new Response(JSON.stringify({ error: 'Unknown type' }), { headers: CORS });
-
-  } catch (e) {
-    return new Response(JSON.stringify({ error: e.message }), { status: 500, headers: CORS });
+  } catch (err) {
+    console.error("verify-cert error:", err);
+    return new Response(
+      JSON.stringify({ error: "Internal error during verification" }),
+      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+    );
   }
 });
