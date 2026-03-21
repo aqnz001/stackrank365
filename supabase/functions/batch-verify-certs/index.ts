@@ -51,7 +51,7 @@ serve(async (req) => {
 
     // Get unverified certs, or specific profile
     let query = supabase.from("certifications").select("id, profile_id, name, ms_cert_id, verification_status").eq("verification_status", "unverified").limit(body.limit ?? 100);
-    if (body.profile_id) query = supabase.from("certifications").select("id, profile_id, name, ms_cert_id, verification_status").eq("profile_id", body.profile_id).neq("verification_status", "verified");
+    if (body.profile_id) query = supabase.from("certifications").select("id, profile_id, name, ms_cert_id, verification_status").eq("user_id", body.profile_id).neq("verification_status", "verified");
     if (body.recheck_all) query = supabase.from("certifications").select("id, profile_id, name, ms_cert_id, verification_status").limit(body.limit ?? 100);
 
     const { data: certs, error } = await query;
