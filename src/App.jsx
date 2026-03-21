@@ -34,7 +34,7 @@ function Footer({ onNavigate }) {
             </p>
             <div style={{ marginTop: '1.25rem' }}>
               <button className="btn btn-gold btn-sm" onClick={() => onNavigate('landing')}>
-                ÃÂÃÂÃÂÃÂ°ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ Join the Waitlist
+                ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ°ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ Join the Waitlist
               </button>
             </div>
           </div>
@@ -58,8 +58,8 @@ function Footer({ onNavigate }) {
           </div>
         </div>
         <div style={{ borderTop: '1px solid var(--border)', paddingTop: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem' }}>
-          <div style={{ fontSize: '0.78rem', color: 'var(--muted)' }}>ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ© 2025 StackRank365. All rights reserved.</div>
-          <div style={{ fontSize: '0.78rem', color: 'var(--muted)' }}>Built for the Microsoft community ÃÂÃÂÃÂÃÂ°ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ</div>
+          <div style={{ fontSize: '0.78rem', color: 'var(--muted)' }}>ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ© 2025 StackRank365. All rights reserved.</div>
+          <div style={{ fontSize: '0.78rem', color: 'var(--muted)' }}>Built for the Microsoft community ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ°ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ</div>
         </div>
       </div>
       <style>{`@media(max-width:768px){ footer .container > div:first-child { grid-template-columns: 1fr !important; } }`}</style>
@@ -72,16 +72,19 @@ function AppInner() {
   const [page, setPage] = useState('landing');
   const [pageData, setPageData] = useState(null);
 
-  // ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ Handle URL hash routing for early-adopter links + Supabase callbacks ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ
+  // ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ Handle URL hash routing for early-adopter links + Supabase callbacks ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ
   useEffect(() => {
     const handleHash = () => {
+      // ── Query string routing: ?page=xxx ──────────────────────────────
+      const qPage = new URLSearchParams(window.location.search).get('page');
+      if (qPage) { setPage(qPage); return; }
       const hash = window.location.hash.replace('#', '');
       const search = window.location.search;
       const fullHash = window.location.hash;
 
-      // Supabase OAuth/magic link callback ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ token arrives in the hash fragment
+      // Supabase OAuth/magic link callback ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ token arrives in the hash fragment
       if (fullHash.includes('access_token=') || fullHash.includes('refresh_token=')) {
-        // Do NOT clear URL ÃÂÃÂ¢ÃÂÃÂÃÂÃÂ Supabase SDK needs the hash to establish session
+        // Do NOT clear URL ÃÂÃÂÃÂÃÂ¢ÃÂÃÂÃÂÃÂÃÂÃÂÃÂÃÂ Supabase SDK needs the hash to establish session
         setPage('dashboard');
         return;
       }
