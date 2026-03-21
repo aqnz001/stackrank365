@@ -41,7 +41,7 @@ serve(async (req) => {
   try {
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
     const body = req.method === "POST" ? await req.json().catch(() => ({})) : {};
-    let query = supabase.from("profiles").select("id, score, created_at, fraud_status").neq("fraud_status", "suspended").limit(500);
+    let query = supabase.from("profiles").select("id, fraud_score, created_at, fraud_status").neq("fraud_status", "suspended").limit(500);
     if (body.profile_id) query = supabase.from("profiles").select("id, score, created_at, fraud_status").eq("id", body.profile_id);
     const { data: profiles, error } = await query;
     if (error) throw error;
@@ -59,6 +59,6 @@ serve(async (req) => {
     }
     return new Response(JSON.stringify(results), { headers: { ...corsHeaders, "Content-Type": "application/json" } });
   } catch(err) {
-    return new Response(JSON.stringify({ error: String(err) }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+    return new Response(JSON.stringify({ error: err?.message || err?.details || JSON.stringify(err) }), { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } });
   }
 });
