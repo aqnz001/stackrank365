@@ -1,10 +1,10 @@
 import { useState } from 'react';
+import { useApp } from '../context/AppContext';
+import { CERTIFICATIONS, getRankTier, getNextRankTier, SPECIALISMS } from '../data/data';
 import LinkedInImport from '../components/LinkedInImport';
 import ResumeAnalyser from '../components/ResumeAnalyser';
 import OpenToWorkToggle from '../components/OpenToWorkToggle';
 import StackRankBadge from '../components/StackRankBadge';
-import { useApp } from '../context/AppContext';
-import { CERTIFICATIONS, getRankTier, getNextRankTier, SPECIALISMS } from '../data/data';
 
 async function getSupabase() {
   try {
@@ -14,7 +14,7 @@ async function getSupabase() {
   } catch { return null; }
 }
 
-// ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ Cert modal ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ
+// ─── Cert modal ───────────────────────────────────────────────────────────────
 function CertModal({ onClose, onAdd }) {
   const [search, setSearch] = useState('');
   const [selected, setSelected] = useState(null);
@@ -29,7 +29,7 @@ function CertModal({ onClose, onAdd }) {
       <div className="modal" style={{ maxWidth: 640 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
           <h3 style={{ margin: 0 }}>Add Certification</h3>
-          <button className="btn btn-ghost btn-sm" onClick={onClose}>ÃÂ¢ÃÂÃÂ</button>
+          <button className="btn btn-ghost btn-sm" onClick={onClose}>✕</button>
         </div>
         <input className="input" placeholder="Search by name, code or specialism..." value={search} onChange={e => setSearch(e.target.value)} style={{ marginBottom: '1rem' }} autoFocus />
         <div style={{ maxHeight: 280, overflowY: 'auto', marginBottom: '1rem', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
@@ -42,7 +42,7 @@ function CertModal({ onClose, onAdd }) {
             }}>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontWeight: 600, fontSize: '0.88rem', color: '#fff' }}>{cert.name}</div>
-                <div style={{ fontSize: '0.72rem', color: 'var(--muted)', fontFamily: 'JetBrains Mono' }}>{cert.code} ÃÂÃÂ· {cert.specialism}</div>
+                <div style={{ fontSize: '0.72rem', color: 'var(--muted)', fontFamily: 'JetBrains Mono' }}>{cert.code} · {cert.specialism}</div>
               </div>
               <span className={`badge ${tierColors[cert.tier]}`} style={{ fontSize: '0.68rem', flexShrink: 0 }}>{cert.tier}</span>
               <span style={{ fontFamily: 'JetBrains Mono', fontSize: '0.78rem', color: 'var(--green)', flexShrink: 0 }}>+{cert.points}</span>
@@ -57,7 +57,7 @@ function CertModal({ onClose, onAdd }) {
               <input className="input" type="date" value={issueDate} onChange={e => setIssueDate(e.target.value)} />
             </div>
             <div style={{ display: 'flex', gap: '0.75rem' }}>
-              <button className="btn btn-ghost" onClick={() => setSelected(null)}>ÃÂ¢ÃÂÃÂ Back</button>
+              <button className="btn btn-ghost" onClick={() => setSelected(null)}>← Back</button>
               <button className="btn btn-primary" style={{ flex: 1, justifyContent: 'center' }}
                 onClick={() => { if (!issueDate) return; onAdd({ ...selected, issueDate }); onClose(); }}>
                 Add {selected.code} (+{selected.points} pts)
@@ -70,7 +70,7 @@ function CertModal({ onClose, onAdd }) {
   );
 }
 
-// ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ Project modal ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ
+// ─── Project modal ────────────────────────────────────────────────────────────
 function ProjectModal({ onClose, onAdd, project }) {
   const [form, setForm] = useState(project || {
     title: '', role: '', description: '', industry: '',
@@ -83,7 +83,7 @@ function ProjectModal({ onClose, onAdd, project }) {
       <div className="modal">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
           <h3 style={{ margin: 0 }}>{project ? 'Edit Project' : 'Add Project'}</h3>
-          <button className="btn btn-ghost btn-sm" onClick={onClose}>ÃÂ¢ÃÂÃÂ</button>
+          <button className="btn btn-ghost btn-sm" onClick={onClose}>✕</button>
         </div>
         <div className="form-group">
           <label className="label">Project Title</label>
@@ -100,7 +100,7 @@ function ProjectModal({ onClose, onAdd, project }) {
         <div className="form-group">
           <label className="label">Privacy Mode</label>
           <div style={{ display: 'flex', gap: '0.5rem' }}>
-            {[['public', 'ÃÂ°ÃÂÃÂÃÂ Public'], ['anonymised', 'ÃÂ°ÃÂÃÂÃÂ¤ Anonymised'], ['confidential', 'ÃÂ°ÃÂÃÂÃÂ Confidential']].map(([val, label]) => (
+            {[['public', '🌍 Public'], ['anonymised', '👤 Anonymised'], ['confidential', '🔒 Confidential']].map(([val, label]) => (
               <button key={val} type="button" className={`btn btn-sm ${form.privacy_mode === val ? 'btn-primary' : 'btn-outline'}`}
                 onClick={() => set('privacy_mode', val)} style={{ flex: 1, justifyContent: 'center', fontSize: '0.75rem' }}>
                 {label}
@@ -130,7 +130,7 @@ function ProjectModal({ onClose, onAdd, project }) {
   );
 }
 
-// ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ Verify tab ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ
+// ─── Verify tab ───────────────────────────────────────────────────────────────
 function VerifyTab({ user, setUser, showToast, authUser }) {
   const [method, setMethod] = useState('ms_learn'); // 'ms_learn' | 'credly'
   const [url, setUrl] = useState('');
@@ -175,7 +175,7 @@ function VerifyTab({ user, setUser, showToast, authUser }) {
       <div style={{ marginBottom: '1.5rem' }}>
         <h3 style={{ margin: '0 0 0.4rem' }}>Verify Your Certifications</h3>
         <p style={{ color: 'var(--muted2)', fontSize: '0.88rem', margin: 0 }}>
-          Verified certifications earn full Stack Points and display a ÃÂ¢ÃÂÃÂ badge on your profile.
+          Verified certifications earn full Stack Points and display a ✓ badge on your profile.
         </p>
       </div>
 
@@ -193,7 +193,7 @@ function VerifyTab({ user, setUser, showToast, authUser }) {
 
       {unverified.length === 0 && (
         <div className="card" style={{ textAlign: 'center', padding: '2rem', marginBottom: '1.5rem', background: 'var(--green-dim)', border: '1px solid rgba(0,229,160,0.2)' }}>
-          <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>ÃÂ¢ÃÂÃÂ</div>
+          <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>✅</div>
           <div style={{ fontWeight: 600, color: 'var(--green)' }}>All certifications verified!</div>
         </div>
       )}
@@ -205,8 +205,8 @@ function VerifyTab({ user, setUser, showToast, authUser }) {
         {/* Method selector */}
         <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.25rem' }}>
           {[
-            ['ms_learn', 'ÃÂ°ÃÂÃÂÃÂ Microsoft Learn Transcript'],
-            ['credly',   'ÃÂ°ÃÂÃÂÃÂ Credly Badge'],
+            ['ms_learn', '🎓 Microsoft Learn Transcript'],
+            ['credly',   '🏅 Credly Badge'],
           ].map(([val, label]) => (
             <button key={val} className={`btn btn-sm ${method === val ? 'btn-primary' : 'btn-outline'}`}
               onClick={() => { setMethod(val); setUrl(''); setStatus(null); setResult(null); }}
@@ -221,18 +221,18 @@ function VerifyTab({ user, setUser, showToast, authUser }) {
           {method === 'ms_learn' ? (
             <>
               <strong style={{ color: 'var(--text)' }}>How to get your transcript share link:</strong><br />
-              1. Go to <span style={{ color: 'var(--blue)' }}>learn.microsoft.com</span> ÃÂ¢ÃÂÃÂ click your profile photo ÃÂ¢ÃÂÃÂ <strong style={{ color: 'var(--text)' }}>Profile</strong><br />
-              2. Click the <strong style={{ color: 'var(--text)' }}>Transcript</strong> tab ÃÂ¢ÃÂÃÂ click <strong style={{ color: 'var(--text)' }}>Share</strong><br />
-              3. Set visibility to <strong style={{ color: 'var(--text)' }}>Public</strong> ÃÂ¢ÃÂÃÂ copy the share link<br />
-              <span style={{ color: 'var(--gold)' }}>ÃÂ¢ÃÂÃÂ  The share link starts with learn.microsoft.com/api/credentials/share/... ÃÂ¢ÃÂÃÂ your profile URL won't work</span>
+              1. Go to <span style={{ color: 'var(--blue)' }}>learn.microsoft.com</span> → click your profile photo → <strong style={{ color: 'var(--text)' }}>Profile</strong><br />
+              2. Click the <strong style={{ color: 'var(--text)' }}>Transcript</strong> tab → click <strong style={{ color: 'var(--text)' }}>Share</strong><br />
+              3. Set visibility to <strong style={{ color: 'var(--text)' }}>Public</strong> → copy the share link<br />
+              <span style={{ color: 'var(--gold)' }}>⚠ The share link starts with learn.microsoft.com/api/credentials/share/... — your profile URL won't work</span>
             </>
           ) : (
             <>
               <strong style={{ color: 'var(--text)' }}>How to get your Credly badge URL:</strong><br />
-              1. Go to <span style={{ color: 'var(--blue)' }}>credly.com</span> ÃÂ¢ÃÂÃÂ sign in ÃÂ¢ÃÂÃÂ click your badge<br />
+              1. Go to <span style={{ color: 'var(--blue)' }}>credly.com</span> → sign in → click your badge<br />
               2. Copy the page URL (e.g. credly.com/badges/abc-123-def)<br />
               3. Make sure the badge is set to <strong style={{ color: 'var(--text)' }}>Public</strong> on Credly<br />
-              <span style={{ color: 'var(--gold)' }}>ÃÂ¢ÃÂÃÂ  Only Microsoft exam certifications count (e.g. PL-400, AZ-900) ÃÂ¢ÃÂÃÂ not achievement or partner badges</span>
+              <span style={{ color: 'var(--gold)' }}>⚠ Only Microsoft exam certifications count (e.g. PL-400, AZ-900) — not achievement or partner badges</span>
             </>
           )}
         </div>
@@ -245,7 +245,7 @@ function VerifyTab({ user, setUser, showToast, authUser }) {
             }
             value={url} onChange={e => setUrl(e.target.value)} />
           <button className="btn btn-primary" onClick={handleVerify} disabled={status === 'loading'} style={{ flexShrink: 0 }}>
-            {status === 'loading' ? 'ÃÂ¢ÃÂÃÂ³ Verifying...' : 'ÃÂ¢ÃÂÃÂ Verify'}
+            {status === 'loading' ? '⏳ Verifying...' : '✓ Verify'}
           </button>
         </div>
 
@@ -253,16 +253,16 @@ function VerifyTab({ user, setUser, showToast, authUser }) {
         {status === 'success' && result && (
           <div style={{ marginTop: '1rem', padding: '1rem', background: 'var(--green-dim)', border: '1px solid rgba(0,229,160,0.2)', borderRadius: 10 }}>
             <div style={{ fontWeight: 600, color: 'var(--green)', marginBottom: '0.5rem' }}>
-              ÃÂ¢ÃÂÃÂ Verified {result.matched?.length || 0} certification{(result.matched?.length || 0) !== 1 ? 's' : ''}
+              ✅ Verified {result.matched?.length || 0} certification{(result.matched?.length || 0) !== 1 ? 's' : ''}
             </div>
             {(result.matched || []).map(c => (
-              <div key={c.code} style={{ fontSize: '0.82rem', color: 'var(--muted2)' }}>ÃÂ¢ÃÂÃÂ¢ {c.code} ÃÂ¢ÃÂÃÂ {c.name}</div>
+              <div key={c.code} style={{ fontSize: '0.82rem', color: 'var(--muted2)' }}>• {c.code} — {c.name}</div>
             ))}
           </div>
         )}
         {status === 'error' && result && (
           <div style={{ marginTop: '1rem', padding: '1rem', background: 'rgba(239,68,68,0.08)', border: '1px solid rgba(239,68,68,0.2)', borderRadius: 10 }}>
-            <div style={{ fontWeight: 600, color: '#f87171', marginBottom: '0.25rem' }}>ÃÂ¢ÃÂÃÂ Verification failed</div>
+            <div style={{ fontWeight: 600, color: '#f87171', marginBottom: '0.25rem' }}>❌ Verification failed</div>
             <div style={{ fontSize: '0.82rem', color: 'var(--muted2)' }}>{result.error}</div>
           </div>
         )}
@@ -275,7 +275,7 @@ function VerifyTab({ user, setUser, showToast, authUser }) {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
             {unverified.map((cert, i) => (
               <div key={i} className="card" style={{ padding: '0.85rem 1.1rem', display: 'flex', alignItems: 'center', gap: '0.75rem', borderLeft: '3px solid var(--gold)' }}>
-                <span style={{ fontSize: '1.1rem' }}>ÃÂ°ÃÂÃÂÃÂ</span>
+                <span style={{ fontSize: '1.1rem' }}>🎓</span>
                 <div style={{ flex: 1 }}>
                   <div style={{ fontWeight: 600, fontSize: '0.88rem' }}>{cert.name}</div>
                   <div style={{ fontSize: '0.72rem', color: 'var(--muted)', fontFamily: 'JetBrains Mono' }}>{cert.code}</div>
@@ -290,7 +290,7 @@ function VerifyTab({ user, setUser, showToast, authUser }) {
   );
 }
 
-// ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ Dashboard ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ
+// ─── Dashboard ────────────────────────────────────────────────────────────────
 export default function Dashboard({ onNavigate }) {
   const { user, setUser, showToast, calcScore, getTierInfo, authUser } = useApp();
   const [activeTab, setActiveTab] = useState('overview');
@@ -302,7 +302,7 @@ export default function Dashboard({ onNavigate }) {
     return (
       <div style={{ minHeight: '70vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>ÃÂ°ÃÂÃÂÃÂ</div>
+          <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🔒</div>
           <h2>Sign in to access your dashboard</h2>
           <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', marginTop: '1.5rem' }}>
             <button className="btn btn-primary" onClick={() => onNavigate('signup')}>Create Profile</button>
@@ -373,11 +373,11 @@ export default function Dashboard({ onNavigate }) {
   };
 
   const tabs = [
-    { id: 'overview',       label: 'ÃÂ°ÃÂÃÂÃÂ Overview' },
-    { id: 'certifications', label: 'ÃÂ°ÃÂÃÂÃÂ Certifications' },
-    { id: 'verify',         label: 'ÃÂ¢ÃÂÃÂ Verify' },
-    { id: 'projects',       label: 'ÃÂ°ÃÂÃÂÃÂÃÂ¯ÃÂ¸ÃÂ Projects' },
-    { id: 'settings',       label: 'ÃÂ¢ÃÂÃÂÃÂ¯ÃÂ¸ÃÂ Settings' },
+    { id: 'overview',       label: '📊 Overview' },
+    { id: 'certifications', label: '🎓 Certifications' },
+    { id: 'verify',         label: '✅ Verify' },
+    { id: 'projects',       label: '🏗️ Projects' },
+    { id: 'settings',       label: '⚙️ Settings' },
   ];
 
   return (
@@ -388,12 +388,12 @@ export default function Dashboard({ onNavigate }) {
           <div>
             <div className="badge badge-blue" style={{ marginBottom: '0.5rem' }}>Dashboard</div>
             <h1 style={{ fontSize: 'clamp(1.6rem, 3vw, 2.4rem)', marginBottom: '0.25rem' }}>
-              Welcome back, {(user.name || '').split(' ')[0]} ÃÂ°ÃÂÃÂÃÂ
+              Welcome back, {(user.name || '').split(' ')[0]} 👋
             </h1>
-            <p style={{ color: 'var(--muted2)', fontSize: '0.95rem' }}>{user.headline} ÃÂÃÂ· {user.specialism}</p>
+            <p style={{ color: 'var(--muted2)', fontSize: '0.95rem' }}>{user.headline} · {user.specialism}</p>
           </div>
           <div style={{ display: 'flex', gap: '0.75rem' }}>
-            <button className="btn btn-outline" onClick={() => onNavigate('profile')}>ÃÂ°ÃÂÃÂÃÂÃÂ¯ÃÂ¸ÃÂ Public Profile</button>
+            <button className="btn btn-outline" onClick={() => onNavigate('profile')}>👁️ Public Profile</button>
             <button className="btn btn-ghost btn-sm" onClick={handleSignOut} style={{ color: 'var(--muted2)' }}>Sign Out</button>
           </div>
         </div>
@@ -409,7 +409,7 @@ export default function Dashboard({ onNavigate }) {
             {nextRank && (
               <div style={{ marginTop: '0.75rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: 'var(--muted2)', marginBottom: '0.3rem' }}>
-                  <span>ÃÂ¢ÃÂÃÂ {nextRank.name}</span>
+                  <span>→ {nextRank.name}</span>
                   <span style={{ fontFamily: 'JetBrains Mono' }}>{pointsToNext.toLocaleString()} pts</span>
                 </div>
                 <div className="progress-track" style={{ height: 5 }}>
@@ -419,14 +419,14 @@ export default function Dashboard({ onNavigate }) {
             )}
           </div>
           {[
-            { label: 'Certifications', val: certs.filter(c => c.verified).length, icon: 'ÃÂ°ÃÂÃÂÃÂ', sub: 'verified', color: 'var(--green)' },
-            { label: 'Projects',       val: projects.length, icon: 'ÃÂ°ÃÂÃÂÃÂÃÂ¯ÃÂ¸ÃÂ', sub: 'logged', color: 'var(--blue)' },
-            { label: 'Pending',        val: certs.filter(c => !c.verified).length, icon: 'ÃÂ¢ÃÂÃÂ³', sub: 'to verify', color: 'var(--gold)' },
+            { label: 'Certifications', val: certs.filter(c => c.verified).length, icon: '🎓', sub: 'verified', color: 'var(--green)' },
+            { label: 'Projects',       val: projects.length, icon: '🏗️', sub: 'logged', color: 'var(--blue)' },
+            { label: 'Pending',        val: certs.filter(c => !c.verified).length, icon: '⏳', sub: 'to verify', color: 'var(--gold)' },
           ].map(s => (
             <div key={s.label} className="card" style={{ padding: '1.25rem', textAlign: 'center' }}>
               <div style={{ fontSize: '1.75rem', marginBottom: '0.4rem' }}>{s.icon}</div>
               <div style={{ fontFamily: 'Rajdhani', fontWeight: 700, fontSize: '1.8rem', color: s.color }}>{s.val}</div>
-              <div style={{ fontSize: '0.75rem', color: 'var(--muted2)' }}>{s.label} ÃÂÃÂ· {s.sub}</div>
+              <div style={{ fontSize: '0.75rem', color: 'var(--muted2)' }}>{s.label} · {s.sub}</div>
             </div>
           ))}
         </div>
@@ -449,7 +449,7 @@ export default function Dashboard({ onNavigate }) {
         {activeTab === 'overview' && (
           <div className="grid-2">
             <div className="card">
-              <h3 style={{ marginBottom: '1.25rem', fontSize: '1.1rem' }}>ÃÂ°ÃÂÃÂÃÂ Score Breakdown</h3>
+              <h3 style={{ marginBottom: '1.25rem', fontSize: '1.1rem' }}>📊 Score Breakdown</h3>
               {[
                 { label: 'Certifications', pts: certs.filter(c=>c.verified).reduce((s,c)=>s+(c.points||500),0), max: 12000, color: 'var(--green)' },
                 { label: 'Projects', pts: projects.length * 800, max: 5000, color: 'var(--blue)' },
@@ -468,13 +468,13 @@ export default function Dashboard({ onNavigate }) {
               ))}
             </div>
             <div className="card">
-              <h3 style={{ marginBottom: '1.25rem', fontSize: '1.1rem' }}>ÃÂ°ÃÂÃÂÃÂ Boost Your Score</h3>
+              <h3 style={{ marginBottom: '1.25rem', fontSize: '1.1rem' }}>🚀 Boost Your Score</h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 {[
-                  { icon: 'ÃÂ°ÃÂÃÂÃÂ', title: 'Add your certifications', pts: '+500ÃÂ¢ÃÂÃÂ3,000 pts each', done: certs.length > 0, tab: 'certifications' },
-                  { icon: 'ÃÂ¢ÃÂÃÂ', title: 'Verify your certifications', pts: 'Unlock full points', done: certs.some(c=>c.verified), tab: 'verify' },
-                  { icon: 'ÃÂ°ÃÂÃÂÃÂÃÂ¯ÃÂ¸ÃÂ', title: 'Log project experience', pts: '+800ÃÂ¢ÃÂÃÂ2,000 pts each', done: projects.length > 0, tab: 'projects' },
-                  { icon: 'ÃÂ°ÃÂÃÂÃÂ', title: 'Complete your bio', pts: '+150 pts', done: !!user.bio, tab: 'settings' },
+                  { icon: '🎓', title: 'Add your certifications', pts: '+500–3,000 pts each', done: certs.length > 0, tab: 'certifications' },
+                  { icon: '✅', title: 'Verify your certifications', pts: 'Unlock full points', done: certs.some(c=>c.verified), tab: 'verify' },
+                  { icon: '🏗️', title: 'Log project experience', pts: '+800–2,000 pts each', done: projects.length > 0, tab: 'projects' },
+                  { icon: '📝', title: 'Complete your bio', pts: '+150 pts', done: !!user.bio, tab: 'settings' },
                 ].map(item => (
                   <div key={item.title} onClick={() => setActiveTab(item.tab)} style={{
                     display: 'flex', gap: '0.75rem', alignItems: 'center', padding: '0.75rem', borderRadius: 10, cursor: 'pointer',
@@ -482,12 +482,12 @@ export default function Dashboard({ onNavigate }) {
                     border: `1px solid ${item.done ? 'rgba(0,229,160,0.2)' : 'var(--border)'}`,
                     opacity: item.done ? 0.7 : 1,
                   }}>
-                    <span style={{ fontSize: '1.2rem' }}>{item.done ? 'ÃÂ¢ÃÂÃÂ' : item.icon}</span>
+                    <span style={{ fontSize: '1.2rem' }}>{item.done ? '✅' : item.icon}</span>
                     <div style={{ flex: 1 }}>
                       <div style={{ fontSize: '0.88rem', fontWeight: 600, color: item.done ? 'var(--green)' : '#fff', textDecoration: item.done ? 'line-through' : 'none' }}>{item.title}</div>
                       <div style={{ fontSize: '0.73rem', color: 'var(--muted2)' }}>{item.pts}</div>
                     </div>
-                    {!item.done && <span style={{ fontSize: '0.8rem', color: 'var(--muted)' }}>ÃÂ¢ÃÂÃÂ</span>}
+                    {!item.done && <span style={{ fontSize: '0.8rem', color: 'var(--muted)' }}>→</span>}
                   </div>
                 ))}
               </div>
@@ -502,14 +502,14 @@ export default function Dashboard({ onNavigate }) {
               <div>
                 <h3 style={{ margin: 0 }}>Your Certifications</h3>
                 <p style={{ fontSize: '0.85rem', color: 'var(--muted2)', margin: '0.25rem 0 0' }}>
-                  {certs.length} added ÃÂÃÂ· {certs.filter(c=>c.verified).length} verified
+                  {certs.length} added · {certs.filter(c=>c.verified).length} verified
                 </p>
               </div>
               <button className="btn btn-primary" onClick={() => setShowCertModal(true)}>+ Add Certification</button>
             </div>
             {certs.length === 0 ? (
               <div className="card" style={{ textAlign: 'center', padding: '3rem', borderStyle: 'dashed' }}>
-                <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>ÃÂ°ÃÂÃÂÃÂ</div>
+                <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>🎓</div>
                 <h3 style={{ marginBottom: '0.5rem' }}>No certifications yet</h3>
                 <p style={{ color: 'var(--muted2)', fontSize: '0.9rem', marginBottom: '1.25rem' }}>Add your Microsoft certifications to earn Stack Points.</p>
                 <button className="btn btn-primary" onClick={() => setShowCertModal(true)}>Add your first certification</button>
@@ -519,21 +519,21 @@ export default function Dashboard({ onNavigate }) {
                 {certs.map((cert, i) => (
                   <div key={i} className="card" style={{ padding: '1rem 1.25rem', display: 'flex', alignItems: 'center', gap: '1rem', borderLeft: `3px solid ${cert.verified ? 'var(--green)' : 'var(--gold)'}` }}>
                     <div style={{ width: 44, height: 44, borderRadius: 10, background: cert.verified ? 'var(--green-dim)' : 'var(--gold-dim)', border: `1px solid ${cert.verified ? 'rgba(0,229,160,0.2)' : 'rgba(255,200,60,0.2)'}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.2rem', flexShrink: 0 }}>
-                      {cert.verified ? 'ÃÂ¢ÃÂÃÂ' : 'ÃÂ°ÃÂÃÂÃÂ'}
+                      {cert.verified ? '✅' : '🎓'}
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ fontWeight: 600, fontSize: '0.9rem', color: '#fff' }}>{cert.name}</div>
                       <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginTop: '0.25rem', flexWrap: 'wrap' }}>
                         <span style={{ fontFamily: 'JetBrains Mono', fontSize: '0.72rem', color: 'var(--muted)' }}>{cert.code}</span>
                         <span className={`badge ${cert.tier === 'Fundamentals' ? 'badge-muted' : cert.tier === 'Associate' ? 'badge-blue' : cert.tier === 'Expert' ? 'badge-gold' : 'badge-green'}`} style={{ fontSize: '0.65rem' }}>{cert.tier}</span>
-                        {cert.verified ? <span className="badge badge-green" style={{ fontSize: '0.65rem' }}>ÃÂ¢ÃÂÃÂ Verified via {cert.verifiedVia === 'ms_learn' ? 'MS Learn' : 'Credly'}</span>
-                          : <span className="badge badge-orange" style={{ fontSize: '0.65rem' }}>ÃÂ¢ÃÂÃÂ³ Pending verification</span>}
+                        {cert.verified ? <span className="badge badge-green" style={{ fontSize: '0.65rem' }}>✓ Verified via {cert.verifiedVia === 'ms_learn' ? 'MS Learn' : 'Credly'}</span>
+                          : <span className="badge badge-orange" style={{ fontSize: '0.65rem' }}>⏳ Pending verification</span>}
                       </div>
                     </div>
                     <span style={{ fontFamily: 'JetBrains Mono', fontWeight: 700, color: cert.verified ? 'var(--green)' : 'var(--muted)', fontSize: '0.9rem', flexShrink: 0 }}>
                       {cert.verified ? `+${cert.points.toLocaleString()}` : 'verify to earn'}
                     </span>
-                    <button className="btn btn-ghost btn-sm" onClick={() => removeCert(cert.code, cert.dbId)} style={{ color: 'var(--red)', padding: '0.3rem 0.5rem' }}>ÃÂ¢ÃÂÃÂ</button>
+                    <button className="btn btn-ghost btn-sm" onClick={() => removeCert(cert.code, cert.dbId)} style={{ color: 'var(--red)', padding: '0.3rem 0.5rem' }}>✕</button>
                   </div>
                 ))}
               </div>
@@ -541,7 +541,7 @@ export default function Dashboard({ onNavigate }) {
             {certs.filter(c => !c.verified).length > 0 && (
               <div style={{ marginTop: '1.25rem', textAlign: 'center' }}>
                 <button className="btn btn-outline" onClick={() => setActiveTab('verify')}>
-                  ÃÂ¢ÃÂÃÂ Verify {certs.filter(c=>!c.verified).length} pending certification{certs.filter(c=>!c.verified).length !== 1 ? 's' : ''} ÃÂ¢ÃÂÃÂ
+                  ✅ Verify {certs.filter(c=>!c.verified).length} pending certification{certs.filter(c=>!c.verified).length !== 1 ? 's' : ''} →
                 </button>
               </div>
             )}
@@ -565,7 +565,7 @@ export default function Dashboard({ onNavigate }) {
             </div>
             {projects.length === 0 ? (
               <div className="card" style={{ textAlign: 'center', padding: '3rem', borderStyle: 'dashed' }}>
-                <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>ÃÂ°ÃÂÃÂÃÂÃÂ¯ÃÂ¸ÃÂ</div>
+                <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>🏗️</div>
                 <h3 style={{ marginBottom: '0.5rem' }}>No projects yet</h3>
                 <p style={{ color: 'var(--muted2)', fontSize: '0.9rem', marginBottom: '1.25rem' }}>Log your real-world implementations to earn Stack Points.</p>
                 <button className="btn btn-primary" onClick={() => setShowProjectModal(true)}>Add your first project</button>
@@ -579,7 +579,7 @@ export default function Dashboard({ onNavigate }) {
                         <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginBottom: '0.4rem', flexWrap: 'wrap' }}>
                           <span style={{ fontWeight: 600, fontSize: '0.95rem', color: '#fff' }}>{proj.title}</span>
                           {proj.enterprise && <span className="badge badge-gold" style={{ fontSize: '0.65rem' }}>Enterprise</span>}
-                          {proj.validated && <span className="badge badge-green" style={{ fontSize: '0.65rem' }}>ÃÂ¢ÃÂÃÂ Validated</span>}
+                          {proj.validated && <span className="badge badge-green" style={{ fontSize: '0.65rem' }}>✓ Validated</span>}
                         </div>
                         {proj.role && <div style={{ fontSize: '0.82rem', color: 'var(--blue)' }}>{proj.role}</div>}
                         {proj.description && <p style={{ fontSize: '0.82rem', color: 'var(--muted2)', margin: '0.4rem 0 0' }}>{proj.description}</p>}
@@ -590,10 +590,10 @@ export default function Dashboard({ onNavigate }) {
                           <button className="btn btn-outline btn-sm"
                             style={{ fontSize: '0.75rem', gap: '0.3rem' }}
                             onClick={() => setValidatingProject(proj)}>
-                            ÃÂ¢ÃÂÃÂ Request Validation
+                            ✅ Request Validation
                           </button>
                         )}
-                        <button className="btn btn-ghost btn-sm" onClick={() => removeProject(proj.id)} style={{ color: 'var(--red)', padding: '0.3rem 0.5rem' }}>ÃÂ¢ÃÂÃÂ</button>
+                        <button className="btn btn-ghost btn-sm" onClick={() => removeProject(proj.id)} style={{ color: 'var(--red)', padding: '0.3rem 0.5rem' }}>✕</button>
                       </div>
                     </div>
                   </div>
@@ -606,37 +606,29 @@ export default function Dashboard({ onNavigate }) {
         {/* Settings */}
         {activeTab === 'settings' && (
           <div style={{ maxWidth: 600 }}>
-            <h3 style={{ marginBottom: '1.25rem' }}>Your StackRank Badge</h3>
-            <div className="card" style={{ marginBottom: '1.5rem' }}>
-              <StackRankBadge user={{
-                id: user?.id,
-                name: user?.name,
-                rank: user?.rank,
-                tier: user?.tier_label,
-                score: user?.score,
-                specialization: user?.specialism,
-              }} />
-            </div>
-          <h3 style={{ marginBottom: '1.25rem' }}>Profile Settings</h3>
+            <h3 style={{ marginBottom: '1.25rem' }}>Profile Settings</h3>
             <div className="card">
+              <SettingsForm user={user} setUser={setUser} showToast={showToast} authUser={authUser} />
+
+              {/* ── Open to Work ───────────────────────────────────────── */}
+              <div style={{ marginBottom: '1rem' }}>
+                <OpenToWorkToggle profileId={user?.id} />
+              </div>
+
+              {/* ── Resume Analyser ─────────────────────────────────────── */}
               <div style={{ marginBottom: '1rem' }}>
                 <ResumeAnalyser onApply={(data) => {
                   showToast('Profile updated from resume');
                 }} />
               </div>
+
+              {/* ── LinkedIn Import ─────────────────────────────────────── */}
               <div style={{ marginBottom: '1.5rem' }}>
                 <LinkedInImport onImport={(data) => {
                   if (data.professional_title) setUser(u => ({ ...u, professional_title: data.professional_title }));
-                  showToast('Profile updated from LinkedIn');
+                  showToast('LinkedIn profile imported');
                 }} />
               </div>
-              <div style={{ marginBottom: '1rem' }}>
-                <OpenToWorkToggle
-                  initialValue={user?.open_to_work || false}
-                  onUpdate={(val) => setUser(u => ({ ...u, open_to_work: val }))}
-                />
-              </div>
-              <SettingsForm user={user} setUser={setUser} showToast={showToast} authUser={authUser} />
             </div>
           </div>
         )}
@@ -711,7 +703,7 @@ function SettingsForm({ user, setUser, showToast, authUser }) {
       </div>
       {user.msAccountId && (
         <div style={{ padding: '0.75rem', background: 'rgba(0,114,178,0.08)', border: '1px solid rgba(0,114,178,0.2)', borderRadius: 8, marginBottom: '1rem', fontSize: '0.82rem', color: 'var(--muted2)', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <span>ÃÂ°ÃÂÃÂÃÂ¦</span> Microsoft account connected ÃÂÃÂ· certifications can be auto-verified
+          <span>🟦</span> Microsoft account connected · certifications can be auto-verified
         </div>
       )}
       <button type="submit" className="btn btn-primary" style={{ justifyContent: 'center' }}>Save Changes</button>
@@ -721,7 +713,7 @@ function SettingsForm({ user, setUser, showToast, authUser }) {
       <div>
         <div style={{ fontWeight: 600, fontSize: '0.9rem', marginBottom: '0.35rem' }}>Password</div>
         <p style={{ fontSize: '0.82rem', color: 'var(--muted2)', marginBottom: '0.75rem' }}>
-          {user.msAccountId ? 'You signed in with Microsoft ÃÂ¢ÃÂÃÂ no password needed.' : 'Send a reset link to your email address.'}
+          {user.msAccountId ? 'You signed in with Microsoft — no password needed.' : 'Send a reset link to your email address.'}
         </p>
         {!user.msAccountId && (
           <ChangePasswordSection email={user.email} showToast={showToast} />
@@ -752,14 +744,14 @@ function ChangePasswordSection({ email, showToast }) {
   if (sent) {
     return (
       <div style={{ padding: '0.75rem 1rem', background: 'var(--green-dim)', border: '1px solid rgba(0,229,160,0.2)', borderRadius: 8, fontSize: '0.82rem', color: 'var(--green)' }}>
-        ÃÂ¢ÃÂÃÂ Reset link sent to {email} ÃÂ¢ÃÂÃÂ check your inbox
+        ✓ Reset link sent to {email} — check your inbox
       </div>
     );
   }
 
   return (
     <button className="btn btn-outline btn-sm" onClick={handleSend} disabled={loading}>
-      {loading ? 'Sending...' : 'ÃÂ°ÃÂÃÂÃÂ Send password reset email'}
+      {loading ? 'Sending...' : '🔑 Send password reset email'}
     </button>
   );
 }
@@ -821,13 +813,13 @@ function ValidationModal({ project, user, authUser, onClose, showToast }) {
     <div className="modal-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
       <div className="modal" style={{ maxWidth: 500 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
-          <h3 style={{ margin: 0 }}>ÃÂ¢ÃÂÃÂ Request Peer Validation</h3>
-          <button className="btn btn-ghost btn-sm" onClick={onClose}>ÃÂ¢ÃÂÃÂ</button>
+          <h3 style={{ margin: 0 }}>✅ Request Peer Validation</h3>
+          <button className="btn btn-ghost btn-sm" onClick={onClose}>✕</button>
         </div>
 
         {sent ? (
           <div style={{ textAlign: 'center', padding: '1rem 0' }}>
-            <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>ÃÂ°ÃÂÃÂÃÂ§</div>
+            <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>📧</div>
             <h4 style={{ marginBottom: '0.5rem' }}>Request sent!</h4>
             <p style={{ color: 'var(--muted2)', fontSize: '0.88rem', marginBottom: '1.25rem' }}>
               We've emailed <strong style={{ color: '#fff' }}>{email}</strong> with a validation link.<br />
@@ -867,7 +859,7 @@ function ValidationModal({ project, user, authUser, onClose, showToast }) {
               <button className="btn btn-ghost" onClick={onClose}>Cancel</button>
               <button className="btn btn-primary" style={{ flex: 1, justifyContent: 'center' }}
                 disabled={sending} onClick={handleSend}>
-                {sending ? 'SendingÃÂ¢ÃÂÃÂ¦' : 'ÃÂ°ÃÂÃÂÃÂ§ Send Validation Request'}
+                {sending ? 'Sending…' : '📧 Send Validation Request'}
               </button>
             </div>
           </>
