@@ -1,5 +1,4 @@
 // src/pages/PrivacyPolicy.jsx
-import { Link } from "react-router-dom";
 
 const Section = ({ title, children }) => (
   <div style={{ marginBottom: "2rem" }}>
@@ -39,9 +38,9 @@ export default function PrivacyPolicy() {
           <P><strong>Data you provide directly:</strong></P>
           <Ul items={["Name and professional title","Email address (account access and notifications)","Work history, certifications, and project details on your profile","Peer validations you give or receive"]} />
           <P><strong>Data collected automatically:</strong></P>
-          <Ul items={["Basic usage analytics via Vercel Analytics — no cookies, no fingerprinting","Authentication events (login, logout, password reset)","IP address retained up to 30 days for security purposes only"]} />
+          <Ul items={["Basic usage analytics via Vercel Analytics â no cookies, no fingerprinting","Authentication events (login, logout, password reset)","IP address retained up to 30 days for security purposes only"]} />
           <P><strong>Data from third parties:</strong></P>
-          <Ul items={["Microsoft Learn API — used solely to verify certification claims. We store the result (verified/failed) and certification UID only.","Azure OAuth — if you sign in with Microsoft, we receive your name and email only. We never receive or store your Microsoft password."]} />
+          <Ul items={["Microsoft Learn API â used solely to verify certification claims. We store the result (verified/failed) and certification UID only.","Azure OAuth â if you sign in with Microsoft, we receive your name and email only. We never receive or store your Microsoft password."]} />
         </Section>
 
         <Section title="3. How we use your data">
@@ -60,21 +59,21 @@ export default function PrivacyPolicy() {
         </Section>
 
         <Section title="6. Your rights">
-          <Ul items={["Access — request a copy of all data we hold about you","Correction — ask us to correct inaccurate data","Deletion — request full account and data deletion","Export — download your profile data as JSON from account settings","Opt out — unsubscribe from all non-essential emails at any time"]} />
+          <Ul items={["Access â request a copy of all data we hold about you","Correction â ask us to correct inaccurate data","Deletion â request full account and data deletion","Export â download your profile data as JSON from account settings","Opt out â unsubscribe from all non-essential emails at any time"]} />
           <P>Email <strong>privacy@stackrank365.com</strong>. We respond within 30 days.</P>
         </Section>
 
         <Section title="7. Security">
-          <P>All data is stored on Supabase (PostgreSQL) in AWS ap-southeast-2 (Sydney), encrypted at rest and in transit, protected by row-level security policies. Passwords are never stored — authentication uses bcrypt hashing or Microsoft Azure OAuth.</P>
+          <P>All data is stored on Supabase (PostgreSQL) in AWS ap-southeast-2 (Sydney), encrypted at rest and in transit, protected by row-level security policies. Passwords are never stored â authentication uses bcrypt hashing or Microsoft Azure OAuth.</P>
           <P>Report security vulnerabilities to <strong>security@stackrank365.com</strong> before public disclosure.</P>
         </Section>
 
         <Section title="8. Cookies">
-          <P>StackRank365 uses no tracking cookies — only a single session cookie to keep you logged in. Vercel Analytics is cookie-free and does not track you across sites.</P>
+          <P>StackRank365 uses no tracking cookies â only a single session cookie to keep you logged in. Vercel Analytics is cookie-free and does not track you across sites.</P>
         </Section>
 
         <Section title="9. Third-party services">
-          <Ul items={["Supabase — database and authentication","Vercel — hosting and analytics","EmailJS — transactional emails","Microsoft Azure — OAuth login"]} />
+          <Ul items={["Supabase â database and authentication","Vercel â hosting and analytics","EmailJS â transactional emails","Microsoft Azure â OAuth login"]} />
           <P>We do not share your data with any other third parties.</P>
         </Section>
 
@@ -83,7 +82,7 @@ export default function PrivacyPolicy() {
         </Section>
 
         <div style={{ borderTop: "1px solid #e5e7eb", paddingTop: "1.5rem", marginTop: "1rem", display: "flex", gap: "1.5rem", flexWrap: "wrap" }}>
-          <Link to="/" style={{ fontSize: "14px", color: "#2563eb", textDecoration: "none" }}>← Back to home</Link>
+          <a href="/" style={{ fontSize: "14px", color: "#2563eb", textDecoration: "none" }}>← Back to home</a>
           <a href="mailto:privacy@stackrank365.com" style={{ fontSize: "14px", color: "#2563eb", textDecoration: "none" }}>Contact privacy team</a>
         </div>
       </div>
