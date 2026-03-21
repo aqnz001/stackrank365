@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { SAMPLE_USERS } from '../data/data';
 
-/* âââ Design tokens â The Reporting Hub style âââââââââââââââââââââ
+/* ─── Design tokens — The Reporting Hub style ─────────────────────
    Font:       Inter, sans-serif
    Body bg:    #f6f9fc
    Primary:    #178ee8  (their exact blue)
@@ -10,8 +10,8 @@ import { SAMPLE_USERS } from '../data/data';
    Nav bg:     #212529
    Heading:    #1f1f28
    Body text:  #64748b
-   Gradient hero: 120deg, #6d28d9 â #4f46e5 â #178ee8
-ââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ */
+   Gradient hero: 120deg, #6d28d9 → #4f46e5 → #178ee8
+──────────────────────────────────────────────────────────────────── */
 
 const T = {
   blue:     '#178ee8',
@@ -81,7 +81,7 @@ function WaitlistForm({ dark = false }) {
   };
   if (done) return (
     <div style={{ background: 'rgba(34,197,94,0.15)', border: '1px solid rgba(34,197,94,0.35)', borderRadius: 8, padding: '1rem 1.5rem', color: dark ? '#fff' : T.heading, fontWeight: 700, fontSize: '1rem', maxWidth: 500 }}>
-      â You're on the list! We'll be in touch soon.
+      ✅ You're on the list! We'll be in touch soon.
     </div>
   );
   return (
@@ -90,10 +90,10 @@ function WaitlistForm({ dark = false }) {
         <input className="sr4-input" type="email" placeholder="your@email.com" value={email}
           onChange={e => setEmail(e.target.value)} onKeyDown={e => e.key === 'Enter' && submit()}
           style={dark ? { background: 'rgba(255,255,255,0.12)', border: '1.5px solid rgba(255,255,255,0.25)', color: '#fff' } : {}} />
-        <button className="sr4-btn" onClick={submit}>ð Join the Waitlist</button>
+        <button className="sr4-btn" onClick={submit}>🚀 Join the Waitlist</button>
       </div>
       {err && <p style={{ color: '#f87171', fontSize: '0.875rem', marginTop: '0.4rem' }}>{err}</p>}
-      <p style={{ fontSize: '0.82rem', color: dark ? 'rgba(255,255,255,0.5)' : T.muted, marginTop: '0.6rem' }}>Free to join Â· No spam Â· No credit card required</p>
+      <p style={{ fontSize: '0.82rem', color: dark ? 'rgba(255,255,255,0.5)' : T.muted, marginTop: '0.6rem' }}>Free to join · No spam · No credit card required</p>
     </div>
   );
 }
@@ -114,7 +114,7 @@ const Tick = ({ color = '#22c55e' }) => (
   </svg>
 );
 
-/* Nav and footer are handled by App.jsx â no embedded nav/footer here */
+/* Nav and footer are handled by App.jsx — no embedded nav/footer here */
 
 export default function Landing4({ onNavigate }) {
   const sorted = [...SAMPLE_USERS].sort((a, b) => b.score - a.score);
@@ -125,7 +125,7 @@ export default function Landing4({ onNavigate }) {
     <div className="sr4">
       <style>{CSS}</style>
 
-      {/* âââ HERO âââââââââââââââââââââââââââââââââââââââââââ */}
+      {/* ─── HERO ─────────────────────────────────────────── */}
       <section style={{ background: T.grad, padding: '5rem 0 9rem', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: -80, right: -100, width: 500, height: 500, background: 'rgba(255,255,255,0.04)', borderRadius: '50%', pointerEvents: 'none' }} />
         <div style={{ position: 'absolute', bottom: 40, left: '8%', width: 300, height: 300, background: 'rgba(0,212,255,0.06)', borderRadius: '50%', pointerEvents: 'none' }} />
@@ -135,7 +135,7 @@ export default function Landing4({ onNavigate }) {
             {/* Left */}
             <div>
               <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', background: 'rgba(255,255,255,0.12)', border: '1px solid rgba(255,255,255,0.2)', borderRadius: 20, padding: '0.35rem 1rem', fontSize: '0.82rem', color: '#fff', fontWeight: 600, marginBottom: '1.75rem' }}>
-                â¡ Early Access â Founding Members Get 500 Bonus Points
+                ⚡ Early Access — Founding Members Get 500 Bonus Points
               </div>
 
               <h1 style={{ fontSize: 'clamp(2.2rem, 5vw, 3.5rem)', fontWeight: 900, color: '#fff', marginBottom: '1.5rem', letterSpacing: '-0.03em', lineHeight: 1.1 }}>
@@ -144,13 +144,13 @@ export default function Landing4({ onNavigate }) {
               </h1>
 
               <p style={{ fontSize: '1.1rem', color: 'rgba(255,255,255,0.85)', marginBottom: '2rem', maxWidth: 500, lineHeight: 1.8 }}>
-                StackRank365 is where Dynamics 365, Power Platform, Copilot Studio, and Azure OpenAI professionals build a verified professional identity — a single trusted score backed by real certifications, peer-validated projects, and community recognition. Not a CV. Not a LinkedIn summary. Proof.
+                StackRank365 is the verified talent community for Dynamics 365, Power Platform, Copilot Studio, and Azure OpenAI professionals. Stop listing certifications. Start proving expertise.
               </p>
 
               <div style={{ marginBottom: '2rem' }}>
                 {[
                   'Certification verification via Microsoft Learn API',
-                  'Peer-validated project evidence â no self-reporting',
+                  'Peer-validated project evidence — no self-reporting',
                   'Live global and local rankings by specialization',
                   'Earn prestige points for MVP, MCT, community work',
                 ].map(item => (
@@ -173,11 +173,11 @@ export default function Landing4({ onNavigate }) {
               </div>
             </div>
 
-            {/* Right â leaderboard preview */}
+            {/* Right — leaderboard preview */}
             <div className="sr4-hr" style={{ background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.14)', borderRadius: 20, overflow: 'hidden', display: 'block' }}>
               <div style={{ padding: '1rem 1.25rem', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontWeight: 800, fontSize: '0.85rem', color: '#fff', letterSpacing: '0.06em', textTransform: 'uppercase' }}>ð Live Rankings</span>
-                <span style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.45)', fontFamily: 'monospace', letterSpacing: '0.04em' }}>GLOBAL Â· ALL SPECIALISMS</span>
+                <span style={{ fontWeight: 800, fontSize: '0.85rem', color: '#fff', letterSpacing: '0.06em', textTransform: 'uppercase' }}>🏆 Live Rankings</span>
+                <span style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.45)', fontFamily: 'monospace', letterSpacing: '0.04em' }}>GLOBAL · ALL SPECIALISMS</span>
               </div>
 
               {/* Podium */}
@@ -186,7 +186,7 @@ export default function Landing4({ onNavigate }) {
                   if (!u) return null;
                   const isGold = vi === 1;
                   const heights = ['90px', '120px', '80px'];
-                  const medals = ['ð¥', 'ð¥', 'ð¥'];
+                  const medals = ['🥈', '🥇', '🥉'];
                   const avatarBg = isGold ? 'linear-gradient(135deg,#f59e0b,#d97706)' : vi === 0 ? 'linear-gradient(135deg,#94a3b8,#64748b)' : 'linear-gradient(135deg,#b45309,#92400e)';
                   return (
                     <div key={u.id} style={{ flex: 1, textAlign: 'center', cursor: 'pointer' }} onClick={() => onNavigate('profile', { userData: u })}>
@@ -201,7 +201,7 @@ export default function Landing4({ onNavigate }) {
                 })}
               </div>
 
-              {/* Rows 4â10 */}
+              {/* Rows 4–10 */}
               {rows.map((u, i) => (
                 <div key={u.id} onClick={() => onNavigate('profile', { userData: u })} style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', padding: '0.6rem 1rem', borderBottom: '1px solid rgba(255,255,255,0.06)', cursor: 'pointer', transition: 'background 0.15s' }}
                   onMouseEnter={e => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
@@ -218,7 +218,7 @@ export default function Landing4({ onNavigate }) {
               ))}
               <div style={{ padding: '0.75rem 1rem', textAlign: 'center', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
                 <button className="sr4-ghost" style={{ fontSize: '0.85rem' }} onClick={() => onNavigate('leaderboard')}>
-                  View full leaderboard â {SAMPLE_USERS.length} professionals â
+                  View full leaderboard — {SAMPLE_USERS.length} professionals →
                 </button>
               </div>
             </div>
@@ -229,7 +229,7 @@ export default function Landing4({ onNavigate }) {
         <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, height: 80, background: T.bodyBg, clipPath: 'polygon(0 100%, 100% 30%, 100% 100%)' }} />
       </section>
 
-      {/* âââ THE PROBLEM ââââââââââââââââââââââââââââââââââââ */}
+      {/* ─── THE PROBLEM ──────────────────────────────────── */}
       <section className="sr4-sec" style={{ background: T.bodyBg }}>
         <div className="sr4-wrap">
           <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
@@ -244,9 +244,9 @@ export default function Landing4({ onNavigate }) {
 
           <div className="sr4-g3">
             {[
-              { stat: '73%',   desc: 'of hiring managers say Microsoft skills are the hardest to verify before interview', icon: 'ð¤' },
-              { stat: '3â6 wks', desc: 'average wasted per bad hire in the Microsoft ecosystem consulting space', icon: 'â±ï¸' },
-              { stat: '61%',   desc: 'of certified professionals say their certs are ignored because there\'s no proof of application', icon: 'ð' },
+              { stat: '73%',   desc: 'of hiring managers say Microsoft skills are the hardest to verify before interview', icon: '😤' },
+              { stat: '3–6 wks', desc: 'average wasted per bad hire in the Microsoft ecosystem consulting space', icon: '⏱️' },
+              { stat: '61%',   desc: 'of certified professionals say their certs are ignored because there\'s no proof of application', icon: '💀' },
             ].map(({ stat, desc, icon }) => (
               <div key={stat} className="sr4-card" style={{ padding: '2rem', textAlign: 'center' }}>
                 <div style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>{icon}</div>
@@ -258,13 +258,13 @@ export default function Landing4({ onNavigate }) {
         </div>
       </section>
 
-      {/* âââ THE SOLUTION (dark navy) âââââââââââââââââââââââ */}
+      {/* ─── THE SOLUTION (dark navy) ─────────────────────── */}
       <div style={{ background: T.bodyBg }}>
         <div style={{ background: T.navy, clipPath: 'polygon(0 6%,100% 0,100% 100%,0 100%)', paddingTop: '5rem', paddingBottom: '5rem' }}>
           <div className="sr4-wrap" style={{ paddingTop: '2rem' }}>
             <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
               <span className="sr4-lbl sr4-lbl-c">The Solution</span>
-              <h2 style={{ color: '#fff', fontSize: 'clamp(1.8rem,4vw,2.8rem)', marginBottom: '1rem' }}>A verified rank that proves what a CV can only claim</h2>
+              <h2 style={{ color: '#fff', fontSize: 'clamp(1.8rem,4vw,2.8rem)', marginBottom: '1rem' }}>A verified rank that speaks louder than a CV</h2>
               <p style={{ color: 'rgba(255,255,255,0.62)', fontSize: '1.05rem', maxWidth: 600, margin: '0 auto' }}>
                 StackRank365 combines Microsoft certification verification, peer-validated project evidence, and community recognition into a single trusted score.
               </p>
@@ -272,12 +272,12 @@ export default function Landing4({ onNavigate }) {
 
             <div className="sr4-g3">
               {[
-                { icon: 'ð', n: '01', title: 'Tier-Weighted Certifications', desc: 'Each cert earns points by difficulty: Expert (3,000) â Associate (1,500) â Fundamentals (500). An Expert cert proves 6Ã more than a Fundamentals badge.' },
-                { icon: 'â', n: '02', title: 'Peer-Validated Projects', desc: 'Colleagues confirm your real implementations. Clients can be anonymised for NDA obligations. Each validation adds 300 pts and genuine credibility.' },
-                { icon: 'ð¤', n: '03', title: 'Copilot Scarcity Bonus', desc: 'Copilot Studio certifications carry a 1.25Ã leaderboard multiplier. Early adopters earn a meaningful, lasting edge while the talent pool is still tiny.' },
-                { icon: 'ð', n: '04', title: 'Global & Local Rankings', desc: 'Your Stack Points determine a global rank, country rank, and city rank. See exactly where you stand against every other verified professional.' },
-                { icon: 'ð', n: '05', title: 'Community Prestige', desc: 'Microsoft MVPs, Certified Trainers, FastTrack Architects, and event speakers earn recognition beyond certifications â rewarding the whole professional.' },
-                { icon: 'ð', n: '06', title: 'Privacy by Design', desc: 'Control exactly what\'s visible. Projects can be public, anonymised, or confidential. Your rank is always earned â never borrowed from client name-dropping.' },
+                { icon: '🎓', n: '01', title: 'Tier-Weighted Certifications', desc: 'Each cert earns points by difficulty: Expert (3,000) → Associate (1,500) → Fundamentals (500). An Expert cert proves 6× more than a Fundamentals badge.' },
+                { icon: '✅', n: '02', title: 'Peer-Validated Projects', desc: 'Colleagues confirm your real implementations. Clients can be anonymised for NDA obligations. Each validation adds 300 pts and genuine credibility.' },
+                { icon: '🤖', n: '03', title: 'Copilot Scarcity Bonus', desc: 'Copilot Studio certifications carry a 1.25× leaderboard multiplier. Early adopters earn a meaningful, lasting edge while the talent pool is still tiny.' },
+                { icon: '📊', n: '04', title: 'Global & Local Rankings', desc: 'Your Stack Points determine a global rank, country rank, and city rank. See exactly where you stand against every other verified professional.' },
+                { icon: '🏆', n: '05', title: 'Community Prestige', desc: 'Microsoft MVPs, Certified Trainers, FastTrack Architects, and event speakers earn recognition beyond certifications — rewarding the whole professional.' },
+                { icon: '🔒', n: '06', title: 'Privacy by Design', desc: 'Control exactly what\'s visible. Projects can be public, anonymised, or confidential. Your rank is always earned — never borrowed from client name-dropping.' },
               ].map(f => (
                 <div key={f.n} className="sr4-card-d" style={{ padding: '1.75rem' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.7rem', marginBottom: '0.85rem' }}>
@@ -293,7 +293,7 @@ export default function Landing4({ onNavigate }) {
         </div>
       </div>
 
-      {/* âââ RANK TIERS âââââââââââââââââââââââââââââââââââââ */}
+      {/* ─── RANK TIERS ───────────────────────────────────── */}
       <section className="sr4-sec" style={{ background: T.white }}>
         <div className="sr4-wrap">
           <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
@@ -304,11 +304,11 @@ export default function Landing4({ onNavigate }) {
 
           <div className="sr4-g5">
             {[
-              { icon: 'ð', name: 'Explorer',    sub: 'Beginning the journey', range: '0â999 pts',    color: '#64748b', bg: '#f8fafc' },
-              { icon: 'â¡', name: 'Practitioner', sub: 'Building credibility',  range: '1,000â3,499',  color: '#059669', bg: '#f0fdf4' },
-              { icon: 'ð¯', name: 'Specialist',   sub: 'Established expert',   range: '3,500â7,999',  color: T.blue,    bg: '#eff6ff' },
-              { icon: 'ðï¸', name: 'Architect',    sub: 'Senior professional',  range: '8,000â14,999', color: '#7c3aed', bg: '#f5f3ff' },
-              { icon: 'ð', name: 'Principal',    sub: 'Elite tier',            range: '15,000+ pts',  color: '#b45309', bg: '#fffbeb' },
+              { icon: '🔍', name: 'Explorer',    sub: 'Beginning the journey', range: '0–999 pts',    color: '#64748b', bg: '#f8fafc' },
+              { icon: '⚡', name: 'Practitioner', sub: 'Building credibility',  range: '1,000–3,499',  color: '#059669', bg: '#f0fdf4' },
+              { icon: '🎯', name: 'Specialist',   sub: 'Established expert',   range: '3,500–7,999',  color: T.blue,    bg: '#eff6ff' },
+              { icon: '🏗️', name: 'Architect',    sub: 'Senior professional',  range: '8,000–14,999', color: '#7c3aed', bg: '#f5f3ff' },
+              { icon: '👑', name: 'Principal',    sub: 'Elite tier',            range: '15,000+ pts',  color: '#b45309', bg: '#fffbeb' },
             ].map(t => (
               <div key={t.name} className="sr4-card" style={{ padding: '1.5rem', textAlign: 'center', borderTop: `4px solid ${t.color}`, background: t.bg }}>
                 <div style={{ fontSize: '2.2rem', marginBottom: '0.75rem' }}>{t.icon}</div>
@@ -321,7 +321,7 @@ export default function Landing4({ onNavigate }) {
         </div>
       </section>
 
-      {/* âââ SIX SPECIALISMS ââââââââââââââââââââââââââââââââ */}
+      {/* ─── SIX SPECIALISMS ──────────────────────────────── */}
       <section className="sr4-sec" style={{ background: T.bodyBg }}>
         <div className="sr4-wrap">
           <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
@@ -333,12 +333,12 @@ export default function Landing4({ onNavigate }) {
 
           <div className="sr4-g6">
             {[
-              { icon: 'ð¦', name: 'Dynamics 365',   count: '12 certs',               color: T.blue,    hot: false },
-              { icon: 'â¡', name: 'Power Platform',  count: '10 certs',               color: '#7c3aed', hot: false },
-              { icon: 'ð¤', name: 'Copilot Studio',  count: '6 certs + 1.25Ã bonus',  color: '#0ea5e9', hot: true  },
-              { icon: 'ð§ ', name: 'Azure OpenAI',    count: '9 certs',                color: '#0099bc', hot: false },
-              { icon: 'ðï¸', name: 'Dataverse',       count: 'Composite score',        color: '#059669', hot: false },
-              { icon: 'ð±', name: 'Power Apps',      count: '5 certs',                color: '#d97706', hot: false },
+              { icon: '📦', name: 'Dynamics 365',   count: '12 certs',               color: T.blue,    hot: false },
+              { icon: '⚡', name: 'Power Platform',  count: '10 certs',               color: '#7c3aed', hot: false },
+              { icon: '🤖', name: 'Copilot Studio',  count: '6 certs + 1.25× bonus',  color: '#0ea5e9', hot: true  },
+              { icon: '🧠', name: 'Azure OpenAI',    count: '9 certs',                color: '#0099bc', hot: false },
+              { icon: '🗄️', name: 'Dataverse',       count: 'Composite score',        color: '#059669', hot: false },
+              { icon: '📱', name: 'Power Apps',      count: '5 certs',                color: '#d97706', hot: false },
             ].map(s => (
               <div key={s.name} className="sr4-card" style={{ padding: '1.1rem 1.4rem', display: 'flex', alignItems: 'center', gap: '0.9rem', cursor: 'pointer', transition: 'transform 0.15s, box-shadow 0.15s' }}
                 onClick={() => onNavigate('scoring')}
@@ -359,12 +359,12 @@ export default function Landing4({ onNavigate }) {
           </div>
 
           <div style={{ textAlign: 'center', marginTop: '2.5rem' }}>
-            <button className="sr4-outline" onClick={() => onNavigate('scoring')}>View full scoring breakdown â</button>
+            <button className="sr4-outline" onClick={() => onNavigate('scoring')}>View full scoring breakdown →</button>
           </div>
         </div>
       </section>
 
-      {/* âââ WHO IS THIS FOR (dark navy) ââââââââââââââââââââ */}
+      {/* ─── WHO IS THIS FOR (dark navy) ──────────────────── */}
       <div style={{ background: T.bodyBg }}>
         <div style={{ background: T.navy, clipPath: 'polygon(0 5%,100% 0,100% 95%,0 100%)', paddingTop: '6rem', paddingBottom: '6rem' }}>
           <div className="sr4-wrap">
@@ -372,15 +372,15 @@ export default function Landing4({ onNavigate }) {
               <span className="sr4-lbl sr4-lbl-c">Built For Everyone</span>
               <h2 style={{ color: '#fff', fontSize: 'clamp(1.8rem,4vw,2.6rem)', marginBottom: '0.75rem' }}>Built for Microsoft Professionals</h2>
               <p style={{ color: 'rgba(255,255,255,0.58)', maxWidth: 540, margin: '0 auto', fontSize: '1rem' }}>
-                Whether you're an independent contractor, senior architect, or rising specialist â your rank works for you.
+                Whether you're an independent contractor, senior architect, or rising specialist — your rank works for you.
               </p>
             </div>
 
             <div className="sr4-g3">
               {[
-                { icon: 'ð·', title: 'Consultants & Contractors', bullets: ['Prove depth beyond a cert list', 'Protect client confidentiality while showing project scale', 'Stand out in a market full of self-declared "experts"', 'Track your rank as you grow'] },
-                { icon: 'ðï¸', title: 'Solution Architects', bullets: ['Showcase enterprise project complexity', 'Earn prestige points for MVP, MCT, FastTrack status', 'Build a public profile that does the talking', 'Get discovered for the right roles'] },
-                { icon: 'ð', title: 'Rising Specialists', bullets: ['Enter Copilot Studio early â earn a 1.25Ã scarcity bonus', 'Stack points with Applied Skills credentials', 'Peer validation gives your projects credibility', 'Build a defensible rank before everyone else does'] },
+                { icon: '👷', title: 'Consultants & Contractors', bullets: ['Prove depth beyond a cert list', 'Protect client confidentiality while showing project scale', 'Stand out in a market full of self-declared "experts"', 'Track your rank as you grow'] },
+                { icon: '🏗️', title: 'Solution Architects', bullets: ['Showcase enterprise project complexity', 'Earn prestige points for MVP, MCT, FastTrack status', 'Build a public profile that does the talking', 'Get discovered for the right roles'] },
+                { icon: '🚀', title: 'Rising Specialists', bullets: ['Enter Copilot Studio early — earn a 1.25× scarcity bonus', 'Stack points with Applied Skills credentials', 'Peer validation gives your projects credibility', 'Build a defensible rank before everyone else does'] },
               ].map(p => (
                 <div key={p.title} className="sr4-card" style={{ padding: '2rem' }}>
                   <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>{p.icon}</div>
@@ -398,7 +398,7 @@ export default function Landing4({ onNavigate }) {
         </div>
       </div>
 
-      {/* âââ SCORING FORMULA ââââââââââââââââââââââââââââââââ */}
+      {/* ─── SCORING FORMULA ──────────────────────────────── */}
       <section className="sr4-sec" style={{ background: T.white }}>
         <div className="sr4-wrap">
           <div className="sr4-g2">
@@ -409,22 +409,22 @@ export default function Landing4({ onNavigate }) {
 
               <div style={{ background: '#0f172a', borderRadius: 12, padding: '1.5rem', fontFamily: 'monospace', fontSize: '0.88rem', lineHeight: 2.1, marginBottom: '1.5rem', borderLeft: `4px solid ${T.blue}` }}>
                 <div style={{ color: '#94a3b8' }}>StackRank Score =</div>
-                <div><span style={{ color: '#60a5fa' }}>  (Certifications</span><span style={{ color: '#e2e8f0' }}> Ã level_weight)</span></div>
-                <div><span style={{ color: '#f472b6' }}>+ (Verified Projects</span><span style={{ color: '#e2e8f0' }}> Ã scale_weight)</span></div>
-                <div><span style={{ color: '#34d399' }}>+ (Community Actions</span><span style={{ color: '#e2e8f0' }}> Ã trust_weight)</span></div>
-                <div><span style={{ color: '#fbbf24' }}>+ (Prestige Bonuses</span><span style={{ color: '#e2e8f0' }}> Ã 1.0)</span></div>
-                <div style={{ color: '#94a3b8', marginTop: '0.5rem' }}>ââââââââââââââââââââ</div>
+                <div><span style={{ color: '#60a5fa' }}>  (Certifications</span><span style={{ color: '#e2e8f0' }}> × level_weight)</span></div>
+                <div><span style={{ color: '#f472b6' }}>+ (Verified Projects</span><span style={{ color: '#e2e8f0' }}> × scale_weight)</span></div>
+                <div><span style={{ color: '#34d399' }}>+ (Community Actions</span><span style={{ color: '#e2e8f0' }}> × trust_weight)</span></div>
+                <div><span style={{ color: '#fbbf24' }}>+ (Prestige Bonuses</span><span style={{ color: '#e2e8f0' }}> × 1.0)</span></div>
+                <div style={{ color: '#94a3b8', marginTop: '0.5rem' }}>────────────────────</div>
                 <div style={{ color: '#38bdf8', fontWeight: 800 }}>= Your Global Stack Rank</div>
               </div>
 
               <div style={{ marginTop: '1.5rem', padding: '1.1rem 1.25rem', background: '#eff6ff', borderRadius: 10, border: `1px solid ${T.blue}18` }}>
                 <div style={{ fontSize: '0.88rem', color: T.body, lineHeight: 1.75 }}>
-                  Example: 3Ã Associate certs (4,500) + 1Ã Expert cert (3,000)<br />
-                  + 2Ã Enterprise projects (4,000) + MVP bonus (1,500)<br />
-                  + 3Ã peer referrals (1,500) + validations given (900)
+                  Example: 3× Associate certs (4,500) + 1× Expert cert (3,000)<br />
+                  + 2× Enterprise projects (4,000) + MVP bonus (1,500)<br />
+                  + 3× peer referrals (1,500) + validations given (900)
                 </div>
                 <div style={{ fontWeight: 800, color: T.blue, marginTop: '0.65rem', fontSize: '1.05rem' }}>
-                  = 15,400 Stack Points â Principal Architect ð
+                  = 15,400 Stack Points → Principal Architect 👑
                 </div>
               </div>
             </div>
@@ -436,15 +436,15 @@ export default function Landing4({ onNavigate }) {
                 </div>
                 {[
                   { name: 'Sign Up + Complete Profile',     weight: 'Founding', pts: '500 pts',   color: '#059669' },
-                  { name: 'Fundamentals Certification',      weight: 'Ã1.0',     pts: '500 pts',   color: T.body },
-                  { name: 'Associate Certification',         weight: 'Ã1.5',     pts: '1,500 pts', color: T.blue },
-                  { name: 'Expert / Specialty Cert',         weight: 'Ã3.0',     pts: '3,000 pts', color: '#b45309' },
-                  { name: 'Applied Skills Credential',       weight: 'Ã0.4',     pts: '400 pts',   color: '#059669' },
-                  { name: 'Validated Project (Std)',          weight: 'Ã0.8',     pts: '800 pts',   color: T.blue },
-                  { name: 'Validated Project (Enterprise)',  weight: 'Ã2.0',     pts: '2,000 pts', color: '#7c3aed' },
-                  { name: 'Copilot Studio certs',            weight: '1.25Ã',    pts: 'Scarcity',  color: '#0ea5e9' },
+                  { name: 'Fundamentals Certification',      weight: '×1.0',     pts: '500 pts',   color: T.body },
+                  { name: 'Associate Certification',         weight: '×1.5',     pts: '1,500 pts', color: T.blue },
+                  { name: 'Expert / Specialty Cert',         weight: '×3.0',     pts: '3,000 pts', color: '#b45309' },
+                  { name: 'Applied Skills Credential',       weight: '×0.4',     pts: '400 pts',   color: '#059669' },
+                  { name: 'Validated Project (Std)',          weight: '×0.8',     pts: '800 pts',   color: T.blue },
+                  { name: 'Validated Project (Enterprise)',  weight: '×2.0',     pts: '2,000 pts', color: '#7c3aed' },
+                  { name: 'Copilot Studio certs',            weight: '1.25×',    pts: 'Scarcity',  color: '#0ea5e9' },
                   { name: 'Microsoft MVP',                   weight: 'Prestige', pts: '1,500 pts', color: '#b45309' },
-                  { name: 'Peer Referral (both join)',       weight: 'Ã0.5',     pts: '500 pts',   color: T.body },
+                  { name: 'Peer Referral (both join)',       weight: '×0.5',     pts: '500 pts',   color: T.body },
                 ].map((row, i) => (
                   <div key={row.name} style={{ display: 'flex', alignItems: 'center', padding: '0.7rem 1.25rem', borderBottom: '1px solid #f1f5f9', background: i % 2 === 0 ? '#fff' : '#fafbfd' }}>
                     <span style={{ flex: 1, fontSize: '0.88rem', color: T.heading }}>{row.name}</span>
@@ -454,7 +454,7 @@ export default function Landing4({ onNavigate }) {
                 ))}
                 <div style={{ padding: '0.85rem 1.25rem', background: '#f8fafc', textAlign: 'right' }}>
                   <button style={{ background: 'none', border: 'none', color: T.blue, fontWeight: 700, fontSize: '0.85rem', cursor: 'pointer', fontFamily: 'inherit' }} onClick={() => onNavigate('scoring')}>
-                    All points verified â zero self-reported â
+                    All points verified — zero self-reported →
                   </button>
                 </div>
               </div>
@@ -463,7 +463,7 @@ export default function Landing4({ onNavigate }) {
         </div>
       </section>
 
-      {/* âââ LIVE RANKINGS PREVIEW ââââââââââââââââââââââââââ */}
+      {/* ─── LIVE RANKINGS PREVIEW ────────────────────────── */}
       <section className="sr4-sec" style={{ background: T.bodyBg }}>
         <div className="sr4-wrap">
           <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
@@ -480,7 +480,7 @@ export default function Landing4({ onNavigate }) {
             {/* PP UK */}
             <div className="sr4-card" style={{ overflow: 'hidden' }}>
               <div style={{ background: '#0f172a', padding: '0.9rem 1.4rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontWeight: 800, fontSize: '0.85rem', color: '#fff', letterSpacing: '0.06em', textTransform: 'uppercase' }}>â¡ Power Platform</span>
+                <span style={{ fontWeight: 800, fontSize: '0.85rem', color: '#fff', letterSpacing: '0.06em', textTransform: 'uppercase' }}>⚡ Power Platform</span>
                 <span style={{ fontFamily: 'monospace', fontSize: '0.7rem', letterSpacing: '0.06em', textTransform: 'uppercase', color: T.cyan }}>United Kingdom</span>
               </div>
               {[
@@ -492,7 +492,7 @@ export default function Landing4({ onNavigate }) {
               ].map((row, i) => (
                 <div key={row.name} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 1.25rem', borderBottom: '1px solid #f1f5f9', transition: 'background 0.15s' }}
                   onMouseEnter={e => e.currentTarget.style.background = '#f8fafc'} onMouseLeave={e => e.currentTarget.style.background = ''}>
-                  <span style={{ width: 22, textAlign: 'center', fontSize: '0.9rem' }}>{['ð¥','ð¥','ð¥'][i] || i + 1}</span>
+                  <span style={{ width: 22, textAlign: 'center', fontSize: '0.9rem' }}>{['🥇','🥈','🥉'][i] || i + 1}</span>
                   <div style={{ width: 36, height: 36, borderRadius: '50%', flexShrink: 0, background: row.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.82rem', color: '#fff' }}>
                     {row.name.split(' ').map(n => n[0]).join('')}
                   </div>
@@ -517,8 +517,8 @@ export default function Landing4({ onNavigate }) {
             {/* Copilot Studio */}
             <div className="sr4-card" style={{ overflow: 'hidden' }}>
               <div style={{ background: '#0f172a', padding: '0.9rem 1.4rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ fontWeight: 800, fontSize: '0.85rem', color: '#fff', letterSpacing: '0.06em', textTransform: 'uppercase' }}>ð¤ Copilot Studio</span>
-                <span style={{ fontFamily: 'monospace', fontSize: '0.7rem', letterSpacing: '0.06em', textTransform: 'uppercase', color: T.cyan }}>Global Â· Emerging</span>
+                <span style={{ fontWeight: 800, fontSize: '0.85rem', color: '#fff', letterSpacing: '0.06em', textTransform: 'uppercase' }}>🤖 Copilot Studio</span>
+                <span style={{ fontFamily: 'monospace', fontSize: '0.7rem', letterSpacing: '0.06em', textTransform: 'uppercase', color: T.cyan }}>Global · Emerging</span>
               </div>
               {SAMPLE_USERS.filter(u => u.specialization === 'Copilot Studio').slice(0, 3).map((u, i) => {
                 const bgs = ['linear-gradient(135deg,#00b4ff,#9b72f5)', 'linear-gradient(135deg,#9b72f5,#00dfa0)', 'linear-gradient(135deg,#0078d4,#00dfa0)'];
@@ -526,7 +526,7 @@ export default function Landing4({ onNavigate }) {
                   <div key={u.id} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.75rem 1.25rem', borderBottom: '1px solid #f1f5f9', cursor: 'pointer', transition: 'background 0.15s' }}
                     onClick={() => onNavigate('profile', { userData: u })}
                     onMouseEnter={e => e.currentTarget.style.background = '#f8fafc'} onMouseLeave={e => e.currentTarget.style.background = ''}>
-                    <span style={{ width: 22, textAlign: 'center', fontSize: '0.9rem' }}>{['ð¥','ð¥','ð¥'][i]}</span>
+                    <span style={{ width: 22, textAlign: 'center', fontSize: '0.9rem' }}>{['🥇','🥈','🥉'][i]}</span>
                     <div style={{ width: 36, height: 36, borderRadius: '50%', flexShrink: 0, background: bgs[i], display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800, fontSize: '0.82rem', color: '#fff' }}>
                       {(u.name||'?').split(' ').map(n => n[0]).join('')}
                     </div>
@@ -545,10 +545,10 @@ export default function Landing4({ onNavigate }) {
               })}
               <div style={{ padding: '1.25rem', background: 'linear-gradient(135deg,rgba(23,142,232,0.05),rgba(124,58,237,0.05))', borderTop: '1px solid #f1f5f9' }}>
                 <p style={{ fontSize: '0.9rem', color: T.body, lineHeight: 1.7, marginBottom: '0.75rem' }}>
-                  Copilot is the <strong style={{ color: T.heading }}>fastest-growing specialization</strong>. Early movers claim top ranks now â before the competition catches up.
+                  Copilot is the <strong style={{ color: T.heading }}>fastest-growing specialization</strong>. Early movers claim top ranks now — before the competition catches up.
                 </p>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-                  <span style={{ color: '#22c55e', fontSize: '1.1rem' }}>â</span>
+                  <span style={{ color: '#22c55e', fontSize: '1.1rem' }}>↑</span>
                   <span style={{ fontWeight: 800, fontSize: '1.3rem', color: '#22c55e' }}>Fast</span>
                   <span style={{ fontFamily: 'monospace', fontSize: '0.7rem', color: T.muted, textTransform: 'uppercase', letterSpacing: '0.08em', marginLeft: '0.2rem' }}>Growing</span>
                 </div>
@@ -557,12 +557,12 @@ export default function Landing4({ onNavigate }) {
           </div>
 
           <div style={{ textAlign: 'center', marginTop: '2.5rem' }}>
-            <button className="sr4-outline" onClick={() => onNavigate('leaderboard')}>View full leaderboard â</button>
+            <button className="sr4-outline" onClick={() => onNavigate('leaderboard')}>View full leaderboard →</button>
           </div>
         </div>
       </section>
 
-      {/* âââ HOW IT WORKS âââââââââââââââââââââââââââââââââââ */}
+      {/* ─── HOW IT WORKS ─────────────────────────────────── */}
       <section className="sr4-sec" style={{ background: T.white }}>
         <div className="sr4-wrap" style={{ maxWidth: 860 }}>
           <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
@@ -570,10 +570,10 @@ export default function Landing4({ onNavigate }) {
             <h2 style={{ fontSize: 'clamp(1.8rem,4vw,2.6rem)' }}>Four Steps to Your Verified Rank</h2>
           </div>
           {[
-            { n: '01', icon: 'ð¤', title: 'Create your profile', desc: 'Join and claim your public URL: stackrank365.com/profile/you', color: T.blue },
-            { n: '02', icon: 'ð', title: 'Add your certifications', desc: 'Each cert is weighted by tier. Expert = 3,000 pts. Associate = 1,500. No tricks.', color: '#7c3aed' },
-            { n: '03', icon: 'ðï¸', title: 'Log your projects', desc: 'Add real implementations with privacy controls. Confidential clients stay confidential.', color: '#059669' },
-            { n: '04', icon: 'â', title: 'Invite peer validators', desc: 'Ask colleagues to confirm your project experience. Each validation adds 300 pts and credibility.', color: '#b45309' },
+            { n: '01', icon: '👤', title: 'Create your profile', desc: 'Join and claim your public URL: stackrank365.com/profile/you', color: T.blue },
+            { n: '02', icon: '🎓', title: 'Add your certifications', desc: 'Each cert is weighted by tier. Expert = 3,000 pts. Associate = 1,500. No tricks.', color: '#7c3aed' },
+            { n: '03', icon: '🏗️', title: 'Log your projects', desc: 'Add real implementations with privacy controls. Confidential clients stay confidential.', color: '#059669' },
+            { n: '04', icon: '✅', title: 'Invite peer validators', desc: 'Ask colleagues to confirm your project experience. Each validation adds 300 pts and credibility.', color: '#b45309' },
           ].map((step, i) => (
             <div key={step.n} style={{ display: 'flex', gap: '1.5rem', padding: '1.5rem', background: i % 2 === 0 ? '#f8fafc' : '#fff', borderRadius: 12, marginBottom: '1rem', border: `1px solid ${T.border}`, alignItems: 'flex-start' }}>
               <div style={{ width: 48, height: 48, borderRadius: 12, background: step.color, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'monospace', fontWeight: 800, fontSize: '0.9rem', color: '#fff', flexShrink: 0 }}>{step.n}</div>
@@ -584,19 +584,19 @@ export default function Landing4({ onNavigate }) {
             </div>
           ))}
           <div style={{ textAlign: 'center', marginTop: '2rem' }}>
-            <button className="sr4-outline" onClick={() => onNavigate('how-it-works')}>Read the full guide â</button>
+            <button className="sr4-outline" onClick={() => onNavigate('how-it-works')}>Read the full guide →</button>
           </div>
         </div>
       </section>
 
-      {/* âââ EXPLORE DEMOS ââââââââââââââââââââââââââââââââââ */}
+      {/* ─── EXPLORE DEMOS ────────────────────────────────── */}
       <section className="sr4-sec-sm" style={{ background: T.bodyBg }}>
         <div className="sr4-wrap">
           <div className="sr4-g3">
             {[
-              { title: 'Live Leaderboard', desc: 'See 15 sample professionals ranked',    btn: 'View Rankings',  page: 'leaderboard',                   color: T.blue,    icon: 'ð' },
-              { title: 'Sample Profile',   desc: 'Explore a detailed pro profile',        btn: 'Browse Profile', page: 'profile', user: SAMPLE_USERS[0], color: '#7c3aed', icon: 'ð¤' },
-              { title: 'Full Scoring',     desc: '35+ certs explained with point values', btn: 'See the Math',   page: 'scoring',                       color: '#b45309', icon: 'ð¢' },
+              { title: 'Live Leaderboard', desc: 'See 15 sample professionals ranked',    btn: 'View Rankings',  page: 'leaderboard',                   color: T.blue,    icon: '📊' },
+              { title: 'Sample Profile',   desc: 'Explore a detailed pro profile',        btn: 'Browse Profile', page: 'profile', user: SAMPLE_USERS[0], color: '#7c3aed', icon: '👤' },
+              { title: 'Full Scoring',     desc: '35+ certs explained with point values', btn: 'See the Math',   page: 'scoring',                       color: '#b45309', icon: '🔢' },
             ].map(d => (
               <div key={d.title} className="sr4-card" style={{ padding: '1.75rem', borderTop: `4px solid ${d.color}`, textAlign: 'center' }}>
                 <div style={{ fontSize: '2rem', marginBottom: '0.75rem' }}>{d.icon}</div>
@@ -614,16 +614,16 @@ export default function Landing4({ onNavigate }) {
         </div>
       </section>
 
-      {/* âââ FINAL CTA ââââââââââââââââââââââââââââââââââââââ */}
+      {/* ─── FINAL CTA ────────────────────────────────────── */}
       <section style={{ background: T.gradMid, padding: '6rem 0', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 60, background: T.bodyBg, clipPath: 'polygon(0 0,100% 100%,100% 0)' }} />
         <div className="sr4-wrap" style={{ textAlign: 'center', maxWidth: 700, position: 'relative' }}>
-          <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>ð</div>
+          <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>👑</div>
           <h2 style={{ fontSize: 'clamp(2rem,5vw,3rem)', color: '#fff', fontWeight: 900, marginBottom: '1.25rem', letterSpacing: '-0.02em' }}>
             Claim your rank before everyone else does
           </h2>
           <p style={{ color: 'rgba(255,255,255,0.8)', fontSize: '1.1rem', marginBottom: '2.5rem', lineHeight: 1.8 }}>
-            StackRank365 is in early access. Founding members earn <strong style={{ color: '#fbbf24' }}>500 bonus points</strong> â enough to enter the leaderboard the moment we launch. The earlier you join, the higher your starting position.
+            StackRank365 is in early access. Founding members earn <strong style={{ color: '#fbbf24' }}>500 bonus points</strong> — enough to enter the leaderboard the moment we launch. The earlier you join, the higher your starting position.
           </p>
           <div style={{ display: 'flex', justifyContent: 'center' }}>
             <WaitlistForm dark />
