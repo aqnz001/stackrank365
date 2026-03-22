@@ -15,6 +15,7 @@ import Pricing from './pages/Pricing';
 import RecruiterDashboard from './pages/RecruiterDashboard';
 import AdminFraud from './pages/AdminFraud';
 import AdminTools from './pages/AdminTools';
+import AdminSitemap from './pages/AdminSitemap';
 
 function Footer({ onNavigate }) {
   return (
@@ -138,6 +139,7 @@ function AppInner() {
       case 'signin':          return <Auth mode="signin" onNavigate={navigate} />;
       case 'reset-password':  return <ResetPassword onNavigate={navigate} />;
       case 'validate':        return <ValidatePage token={pageData?.token} onNavigate={navigate} />;
+      case 'sr365-sitemap':          return <AdminSitemap />;
       case 'sr365-admin-tools':   return <AdminTools />;
       case 'admin-fraud':          return <AdminFraud onNavigate={navigate} />;
       case 'pricing':              return <Pricing onNavigate={navigate} />;
