@@ -61,9 +61,10 @@ export default function Leaderboard({ onNavigate }) {
     setFilterCountry(country === 'Global' ? '' : country);
   }, []);
 
-  // Load real users from Supabase
+  // Load real users from Supabase — only for signed-in users
   useEffect(() => {
     (async () => {
+      if (!user) return; // guests see demo data only
       const sb = await getSupabase();
       if (!sb) return;
       try {
@@ -91,7 +92,7 @@ export default function Leaderboard({ onNavigate }) {
         }
       } catch { setLiveUsers([]); }
     })();
-  }, []);
+  }, [user]);
 
   const allUsers = (usingLive && liveUsers?.length > 0) ? liveUsers : SAMPLE_USERS;
 
@@ -375,7 +376,7 @@ export default function Leaderboard({ onNavigate }) {
               Where would you rank?
             </div>
             <p style={{ color: 'var(--muted2)', fontSize: '0.9rem', margin: 0 }}>
-              {usingLive ? 'Sign up to claim your place on the live leaderboard.' : 'StackRank365 is in early access — join now to be a Founding Member.'}
+              {usingLive ? 'Sign up to claim your place on the live leaderboard.' : 'Sign in to see the live leaderboard. StackRank365 is in early access — join now to be a Founding Member.'}
             </p>
           </div>
           <button className="btn btn-gold" onClick={() => onNavigate(usingLive ? 'signup' : 'landing')}>
