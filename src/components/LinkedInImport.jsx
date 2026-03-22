@@ -27,9 +27,15 @@ export default function LinkedInImport({ onImport }) {
 
     try {
       // Use Supabase edge function to fetch profile via LinkedIn scraping API
-      const { data, error: fnError } = await supabase.functions.invoke("fetch-linkedin-profile", {
-        body: { handle },
-      });
+      const { data, error: fnError } = await (async () => {
+        const _r = await fetch('https://shnuwkjkjthvaovoywju.supabase.co/functions/v1/fetch-linkedin-profile', {
+          method: 'POST',
+          headers: { apikey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNobnV3a2pranRodmFvdm95d2p1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0MjcxODQsImV4cCI6MjA4OTAwMzE4NH0.E3jR8tamdJNdiRMiO_XtbSZU1IrDpPFhVnPJmNSN4X4', Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNobnV3a2pranRodmFvdm95d2p1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0MjcxODQsImV4cCI6MjA4OTAwMzE4NH0.E3jR8tamdJNdiRMiO_XtbSZU1IrDpPFhVnPJmNSN4X4', 'Content-Type': 'application/json' },
+          body: JSON.stringify({ handle }),
+        });
+        const _j = await _r.json();
+        return _r.ok ? { data: _j.data || _j, error: null } : { data: null, error: { message: _j.error || 'Error ' + _r.status } };
+      })();
       if (fnError || data?.error) throw new Error(fnError?.message ?? data?.error ?? "Could not fetch profile");
       setPreview(data);
       setStatus("preview");
