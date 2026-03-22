@@ -102,9 +102,9 @@ export default function Auth({ mode = 'signup', onNavigate }) {
         options: {
           data: {
             full_name: (form.first_name + ' ' + form.last_name).trim(),
-          first_name: form.first_name,
-          last_name: form.last_name,
-            preferred_username: form.username || (form.first_name + '.' + form.last_name).toLowerCase().replace(/\s+/g, '.),
+            first_name: form.first_name,
+            last_name: form.last_name,
+            preferred_username: form.username || (form.first_name + '.' + form.last_name).toLowerCase().replace(/\s+/g, '.')),
           },
         },
       });
