@@ -1,105 +1,140 @@
-import { useState, useRef } from "react";
-import { supabase } from "../lib/supabaseClient";
+import { useState, useRef } from 'react';
 
-const STEP = { IDLE:"idle",UPLOADING:"uploading",ANALYSING:"analysing",PREVIEW:"preview",APPLYING:"applying",DONE:"done",ERROR:"error" };
+const SB_URL   = 'https://shnuwkjkjthvaovoywju.supabase.co';
+const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNobnV3a2pranRodmFvdm95d2p1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0MjcxODQsImV4cCI6MjA4OTAwMzE4NH0.E3jR8tamdJNdiRMiO_XtbSZU1IrDpPFhVnPJmNSN4X4';
 
-export default function ResumeAnalyser({ onApply }) {
-  const [step,setStep] = useState(STEP.IDLE);
-  const [result,setResult] = useState(null);
-  const [error,setError] = useState(null);
-  const [sel,setSel] = useState({ summary:true,title:true,certifications:true,skills:true,projects:false });
-  const fileRef = useRef(null);
+export default function ResumeAnalyser({ onApprove }) {
+  const [status, setStatus] = useState('idle');
+  const [summary, setSummary] = useState('');
+  const [editedSummary, setEditedSummary] = useState('');
+  const [reviseNote, setReviseNote] = useState('');
+  const [error, setError] = useState('');
+  const [filename, setFilename] = useState('');
+  const [pdfBase64, setPdfBase64] = useState('');
+  const [isEditing, setIsEditing] = useState(false);
+  const fileRef = useRef();
+
+  const card = { background:'var(--surface2,#1c2539)', border:'1px solid var(--border,rgba(255,255,255,.07))', borderRadius:10, padding:'1rem', marginBottom:'1rem' };
+  const lbl = { fontSize:'0.7rem', color:'var(--muted,#64748b)', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.06em', display:'block', marginBottom:4 };
+  const ta  = { width:'100%', padding:'10px 12px', fontSize:13, lineHeight:1.65, background:'var(--bg,#0d1117)', border:'1px solid var(--border,rgba(255,255,255,.1))', borderRadius:6, color:'var(--text,#e2e8f0)', outline:'none', resize:'vertical', minHeight:110, boxSizing:'border-box' };
+  const bp  = { padding:'8px 16px', fontSize:13, fontWeight:600, borderRadius:6, cursor:'pointer', border:'none', background:'var(--blue,#00c2ff)', color:'#000' };
+  const bs  = { padding:'8px 14px', fontSize:13, fontWeight:600, borderRadius:6, cursor:'pointer', border:'1px solid var(--border,rgba(255,255,255,.1))', background:'transparent', color:'var(--text,#e2e8f0)' };
+  const bd  = { padding:'8px 14px', fontSize:13, fontWeight:600, borderRadius:6, cursor:'pointer', border:'none', background:'rgba(239,68,68,.15)', color:'#f87171' };
+
+  const readFile = (file) => new Promise((res, rej) => {
+    if (file.type !== 'application/pdf') return rej(new Error('Only PDF files are accepted'));
+    if (file.size > 5*1024*1024) return rej(new Error('File must be under 5 MB'));
+    const r = new FileReader();
+    r.onload = e => res(e.target.result.split(',')[1]);
+    r.onerror = () => rej(new Error('Could not read file'));
+    r.readAsDataURL(file);
+  });
+
+  const analyse = async (base64, note='') => {
+    setStatus('uploading'); setError('');
+    try {
+      const res = await fetch(SB_URL+'/functions/v1/analyse-resume', {
+        method:'POST',
+        headers:{ apikey:ANON_KEY, Authorization:'Bearer '+ANON_KEY, 'Content-Type':'application/json' },
+        body: JSON.stringify({ pdf_base64: base64, revise_note: note }),
+      });
+      const json = await res.json();
+      if (!res.ok || json.error) throw new Error(json.error || 'Analysis failed');
+      const text = json.summary || '';
+      if (!text) throw new Error('No summary returned');
+      setSummary(text); setEditedSummary(text); setStatus('reviewing'); setReviseNote('');
+    } catch(e) { setError(e.message); setStatus('idle'); }
+  };
 
   const handleFile = async (file) => {
-    if (!file || file.type!=="application/pdf") { setError("Please upload a PDF file."); setStep(STEP.ERROR); return; }
-    if (file.size > 5*1024*1024) { setError("File must be under 5MB."); setStep(STEP.ERROR); return; }
-    setStep(STEP.UPLOADING); setError(null);
-    try {
-      const base64 = await new Promise((res,rej) => { const r=new FileReader(); r.onload=()=>res(r.result.split(",")[1]); r.onerror=rej; r.readAsDataURL(file); });
-      setStep(STEP.ANALYSING);
-      const { data:{user} } = await supabase.auth.getUser();
-      const { data, error:fnErr } = await (async () => {
-        const _r = await fetch('https://shnuwkjkjthvaovoywju.supabase.co/functions/v1/analyse-resume', {
-          method: 'POST',
-          headers: { apikey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNobnV3a2pranRodmFvdm95d2p1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0MjcxODQsImV4cCI6MjA4OTAwMzE4NH0.E3jR8tamdJNdiRMiO_XtbSZU1IrDpPFhVnPJmNSN4X4', Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNobnV3a2pranRodmFvdm95d2p1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0MjcxODQsImV4cCI6MjA4OTAwMzE4NH0.E3jR8tamdJNdiRMiO_XtbSZU1IrDpPFhVnPJmNSN4X4', 'Content-Type': 'application/json' },
-          body: JSON.stringify({ pdf_base64: base64, profile_id: user?.id }),
-        });
-        const _j = await _r.json();
-        return _r.ok ? { data: _j, error: null } : { data: null, error: { message: _j.error || 'Error ' + _r.status } };
-      })();
-      if (fnErr || data?.error) throw new Error(fnErr?.message ?? data?.error ?? "Analysis failed");
-      setResult(data.data); setStep(STEP.PREVIEW);
-    } catch(err) { setError(err.message); setStep(STEP.ERROR); }
+    try { const b64=await readFile(file); setPdfBase64(b64); setFilename(file.name); await analyse(b64); }
+    catch(e) { setError(e.message); setStatus('idle'); }
   };
 
-  const handleApply = async () => {
-    setStep(STEP.APPLYING);
-    try {
-      const { data:{user} } = await supabase.auth.getUser();
-      const updates = {};
-      if (sel.title && result.professional_title) updates.professional_title = result.professional_title;
-      if (sel.summary && result.summary) updates.bio = result.summary;
-      if (result.region) updates.region = result.region;
-      if (Object.keys(updates).length) await supabase.from("profiles").update(updates).eq("id", user.id);
-      if (sel.certifications && result.certifications?.length) {
-        await supabase.from("certifications").upsert(result.certifications.map(c=>({ profile_id:user.id, name:c.name, ms_cert_id:c.ms_cert_id??null, issued_date:c.year?`${c.year}-01-01`:null, verification_status:"unverified" })), { onConflict:"profile_id,name", ignoreDuplicates:true });
-      }
-      if (sel.projects && result.projects?.length) {
-        await supabase.from("projects").insert(result.projects.map(p=>({ profile_id:user.id, title:p.title, technology:p.technology, project_date:p.year?`${p.year}-06-01`:null, description:p.description })));
-      }
-      setStep(STEP.DONE); onApply?.({ updates });
-    } catch(err) { setError(err.message); setStep(STEP.ERROR); }
-  };
-
-  const reset = () => { setStep(STEP.IDLE); setResult(null); setError(null); };
+  const handleApprove = () => { onApprove?.(isEditing ? editedSummary : summary); setStatus('approved'); };
+  const handleReset   = () => { setStatus('idle'); setSummary(''); setEditedSummary(''); setReviseNote(''); setError(''); setFilename(''); setPdfBase64(''); setIsEditing(false); };
 
   return (
-    <div style={{ background:"#fff",border:"0.5px solid #d3d1c7",borderRadius:"12px",padding:"1.5rem" }}>
-      <div style={{ display:"flex",alignItems:"center",gap:"10px",marginBottom:"1rem" }}>
-        <div style={{ width:"32px",height:"32px",background:"#1e3a5f",borderRadius:"6px",display:"flex",alignItems:"center",justifyContent:"center" }}><span style={{ color:"#fff",fontSize:"14px" }}>📄</span></div>
-        <div><p style={{ fontWeight:600,fontSize:"14px",margin:0 }}>Resume Analyser</p><p style={{ fontSize:"12px",color:"#73726c",margin:0 }}>Upload your CV — we extract your Microsoft skills, certs, and projects</p></div>
+    <div style={card}>
+      <style>{'@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}'}</style>
+
+      {/* Header */}
+      <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:'0.875rem'}}>
+        <span style={{fontSize:22}}>📄</span>
+        <div>
+          <p style={{fontSize:'0.88rem',fontWeight:700,color:'var(--text,#e2e8f0)',margin:0}}>Resume Analyser</p>
+          <p style={{fontSize:'0.72rem',color:'var(--muted,#64748b)',margin:0}}>
+            {status==='idle'&&'Upload your CV — AI generates a short profile summary from your experience'}
+            {status==='uploading'&&'Reading your CV and writing summary...'}
+            {status==='reviewing'&&'Review your generated summary — edit, ask for a revision, or approve'}
+            {status==='approved'&&'Summary added to your profile bio'}
+          </p>
+        </div>
       </div>
 
-      {step===STEP.IDLE && <div onClick={()=>fileRef.current?.click()} onDragOver={e=>e.preventDefault()} onDrop={e=>{e.preventDefault();handleFile(e.dataTransfer.files[0]);}} style={{ border:"2px dashed #d3d1c7",borderRadius:"8px",padding:"2rem",textAlign:"center",cursor:"pointer" }}>
-        <p style={{ fontSize:"24px",margin:"0 0 0.5rem" }}>📎</p>
-        <p style={{ fontWeight:500,fontSize:"14px",color:"#1a1a18",margin:"0 0 4px" }}>Drop PDF here or click to browse</p>
-        <p style={{ fontSize:"12px",color:"#73726c",margin:0 }}>PDF only · Max 5MB · Analysed by Claude AI</p>
-        <input ref={fileRef} type="file" accept="application/pdf" style={{ display:"none" }} onChange={e=>handleFile(e.target.files?.[0])}/>
-      </div>}
+      {/* IDLE */}
+      {status==='idle'&&(
+        <>
+          <div onClick={()=>fileRef.current?.click()} onDrop={e=>{e.preventDefault();const f=e.dataTransfer.files?.[0];if(f)handleFile(f);}} onDragOver={e=>e.preventDefault()}
+            style={{border:'1.5px dashed var(--border-blue,rgba(0,194,255,.3))',borderRadius:8,padding:'1.5rem',textAlign:'center',cursor:'pointer',background:'rgba(0,194,255,.03)'}}>
+            <div style={{fontSize:28,marginBottom:6}}>📎</div>
+            <p style={{fontSize:13,color:'var(--muted,#64748b)',margin:0}}>Drop PDF here or click to browse</p>
+            <p style={{fontSize:11,color:'var(--muted,#64748b)',margin:'4px 0 0',opacity:0.7}}>PDF only · Max 5 MB · Summary by Claude AI</p>
+          </div>
+          <input ref={fileRef} type="file" accept=".pdf" style={{display:'none'}} onChange={e=>{if(e.target.files?.[0])handleFile(e.target.files[0]);}}/>
+          {error&&<p style={{fontSize:12,color:'#f87171',margin:'0.5rem 0 0'}}>{error}</p>}
+        </>
+      )}
 
-      {(step===STEP.UPLOADING||step===STEP.ANALYSING) && <div style={{ textAlign:"center",padding:"2rem" }}>
-        <p style={{ fontSize:"32px",margin:"0 0 0.5rem" }}>{step===STEP.UPLOADING?"⏫":"🤖"}</p>
-        <p style={{ fontWeight:500,fontSize:"14px",margin:0 }}>{step===STEP.UPLOADING?"Uploading...":"Claude is analysing your resume..."}</p>
-      </div>}
-
-      {step===STEP.ERROR && <div style={{ background:"#fef2f2",border:"1px solid #fecaca",borderRadius:"8px",padding:"1rem" }}>
-        <p style={{ fontSize:"13px",color:"#991b1b",margin:"0 0 0.75rem" }}>⚠️ {error}</p>
-        <button onClick={reset} style={{ padding:"6px 14px",fontSize:"12px",background:"transparent",border:"0.5px solid #fecaca",borderRadius:"8px",cursor:"pointer",color:"#991b1b" }}>Try again</button>
-      </div>}
-
-      {step===STEP.PREVIEW && result && <div>
-        <div style={{ background:"#f0fdf4",border:"1px solid #bbf7d0",borderRadius:"8px",padding:"0.75rem 1rem",marginBottom:"1rem" }}>
-          <p style={{ fontSize:"13px",color:"#166534",margin:0 }}>✓ Analysis complete — confidence {result.confidence??0}%</p>
+      {/* UPLOADING */}
+      {status==='uploading'&&(
+        <div style={{textAlign:'center',padding:'1.5rem 0'}}>
+          <div style={{fontSize:28,marginBottom:8,animation:'spin 1.5s linear infinite',display:'inline-block'}}>⟳</div>
+          <p style={{fontSize:13,color:'var(--muted,#64748b)',margin:0}}>Analysing your CV...</p>
+          <p style={{fontSize:11,color:'var(--muted,#64748b)',margin:'4px 0 0',opacity:0.6}}>Usually takes 10–20 seconds</p>
         </div>
-        <div style={{ display:"flex",flexDirection:"column",gap:"0.75rem",marginBottom:"1.25rem" }}>
-          {result.professional_title && <label style={{ display:"flex",alignItems:"center",gap:"8px",cursor:"pointer",fontSize:"13px" }}><input type="checkbox" checked={sel.title} onChange={()=>setSel(s=>({...s,title:!s.title}))}/> Title: <strong>{result.professional_title}</strong></label>}
-          {result.summary && <label style={{ display:"flex",alignItems:"center",gap:"8px",cursor:"pointer",fontSize:"13px" }}><input type="checkbox" checked={sel.summary} onChange={()=>setSel(s=>({...s,summary:!s.summary}))}/> Bio / summary</label>}
-          {result.certifications?.length>0 && <label style={{ display:"flex",alignItems:"center",gap:"8px",cursor:"pointer",fontSize:"13px" }}><input type="checkbox" checked={sel.certifications} onChange={()=>setSel(s=>({...s,certifications:!s.certifications}))}/> {result.certifications.length} certifications</label>}
-          {result.projects?.length>0 && <label style={{ display:"flex",alignItems:"center",gap:"8px",cursor:"pointer",fontSize:"13px" }}><input type="checkbox" checked={sel.projects} onChange={()=>setSel(s=>({...s,projects:!s.projects}))}/> {result.projects.length} projects (review before importing)</label>}
-        </div>
-        <p style={{ fontSize:"11px",color:"#b4b2a9",margin:"0 0 0.75rem" }}>Certs imported as self-reported — verify with Microsoft Learn to unlock full score.</p>
-        <div style={{ display:"flex",gap:"8px" }}>
-          <button onClick={handleApply} style={{ flex:1,padding:"10px",background:"#1e3a5f",color:"#fff",border:"none",borderRadius:"8px",fontSize:"13px",fontWeight:600,cursor:"pointer" }}>Apply to profile</button>
-          <button onClick={reset} style={{ flex:1,padding:"10px",background:"transparent",border:"0.5px solid #d3d1c7",borderRadius:"8px",fontSize:"13px",cursor:"pointer" }}>Cancel</button>
-        </div>
-      </div>}
+      )}
 
-      {step===STEP.DONE && <div style={{ textAlign:"center",padding:"1.5rem" }}>
-        <p style={{ fontSize:"32px",margin:"0 0 0.5rem" }}>✓</p>
-        <p style={{ fontWeight:600,fontSize:"15px",margin:"0 0 0.25rem" }}>Profile updated from resume</p>
-        <p style={{ fontSize:"12px",color:"#73726c",margin:"0 0 1rem" }}>Verify certifications with Microsoft Learn to unlock full score weight.</p>
-        <button onClick={reset} style={{ padding:"8px 20px",background:"transparent",border:"0.5px solid #d3d1c7",borderRadius:"8px",fontSize:"13px",cursor:"pointer" }}>Analyse another</button>
-      </div>}
+      {/* REVIEWING */}
+      {status==='reviewing'&&(
+        <div>
+          <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:6}}>
+            <span style={lbl}>Generated Summary</span>
+            <button onClick={()=>setIsEditing(!isEditing)} style={{...bs,padding:'4px 10px',fontSize:11}}>
+              {isEditing?'View':'✏️ Edit manually'}
+            </button>
+          </div>
+
+          {isEditing
+            ? <textarea style={ta} value={editedSummary} onChange={e=>setEditedSummary(e.target.value)} placeholder="Edit your summary..."/>
+            : <div style={{...ta,minHeight:'auto',cursor:'default',whiteSpace:'pre-wrap'}}>{summary}</div>
+          }
+
+          <details style={{marginTop:'0.75rem'}}>
+            <summary style={{fontSize:12,color:'var(--muted,#64748b)',cursor:'pointer',userSelect:'none'}}>🔄 Ask AI to revise</summary>
+            <div style={{marginTop:8}}>
+              <span style={lbl}>What should change?</span>
+              <textarea style={{...ta,minHeight:60}} placeholder="e.g. Make it shorter, focus on Power Platform, use a more formal tone..." value={reviseNote} onChange={e=>setReviseNote(e.target.value)}/>
+              <button onClick={()=>analyse(pdfBase64,reviseNote)} disabled={!reviseNote.trim()} style={{...bs,marginTop:6,opacity:reviseNote.trim()?1:0.5}}>Regenerate ↺</button>
+            </div>
+          </details>
+
+          <p style={{fontSize:11,color:'var(--muted,#64748b)',margin:'0.75rem 0',opacity:0.7}}>From: {filename} · Will appear on your public profile under Bio.</p>
+
+          <div style={{display:'flex',gap:8}}>
+            <button onClick={handleApprove} style={bp}>✓ Add to Profile</button>
+            <button onClick={handleReset} style={bd}>Discard</button>
+          </div>
+        </div>
+      )}
+
+      {/* APPROVED */}
+      {status==='approved'&&(
+        <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',padding:'0.5rem 0'}}>
+          <span style={{fontSize:13,color:'#22c55e'}}>✓ Summary added to profile bio — click Save Changes to persist</span>
+          <button onClick={handleReset} style={{...bs,fontSize:11,padding:'4px 10px'}}>Upload new CV</button>
+        </div>
+      )}
     </div>
   );
 }
