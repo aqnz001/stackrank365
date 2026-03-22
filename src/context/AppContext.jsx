@@ -50,6 +50,8 @@ export function AppProvider({ children }) {
       setUserState({
         id: userId,
         name: profile.name,
+          first_name: profile.first_name || (profile.name||'').split(' ')[0],
+          last_name: profile.last_name || (profile.name||'').split(' ').slice(1).join(' '),
         email,
         username: profile.username,
         headline: profile.headline || '',
@@ -80,8 +82,8 @@ export function AppProvider({ children }) {
       const meta = au?.user?.user_metadata || {};
       const fallbackName = meta.full_name || meta.name || email?.split('@')[0] || 'User';
       const fallbackUsername = (meta.preferred_username || email?.split('@')[0] || userId.slice(0,8)).toLowerCase().replace(/[^a-z0-9._-]/g, '');
-      await sb.from('profiles').upsert({ id: userId, name: fallbackName, username: fallbackUsername, ms_account_id: meta.sub || null, founding_member: true });
-      setUserState({ id: userId, name: fallbackName, email, username: fallbackUsername, headline: '', bio: '', location: '', specialism: 'Dynamics 365', yearsExp: 0, foundingMember: true, msAccountId: meta.sub || null, certifications: [], projects: [] });
+      await sb.from('profiles').upsert({ id: userId, name: fallbackName, first_name: fallbackName.split(' ')[0], last_name: fallbackName.split(' ').slice(1).join(' '), username: fallbackUsername, ms_account_id: meta.sub || null, founding_member: true });
+      setUserState({ id: userId, name: fallbackName, first_name: fallbackName.split(' ')[0], last_name: fallbackName.split(' ').slice(1).join(' '), email, username: fallbackUsername, headline: '', bio: '', location: '', specialism: 'Dynamics 365', yearsExp: 0, foundingMember: true, msAccountId: meta.sub || null, certifications: [], projects: [] });
     }
   };
 
