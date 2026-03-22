@@ -98,7 +98,7 @@ export function AppProvider({ children }) {
         }
         setLoading(false);
 
-        // 2. Also listen for future auth changes (sign in, sign out, token refresh)
+        // 2. Listen for future auth changes — subscription cleaned up on unmount
         const { data: { subscription } } = sb.auth.onAuthStateChange(async (event, session) => {
           setAuthUser(session?.user ?? null);
           if (session?.user) {
@@ -117,7 +117,7 @@ export function AppProvider({ children }) {
         setLoading(false);
       }
     })();
-    return () => sub?.unsubscribe();
+    return () => { try { subscription?.unsubscribe(); } catch(e) {} };
   }, []);
 
   const saveUser = async (u) => {
