@@ -1,0 +1,26 @@
+[functions.analyse-resume]
+verify_jwt = false
+
+[functions.fetch-linkedin-profile]
+verify_jwt = false
+
+[functions.batch-verify-certs]
+verify_jwt = false
+
+[functions.cert-expiry-reminders]
+verify_jwt = false
+
+[functions.detect-fake-profiles]
+verify_jwt = false
+
+[functions.recruiter-match]
+verify_jwt = false
+
+[functions.sync-catalog]
+verify_jwt = false
+
+[functions.verify-cert]
+verify_jwt = false
+
+[functions.verify-reputation]
+verify_jwt = false
