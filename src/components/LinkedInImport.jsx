@@ -1,126 +1,155 @@
 import { useState } from "react";
-import { supabase } from "../lib/supabaseClient";
 
-const FIELD_MAP = {
-  headline: "professional_title",
-  firstName: "first_name",
-  lastName: "last_name",
-  location: "region",
-  summary: "bio",
-};
+// LinkedInImport — auto-fill profile from LinkedIn URL
+// Note: LinkedIn blocks server-side scraping, so we use a manual fallback form
 
-function parseLinkedInUrl(url) {
-  const match = url.match(/linkedin\.com\/in\/([^/?#]+)/i);
-  return match ? match[1] : null;
-}
+const SB_URL  = 'https://shnuwkjkjthvaovoywju.supabase.co';
+const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNobnV3a2pranRodmFvdm95d2p1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0MjcxODQsImV4cCI6MjA4OTAwMzE4NH0.E3jR8tamdJNdiRMiO_XtbSZU1IrDpPFhVnPJmNSN4X4';
 
 export default function LinkedInImport({ onImport }) {
-  const [url, setUrl] = useState("");
-  const [status, setStatus] = useState("idle"); // idle | loading | preview | success | error
-  const [preview, setPreview] = useState(null);
-  const [error, setError] = useState(null);
+  const [handle, setHandle] = useState("");
+  const [status, setStatus] = useState("idle"); // idle | loading | manual | done | error
+  const [manualData, setManualData] = useState({ name: "", professional_title: "", location: "", headline: "" });
+  const [message, setMessage] = useState("");
+
+  // Normalise LinkedIn URL/handle to just the handle slug
+  const normalise = (val) =>
+    val.replace(/https?:\/\//, "").replace(/www\./, "").replace(/linkedin\.com\/in\//, "").replace(/\/$/, "").trim();
 
   const handleFetch = async () => {
-    const handle = parseLinkedInUrl(url.trim());
-    if (!handle) { setError("Please enter a valid LinkedIn profile URL (e.g. linkedin.com/in/yourname)"); return; }
-    setStatus("loading"); setError(null);
-
-    try {
-      // Use Supabase edge function to fetch profile via LinkedIn scraping API
-      const { data, error: fnError } = await (async () => {
-        const _r = await fetch('https://shnuwkjkjthvaovoywju.supabase.co/functions/v1/fetch-linkedin-profile', {
-          method: 'POST',
-          headers: { apikey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNobnV3a2pranRodmFvdm95d2p1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0MjcxODQsImV4cCI6MjA4OTAwMzE4NH0.E3jR8tamdJNdiRMiO_XtbSZU1IrDpPFhVnPJmNSN4X4', Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNobnV3a2pranRodmFvdm95d2p1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0MjcxODQsImV4cCI6MjA4OTAwMzE4NH0.E3jR8tamdJNdiRMiO_XtbSZU1IrDpPFhVnPJmNSN4X4', 'Content-Type': 'application/json' },
-          body: JSON.stringify({ handle }),
-        });
-        const _j = await _r.json();
-        return _r.ok ? { data: _j.data || _j, error: null } : { data: null, error: { message: _j.error || 'Error ' + _r.status } };
-      })();
-      if (fnError || data?.error) throw new Error(fnError?.message ?? data?.error ?? "Could not fetch profile");
-      setPreview(data);
-      setStatus("preview");
-    } catch (err) {
-      setError(err.message);
-      setStatus("error");
-    }
-  };
-
-  const handleConfirm = async () => {
-    if (!preview) return;
+    const clean = normalise(handle);
+    if (!clean) return;
     setStatus("loading");
+    setMessage("");
+
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      const updates = {
-        professional_title: preview.headline ?? undefined,
-        region: preview.location ?? undefined,
-        bio: preview.summary ?? undefined,
-        linkedin_url: url.trim(),
-      };
-      const { error: updateError } = await supabase.from("profiles").update(updates).eq("id", user.id);
-      if (updateError) throw updateError;
-      setStatus("success");
-      onImport?.(updates);
-    } catch (err) {
-      setError(err.message);
-      setStatus("error");
+      const res = await fetch(SB_URL + "/functions/v1/fetch-linkedin-profile", {
+        method: "POST",
+        headers: { apikey: ANON_KEY, Authorization: "Bearer " + ANON_KEY, "Content-Type": "application/json" },
+        body: JSON.stringify({ handle: clean }),
+      });
+      const json = await res.json();
+
+      if (res.ok && json.data?.name) {
+        // Auto-fill succeeded
+        const d = json.data;
+        onImport?.({ 
+          name: d.name,
+          professional_title: d.professional_title,
+          location: d.location,
+          linkedin_url: "https://linkedin.com/in/" + clean,
+        });
+        setStatus("done");
+        setMessage("Profile imported! Your fields have been updated.");
+      } else {
+        // LinkedIn blocked scraping — show manual form pre-filled with handle
+        setManualData({ name: "", professional_title: "", location: "", headline: "" });
+        setStatus("manual");
+        setMessage("");
+      }
+    } catch {
+      setManualData({ name: "", professional_title: "", location: "", headline: "" });
+      setStatus("manual");
     }
   };
+
+  const handleManualApply = () => {
+    onImport?.({
+      name: manualData.name || undefined,
+      professional_title: manualData.professional_title || undefined,
+      location: manualData.location || undefined,
+      linkedin_url: "https://linkedin.com/in/" + normalise(handle),
+    });
+    setStatus("done");
+    setMessage("Profile updated with your LinkedIn details.");
+  };
+
+  const card = {
+    background: "var(--surface2, #1c2539)",
+    border: "1px solid var(--border, rgba(255,255,255,.07))",
+    borderRadius: 10,
+    padding: "1rem",
+    marginBottom: "1rem",
+  };
+
+  const label = { fontSize: "0.72rem", color: "var(--muted, #64748b)", fontWeight: 600, marginBottom: 4, display: "block", textTransform: "uppercase", letterSpacing: "0.05em" };
+  const input = { width: "100%", padding: "8px 10px", fontSize: 13, background: "var(--bg, #0d1117)", border: "1px solid var(--border, rgba(255,255,255,.1))", borderRadius: 6, color: "var(--text, #e2e8f0)", outline: "none" };
+  const btn = (variant) => ({
+    padding: "8px 16px", fontSize: 13, fontWeight: 600, borderRadius: 6, cursor: "pointer", border: "none",
+    background: variant === "primary" ? "var(--blue, #00c2ff)" : "var(--surface3, #1e2d40)",
+    color: variant === "primary" ? "#000" : "var(--text, #e2e8f0)",
+    opacity: 1,
+  });
 
   return (
-    <div style={{ background: "#fff", border: "0.5px solid #d3d1c7", borderRadius: "12px", padding: "1.5rem" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "1rem" }}>
-        <div style={{ width: "32px", height: "32px", background: "#0077b5", borderRadius: "6px", display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <span style={{ color: "#fff", fontWeight: 700, fontSize: "14px" }}>in</span>
-        </div>
+    <div style={card}>
+      {/* Header */}
+      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: "0.75rem" }}>
+        <div style={{ fontSize: 20 }}>&#128279;</div>
         <div>
-          <p style={{ fontWeight: 600, fontSize: "14px", margin: 0 }}>Import from LinkedIn</p>
-          <p style={{ fontSize: "12px", color: "#73726c", margin: 0 }}>Auto-fill your profile from your LinkedIn URL</p>
+          <p style={{ fontSize: "0.85rem", fontWeight: 600, color: "var(--text, #e2e8f0)", margin: 0 }}>Import from LinkedIn</p>
+          <p style={{ fontSize: "0.72rem", color: "var(--muted, #64748b)", margin: 0 }}>
+            {status === "manual" ? "LinkedIn blocked auto-import — fill in manually below" : "Auto-fill your profile from your LinkedIn URL"}
+          </p>
         </div>
       </div>
 
-      {status !== "success" && (
-        <div style={{ display: "flex", gap: "8px", marginBottom: "1rem" }}>
+      {/* URL input row */}
+      {status !== "done" && (
+        <div style={{ display: "flex", gap: 8, marginBottom: "0.75rem" }}>
           <input
-            type="url"
-            value={url}
-            onChange={e => setUrl(e.target.value)}
+            style={{ ...input, flex: 1 }}
             placeholder="https://linkedin.com/in/your-name"
-            style={{ flex: 1, padding: "8px 12px", fontSize: "13px", border: "0.5px solid #d3d1c7", borderRadius: "8px", outline: "none" }}
+            value={handle}
+            onChange={(e) => setHandle(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleFetch()}
           />
-          <button
-            onClick={handleFetch}
-            disabled={status === "loading" || !url.trim()}
-            style={{ padding: "8px 16px", fontSize: "13px", fontWeight: 500, background: "#1e3a5f", color: "#fff", border: "none", borderRadius: "8px", cursor: "pointer", opacity: status === "loading" ? 0.6 : 1 }}
-          >
-            {status === "loading" ? "Loading…" : "Fetch"}
+          <button style={btn("primary")} onClick={handleFetch} disabled={status === "loading" || !handle.trim()}>
+            {status === "loading" ? "..." : "Fetch"}
           </button>
         </div>
       )}
 
-      {error && <p style={{ fontSize: "12px", color: "#A32D2D", margin: "0 0 0.75rem" }}>{error}</p>}
+      {/* Manual fallback form */}
+      {status === "manual" && (
+        <div>
+          <div style={{ background: "rgba(251,191,36,.08)", border: "1px solid rgba(251,191,36,.2)", borderRadius: 6, padding: "8px 12px", marginBottom: "0.75rem", fontSize: 12, color: "#fbbf24" }}>
+            &#9888;&#65039; LinkedIn prevents automatic profile fetching. Enter your details below — your LinkedIn URL will still be saved.
+          </div>
 
-      {status === "preview" && preview && (
-        <div style={{ background: "#f9fafb", borderRadius: "8px", padding: "1rem", marginBottom: "1rem" }}>
-          <p style={{ fontSize: "13px", fontWeight: 600, margin: "0 0 0.5rem", color: "#1a1a18" }}>Preview — confirm to import</p>
-          {preview.headline && <p style={{ fontSize: "13px", margin: "0 0 0.25rem" }}><strong>Title:</strong> {preview.headline}</p>}
-          {preview.location && <p style={{ fontSize: "13px", margin: "0 0 0.25rem" }}><strong>Location:</strong> {preview.location}</p>}
-          {preview.summary && <p style={{ fontSize: "13px", margin: "0 0 0.25rem", color: "#4b5563" }}><strong>Bio:</strong> {preview.summary.slice(0, 120)}{preview.summary.length > 120 ? "…" : ""}</p>}
-          <p style={{ fontSize: "11px", color: "#73726c", margin: "0.5rem 0 0" }}>Your certifications and projects are not affected. Only title, location, and bio will be updated.</p>
-          <div style={{ display: "flex", gap: "8px", marginTop: "0.75rem" }}>
-            <button onClick={handleConfirm} style={{ padding: "6px 16px", fontSize: "13px", fontWeight: 500, background: "#1e3a5f", color: "#fff", border: "none", borderRadius: "8px", cursor: "pointer" }}>
-              Confirm import
-            </button>
-            <button onClick={() => { setStatus("idle"); setPreview(null); }} style={{ padding: "6px 16px", fontSize: "13px", background: "transparent", border: "0.5px solid #d3d1c7", borderRadius: "8px", cursor: "pointer" }}>
-              Cancel
-            </button>
+          <div style={{ display: "grid", gap: 10 }}>
+            <div>
+              <span style={label}>Full Name</span>
+              <input style={input} placeholder="Your full name" value={manualData.name} onChange={(e) => setManualData(d => ({ ...d, name: e.target.value }))} />
+            </div>
+            <div>
+              <span style={label}>Professional Title</span>
+              <input style={input} placeholder="e.g. Dynamics 365 Architect" value={manualData.professional_title} onChange={(e) => setManualData(d => ({ ...d, professional_title: e.target.value }))} />
+            </div>
+            <div>
+              <span style={label}>Location</span>
+              <input style={input} placeholder="e.g. London, UK" value={manualData.location} onChange={(e) => setManualData(d => ({ ...d, location: e.target.value }))} />
+            </div>
+          </div>
+
+          <div style={{ display: "flex", gap: 8, marginTop: "0.75rem" }}>
+            <button style={btn("primary")} onClick={handleManualApply}>Apply to Profile</button>
+            <button style={btn("secondary")} onClick={() => { setStatus("idle"); setMessage(""); }}>Cancel</button>
           </div>
         </div>
       )}
 
-      {status === "success" && (
-        <div style={{ background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: "8px", padding: "0.75rem 1rem" }}>
-          <p style={{ fontSize: "13px", color: "#166534", margin: 0 }}>✓ Profile updated from LinkedIn. Your certifications and rank are unchanged.</p>
+      {/* Success state */}
+      {status === "done" && (
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+          <span style={{ fontSize: 13, color: "#22c55e" }}>&#10003; {message}</span>
+          <button style={{ ...btn("secondary"), fontSize: 12, padding: "5px 10px" }} onClick={() => setStatus("idle")}>Import again</button>
         </div>
+      )}
+
+      {/* Error */}
+      {message && status === "error" && (
+        <p style={{ fontSize: 12, color: "#f87171", margin: "0.5rem 0 0" }}>{message}</p>
       )}
     </div>
   );
