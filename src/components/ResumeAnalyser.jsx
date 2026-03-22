@@ -18,7 +18,15 @@ export default function ResumeAnalyser({ onApply }) {
       const base64 = await new Promise((res,rej) => { const r=new FileReader(); r.onload=()=>res(r.result.split(",")[1]); r.onerror=rej; r.readAsDataURL(file); });
       setStep(STEP.ANALYSING);
       const { data:{user} } = await supabase.auth.getUser();
-      const { data, error:fnErr } = await supabase.functions.invoke("analyse-resume", { body: { pdf_base64: base64, profile_id: user?.id } });
+      const { data, error:fnErr } = await (async () => {
+        const _r = await fetch('https://shnuwkjkjthvaovoywju.supabase.co/functions/v1/analyse-resume', {
+          method: 'POST',
+          headers: { apikey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNobnV3a2pranRodmFvdm95d2p1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0MjcxODQsImV4cCI6MjA4OTAwMzE4NH0.E3jR8tamdJNdiRMiO_XtbSZU1IrDpPFhVnPJmNSN4X4', Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNobnV3a2pranRodmFvdm95d2p1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0MjcxODQsImV4cCI6MjA4OTAwMzE4NH0.E3jR8tamdJNdiRMiO_XtbSZU1IrDpPFhVnPJmNSN4X4', 'Content-Type': 'application/json' },
+          body: JSON.stringify({ pdf_base64: base64, profile_id: user?.id }),
+        });
+        const _j = await _r.json();
+        return _r.ok ? { data: _j, error: null } : { data: null, error: { message: _j.error || 'Error ' + _r.status } };
+      })();
       if (fnErr || data?.error) throw new Error(fnErr?.message ?? data?.error ?? "Analysis failed");
       setResult(data.data); setStep(STEP.PREVIEW);
     } catch(err) { setError(err.message); setStep(STEP.ERROR); }
