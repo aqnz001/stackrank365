@@ -32,7 +32,7 @@ export default function Auth({ mode = 'signup', onNavigate }) {
   const [resetSent, setResetSent] = useState(false);
 
   const [form, setForm] = useState({
-    first_name: '', last_name: '', email: '', username: '', password: ',
+    first_name: '', last_name: '', email: '', username: '', password: '',
     headline: '', specialism: 'Dynamics 365', location: '', yearsExp: '',
   });
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
