@@ -1,10 +1,7 @@
 import { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { CERTIFICATIONS, getRankTier, getNextRankTier, SPECIALISMS } from '../data/data';
-import LinkedInImport from '../components/LinkedInImport';
 import ResumeAnalyser from '../components/ResumeAnalyser';
-import OpenToWorkToggle from '../components/OpenToWorkToggle';
-import StackRankBadge from '../components/StackRankBadge';
 
 async function getSupabase() {
   try {
@@ -610,23 +607,10 @@ export default function Dashboard({ onNavigate }) {
             <div className="card">
               <SettingsForm user={user} setUser={setUser} showToast={showToast} authUser={authUser} />
 
-              {/* ── Open to Work ───────────────────────────────────────── */}
-              <div style={{ marginBottom: '1rem' }}>
-                <OpenToWorkToggle profileId={user?.id} />
-              </div>
-
               {/* ── Resume Analyser ─────────────────────────────────────── */}
               <div style={{ marginBottom: '1rem' }}>
                 <ResumeAnalyser onApply={(data) => {
                   showToast('Profile updated from resume');
-                }} />
-              </div>
-
-              {/* ── LinkedIn Import ─────────────────────────────────────── */}
-              <div style={{ marginBottom: '1.5rem' }}>
-                <LinkedInImport onImport={(data) => {
-                  if (data.professional_title) setUser(u => ({ ...u, professional_title: data.professional_title }));
-                  showToast('LinkedIn profile imported');
                 }} />
               </div>
             </div>
