@@ -112,6 +112,37 @@ function ProjectModal({ onClose, onAdd, project }) {
           <input type="checkbox" checked={form.enterprise} onChange={e => set('enterprise', e.target.checked)} />
           Enterprise project (+2,000 pts)
         </label>
+        <div style={{ borderTop: '1px solid var(--border)', paddingTop: '1.25rem', marginTop: '0.25rem' }}>
+          <div style={{ fontSize: '0.8rem', fontWeight: 700, color: 'var(--blue)', marginBottom: '1rem', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+            Colleague Validation (Optional)
+          </div>
+          <p style={{ fontSize: '0.8rem', color: 'var(--muted2)', marginBottom: '1rem' }}>
+            Add a colleague who worked on this project. We'll send them a request to validate your involvement.
+          </p>
+          <div className="form-group">
+            <label className="label">Colleague Full Name</label>
+            <input className="input" placeholder="Alex Johnson" value={form.colleague_name || ''} onChange={e => set('colleague_name', e.target.value)} />
+          </div>
+          <div className="form-group">
+            <label className="label">Their Role on Project</label>
+            <input className="input" placeholder="Project Manager" value={form.colleague_role || ''} onChange={e => set('colleague_role', e.target.value)} />
+          </div>
+          <div className="form-group">
+            <label className="label">Your Relationship</label>
+            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+              {['Line Manager', 'Peer', 'Direct Report', 'Client', 'Vendor'].map(rel => (
+                <button key={rel} type="button" className={`btn btn-sm ${form.colleague_relationship === rel ? 'btn-primary' : 'btn-outline'}`}
+                  onClick={() => set('colleague_relationship', rel)} style={{ fontSize: '0.75rem' }}>
+                  {rel}
+                </button>
+              ))}
+            </div>
+          </div>
+          <div className="form-group">
+            <label className="label">Colleague Email</label>
+            <input className="input" type="email" placeholder="alex.johnson@company.com" value={form.colleague_email || ''} onChange={e => set('colleague_email', e.target.value)} />
+          </div>
+        </div>
         <div className="card" style={{ background: 'var(--green-dim)', border: '1px solid rgba(0,229,160,0.2)', padding: '0.75rem', marginBottom: '1.25rem' }}>
           <div style={{ fontSize: '0.82rem', color: 'var(--green)', fontWeight: 600 }}>This project will earn +{pts.toLocaleString()} Stack Points</div>
         </div>
@@ -293,6 +324,8 @@ export default function Dashboard({ onNavigate }) {
   const [activeTab, setActiveTab] = useState('overview');
   const [showCertModal, setShowCertModal] = useState(false);
   const [showProjectModal, setShowProjectModal] = useState(false);
+  const [validations, setValidations] = useState([]);
+  const [validationsLoading, setValidationsLoading] = useState(false);
   const [validatingProject, setValidatingProject] = useState(null);
 
   if (!user) {
@@ -347,7 +380,21 @@ export default function Dashboard({ onNavigate }) {
         description: proj.description, industry: proj.industry,
         privacy_mode: proj.privacy_mode, enterprise: proj.enterprise,
         validated: false, points: proj.points,
+        colleague_name: proj.colleague_name || null,
+        colleague_role: proj.colleague_role || null,
+        colleague_relationship: proj.colleague_relationship || null,
+        colleague_email: proj.colleague_email || null,
       }).select().single();
+      // If colleague email provided, create validation request
+      if (data?.id && proj.colleague_email) {
+        await sb.from('project_validations').insert({
+          project_id: data.id, user_id: authUser.id,
+          colleague_name: proj.colleague_name, colleague_email: proj.colleague_email,
+          colleague_role: proj.colleague_role, relationship: proj.colleague_relationship,
+          status: 'pending',
+        });
+        showToast('Validation request sent to ' + proj.colleague_name, 'info');
+      }
       if (data) id = data.id;
     }
     setUser({ ...user, projects: [...projects, { ...proj, id }] });
@@ -369,11 +416,41 @@ export default function Dashboard({ onNavigate }) {
     onNavigate('landing');
   };
 
+  const loadValidations = async () => {
+    const sb = await getSupabase();
+    if (!sb || !authUser) return;
+    setValidationsLoading(true);
+    const { data } = await sb.from('project_validations')
+      .select(`*, projects(title)`)
+      .eq('user_id', authUser.id)
+      .order('sent_at', { ascending: false });
+    setValidations(data || []);
+    setValidationsLoading(false);
+  };
+
+  const withdrawValidation = async (id) => {
+    const sb = await getSupabase();
+    if (!sb) return;
+    await sb.from('project_validations').update({ status: 'withdrawn' }).eq('id', id);
+    setValidations(v => v.map(x => x.id === id ? { ...x, status: 'withdrawn' } : x));
+    showToast('Validation request withdrawn', 'info');
+  };
+
+  const resendValidation = async (id) => {
+    const sb = await getSupabase();
+    if (!sb) return;
+    await sb.from('project_validations').update({ status: 'pending', sent_at: new Date().toISOString() }).eq('id', id);
+    setValidations(v => v.map(x => x.id === id ? { ...x, status: 'pending' } : x));
+    showToast('Validation request resent', 'success');
+  };
+
   const tabs = [
     { id: 'overview',       label: '📊 Overview' },
     { id: 'certifications', label: '🎓 Certifications' },
     { id: 'verify',         label: '✅ Verify' },
     { id: 'projects',       label: '🏗️ Projects' },
+    { id: 'validations',    label: '🤝 Validations' },
+    { id: 'cv',             label: '📄 CV Analyser' },
     { id: 'settings',       label: '⚙️ Settings' },
   ];
 
@@ -385,7 +462,7 @@ export default function Dashboard({ onNavigate }) {
           <div>
             <div className="badge badge-blue" style={{ marginBottom: '0.5rem' }}>Dashboard</div>
             <h1 style={{ fontSize: 'clamp(1.6rem, 3vw, 2.4rem)', marginBottom: '0.25rem' }}>
-              Welcome back, {(user.name || '').split(' ')[0]} 👋
+              Welcome back, {user.first_name || (user.name || '').split(' ')[0]} 👋
             </h1>
             <p style={{ color: 'var(--muted2)', fontSize: '0.95rem' }}>{user.headline} · {user.specialism}</p>
           </div>
@@ -431,7 +508,7 @@ export default function Dashboard({ onNavigate }) {
         {/* Tabs */}
         <div className="tabs" style={{ marginBottom: '1.5rem' }}>
           {tabs.map(t => (
-            <button key={t.id} className={`tab ${activeTab === t.id ? 'active' : ''}`} onClick={() => setActiveTab(t.id)}>
+            <button key={t.id} className={`tab ${activeTab === t.id ? 'active' : ''}`} onClick={() => { setActiveTab(t.id); if (t.id === 'validations') loadValidations(); }}>
               {t.label}
               {t.id === 'verify' && certs.filter(c => !c.verified).length > 0 && (
                 <span style={{ marginLeft: '0.4rem', background: 'var(--gold)', color: '#000', borderRadius: 10, padding: '0 6px', fontSize: '0.65rem', fontWeight: 700 }}>
@@ -600,6 +677,88 @@ export default function Dashboard({ onNavigate }) {
           </div>
         )}
 
+
+        {/* Validations */}
+        {activeTab === 'validations' && (
+          <div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
+              <div>
+                <h3 style={{ margin: 0 }}>Project Validation Requests</h3>
+                <p style={{ fontSize: '0.85rem', color: 'var(--muted2)', margin: '0.25rem 0 0' }}>
+                  Requests sent to colleagues to validate your project involvement
+                </p>
+              </div>
+            </div>
+            {validationsLoading ? (
+              <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--muted2)' }}>Loading...</div>
+            ) : validations.length === 0 ? (
+              <div className="card" style={{ textAlign: 'center', padding: '3rem', borderStyle: 'dashed' }}>
+                <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>🤝</div>
+                <h3 style={{ marginBottom: '0.5rem' }}>No validation requests yet</h3>
+                <p style={{ color: 'var(--muted2)', fontSize: '0.9rem' }}>
+                  Add a colleague email when logging a project to request validation.
+                </p>
+              </div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                {validations.map(v => {
+                  const statusColor = { pending: 'var(--gold)', approved: 'var(--green)', rejected: '#f87171', withdrawn: 'var(--muted2)' }[v.status] || 'var(--muted2)';
+                  const statusIcon = { pending: '⏳', approved: '✅', rejected: '❌', withdrawn: '↩️' }[v.status] || '❓';
+                  const canAct = v.status === 'pending';
+                  return (
+                    <div key={v.id} className="card" style={{ padding: '1rem' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1rem' }}>
+                        <div style={{ flex: 1 }}>
+                          <div style={{ fontWeight: 600, marginBottom: '0.25rem' }}>{v.projects?.title || 'Project'}</div>
+                          <div style={{ fontSize: '0.85rem', color: 'var(--muted2)' }}>
+                            Sent to <strong>{v.colleague_name}</strong> ({v.colleague_email})
+                          </div>
+                          <div style={{ fontSize: '0.8rem', color: 'var(--muted2)', marginTop: '0.25rem' }}>
+                            {v.colleague_role} · {v.relationship} · {new Date(v.sent_at).toLocaleDateString()}
+                          </div>
+                          {v.response_note && (
+                            <div style={{ fontSize: '0.82rem', fontStyle: 'italic', color: 'var(--muted2)', marginTop: '0.4rem', borderLeft: '2px solid var(--border)', paddingLeft: '0.5rem' }}>
+                              "{v.response_note}"
+                            </div>
+                          )}
+                        </div>
+                        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: '0.5rem' }}>
+                          <span style={{ fontSize: '0.8rem', fontWeight: 600, color: statusColor }}>
+                            {statusIcon} {v.status.charAt(0).toUpperCase() + v.status.slice(1)}
+                          </span>
+                          {canAct && (
+                            <div style={{ display: 'flex', gap: '0.5rem' }}>
+                              <button className="btn btn-sm btn-outline" onClick={() => resendValidation(v.id)} style={{ fontSize: '0.75rem' }}>Resend</button>
+                              <button className="btn btn-sm" onClick={() => withdrawValidation(v.id)} style={{ fontSize: '0.75rem', background: 'rgba(239,68,68,.15)', color: '#f87171', border: 'none' }}>Withdraw</button>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* CV Analyser */}
+        {activeTab === 'cv' && (
+          <div>
+            <div style={{ marginBottom: '1.25rem' }}>
+              <h3 style={{ margin: '0 0 0.25rem' }}>CV Analyser</h3>
+              <p style={{ fontSize: '0.85rem', color: 'var(--muted2)', margin: 0 }}>
+                Upload your CV to generate a professional summary for your profile.
+              </p>
+            </div>
+            <ResumeAnalyser
+              onApprove={(summary) => {
+                setUser(u => ({ ...u, bio: summary }));
+                showToast('Profile summary updated — click Save Changes in Settings to persist', 'success');
+              }}
+            />
+          </div>
+        )}
         {/* Settings */}
         {activeTab === 'settings' && (
           <div style={{ maxWidth: 600 }}>
@@ -607,12 +766,6 @@ export default function Dashboard({ onNavigate }) {
             <div className="card">
               <SettingsForm user={user} setUser={setUser} showToast={showToast} authUser={authUser} />
 
-              {/* ── Resume Analyser ─────────────────────────────────────── */}
-              <div style={{ marginBottom: '1rem' }}>
-                <ResumeAnalyser onApply={(data) => {
-                  showToast('Profile updated from resume');
-                }} />
-              </div>
             </div>
           </div>
         )}
