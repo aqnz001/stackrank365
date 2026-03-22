@@ -32,7 +32,7 @@ export default function Auth({ mode = 'signup', onNavigate }) {
   const [resetSent, setResetSent] = useState(false);
 
   const [form, setForm] = useState({
-    name: '', email: '', username: '', password: '',
+    first_name: '', last_name: '', email: '', username: '', password: ',
     headline: '', specialism: 'Dynamics 365', location: '', yearsExp: '',
   });
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
@@ -83,7 +83,7 @@ export default function Auth({ mode = 'signup', onNavigate }) {
   // ─── Step 1: account details ──────────────────────────────────────────────
   const handleStep1 = (e) => {
     e.preventDefault();
-    if (!form.name || !form.email || !form.password) { showToast('Fill in all fields', 'error'); return; }
+    if (!form.first_name || !form.last_name || !form.email || !form.password) { showToast('Fill in all fields', 'error'); return; }
     if (!form.email.includes('@')) { showToast('Enter a valid email', 'error'); return; }
     if (form.password.length < 8) { showToast('Password must be 8+ characters', 'error'); return; }
     setStep(2);
@@ -101,8 +101,10 @@ export default function Auth({ mode = 'signup', onNavigate }) {
         password: form.password,
         options: {
           data: {
-            full_name: form.name,
-            preferred_username: form.username || form.name.toLowerCase().replace(/\s+/g, '.'),
+            full_name: (form.first_name + ' ' + form.last_name).trim(),
+          first_name: form.first_name,
+          last_name: form.last_name,
+            preferred_username: form.username || (form.first_name + '.' + form.last_name).toLowerCase().replace(/\s+/g, '.),
           },
         },
       });
@@ -122,7 +124,7 @@ export default function Auth({ mode = 'signup', onNavigate }) {
     } else {
       // localStorage fallback
       setUser({
-        name: form.name, email: form.email,
+        name: (form.first_name + ' ' + form.last_name).trim(), first_name: form.first_name, last_name: form.last_name, email: form.email,
         username: form.username || form.name.toLowerCase().replace(/\s+/g, '.'),
         headline: form.headline, specialism: form.specialism,
         location: form.location, yearsExp: parseInt(form.yearsExp) || 0,
@@ -146,7 +148,7 @@ export default function Auth({ mode = 'signup', onNavigate }) {
       showToast('Welcome back!', 'success');
       onNavigate('dashboard');
     } else {
-      setUser({ name: 'Demo User', email: form.email, username: 'demo.user',
+      setUser({ name: 'Demo User', first_name: 'Demo', last_name: 'User', email: form.email, username: 'demo.user',
         headline: 'Microsoft Professional', specialism: 'Dynamics 365',
         certifications: [], projects: [], foundingMember: true });
       showToast('Welcome back! (demo mode)', 'success');
@@ -266,9 +268,15 @@ export default function Auth({ mode = 'signup', onNavigate }) {
               {/* Signup Step 1 */}
               {isSignup && step === 1 && (
                 <form onSubmit={handleStep1}>
-                  <div className="form-group">
-                    <label className="label">Full Name</label>
-                    <input className="input" placeholder="Sarah Mitchell" value={form.name} onChange={e => set('name', e.target.value)} />
+                  <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'0.75rem' }}>
+                    <div className="form-group" style={{ margin:0 }}>
+                      <label className="label">First Name</label>
+                      <input className="input" placeholder="Sarah" value={form.first_name} onChange={e => set('first_name', e.target.value)} />
+                    </div>
+                    <div className="form-group" style={{ margin:0 }}>
+                      <label className="label">Last Name</label>
+                      <input className="input" placeholder="Mitchell" value={form.last_name} onChange={e => set('last_name', e.target.value)} />
+                    </div>
                   </div>
                   <div className="form-group">
                     <label className="label">Email</label>
