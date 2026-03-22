@@ -104,7 +104,7 @@ export default function Auth({ mode = 'signup', onNavigate }) {
             full_name: (form.first_name + ' ' + form.last_name).trim(),
             first_name: form.first_name,
             last_name: form.last_name,
-            preferred_username: form.username || (form.first_name + '.' + form.last_name).toLowerCase().replace(/\s+/g, '.')),
+            preferred_username: form.username || (form.first_name + '.' + form.last_name).toLowerCase().replace(/\s+/g, '.'),
           },
         },
       });
@@ -116,7 +116,7 @@ export default function Auth({ mode = 'signup', onNavigate }) {
           specialism: form.specialism,
           location: form.location,
           years_exp: parseInt(form.yearsExp) || 0,
-          username: form.username || form.name.toLowerCase().replace(/\s+/g, '.'),
+          username: form.username || (form.first_name + ' ' + form.last_name).toLowerCase().replace(/\s+/g, '.'),
         }).eq('id', data.user.id);
       }
       showToast('Welcome to StackRank365! 🎉 Complete your profile to start earning points.', 'success');
@@ -125,7 +125,7 @@ export default function Auth({ mode = 'signup', onNavigate }) {
       // localStorage fallback
       setUser({
         name: (form.first_name + ' ' + form.last_name).trim(), first_name: form.first_name, last_name: form.last_name, email: form.email,
-        username: form.username || form.name.toLowerCase().replace(/\s+/g, '.'),
+        username: form.username || (form.first_name + ' ' + form.last_name).toLowerCase().replace(/\s+/g, '.'),
         headline: form.headline, specialism: form.specialism,
         location: form.location, yearsExp: parseInt(form.yearsExp) || 0,
         certifications: [], projects: [], foundingMember: true,
