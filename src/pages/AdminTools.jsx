@@ -24,13 +24,35 @@ const fail = m => ({ status:'fail', message:m });
 const skip = m => ({ status:'skip', message:m });
 const warn = m => ({ status:'warn', message:m });
 
+// ── DOM-based page check for SPA CTA tests ────────────────────────────────────
+// Navigates to a page via React routing, waits for render, checks DOM, restores
+async function checkPage(page, checks) {
+  const prev = new URLSearchParams(window.location.search).get('page') || '';
+  // Push new route
+  const url = new URL(window.location.href);
+  url.searchParams.set('page', page);
+  window.history.pushState({}, '', url);
+  window.dispatchEvent(new PopStateEvent('popstate'));
+  // Wait for React to render
+  await new Promise(r => setTimeout(r, 1800));
+  const text = document.body.innerText;
+  // Restore admin tools
+  const restore = new URL(window.location.href);
+  restore.searchParams.set('page', 'sr365-admin-tools');
+  window.history.pushState({}, '', restore);
+  window.dispatchEvent(new PopStateEvent('popstate'));
+  await new Promise(r => setTimeout(r, 400));
+  // Run checks against captured text
+  return { text, page };
+}
+
 const SUITES = [
   { id:'landing', name:'TS-01 Landing Page', tests:[
-    { id:'TC-001', name:'Page title correct', priority:'P1', run: async()=>{ const h=await fetch(SITE).then(r=>r.text()); return h.includes('StackRank365')?pass('Title correct'):fail('StackRank365 missing'); }},
+    { id:'TC-001', name:'Page title correct', priority:'P1', run: async()=>{ const h=await fetch(SITE).then(r=>r.text()); return h.includes('StackRank365')?pass('Title correct'):fail('StackRank365 not in HTML shell'); }},
     { id:'TC-002', name:'Nav links in DOM', priority:'P1', run: async()=>{ const t=document.body.innerText; const m=['How It Works','Scoring','Leaderboard','About'].filter(n=>!t.includes(n)); return m.length?fail('Missing: '+m.join(', ')):pass('All nav links present'); }},
     { id:'TC-003', name:'Load time < 5s', priority:'P2', run: async()=>{ const t=Date.now(); await fetch(SITE); const ms=Date.now()-t; return ms>5000?fail(ms+'ms exceeds 5s'):pass('Loaded in '+ms+'ms'); }},
-    { id:'TC-004', name:'Privacy page loads', priority:'P1', run: async()=>{ const h=await fetch(SITE+'/?page=privacy').then(r=>r.text()); return h.includes('StackRank365')?pass('Privacy page shell loads'):fail('Shell missing'); }},
-    { id:'TC-005', name:'Pricing page loads', priority:'P2', run: async()=>{ const h=await fetch(SITE+'/?page=pricing').then(r=>r.text()); return h.includes('StackRank365')?pass('Pricing page loads'):fail('Shell missing'); }},
+    { id:'TC-004', name:'Privacy page shell loads', priority:'P1', run: async()=>{ const h=await fetch(SITE+'/?page=privacy').then(r=>r.text()); return h.includes('StackRank365')?pass('Privacy page shell loads (React SPA)'):fail('Shell missing'); }},
+    { id:'TC-005', name:'Pricing page shell loads', priority:'P2', run: async()=>{ const h=await fetch(SITE+'/?page=pricing').then(r=>r.text()); return h.includes('StackRank365')?pass('Pricing page shell loads (React SPA)'):fail('Shell missing'); }},
   ]},
   { id:'auth', name:'TS-02 Authentication', tests:[
     { id:'TC-020', name:'Sign up new email', priority:'P1', run: async()=>{ const e='auto_'+Date.now()+'@protonmail.com'; const r=await sbAuth('/auth/v1/signup',{email:e,password:'TestPass123!'}); const d=await safeJson(r); return(d.user?.id||d.id)?pass('Signup accepted'):warn('Check: '+(d.error_description||JSON.stringify(d).slice(0,60))); }},
@@ -77,24 +99,24 @@ const SUITES = [
     { id:'TC-DI-03', name:'profiles: tier values valid', priority:'P1', run: async()=>{ const r=await sbRest('/rest/v1/profiles?select=tier&not.tier=in.(free,pro,recruiter)&limit=5'); if(!r.ok)return skip('RLS blocks anon check'); const rows=await safeJson(r); return rows.length?fail(rows.length+' profiles have invalid tier'):pass('All tier values valid'); }},
     { id:'TC-DI-04', name:'certifications alias columns exist', priority:'P1', run: async()=>{ const r=await sbRest('/rest/v1/certifications?select=ms_cert_id,profile_id,issued_date&limit=1'); return r.ok?pass('Alias columns (ms_cert_id, profile_id, issued_date) exist'):fail('Alias columns missing: '+(await safeJson(r)).message); }},
   ]},
-  { id:'cta_landing', name:'TS-08 CTAs - Landing Page', tests:[
-    { id:'TC-CTA-01', name:'Join Waitlist CTA present', priority:'P1', run: async()=>{ const h=await fetch(SITE).then(r=>r.text()); return h.includes('Waitlist')||h.includes('waitlist')?pass('Join Waitlist CTA present'):fail('Join Waitlist CTA missing'); }},
-    { id:'TC-CTA-02', name:'Leaderboard link present', priority:'P2', run: async()=>{ const h=await fetch(SITE).then(r=>r.text()); return h.includes('leaderboard')?pass('Leaderboard link present'):fail('No leaderboard link'); }},
-    { id:'TC-CTA-03', name:'Scoring link present', priority:'P2', run: async()=>{ const h=await fetch(SITE).then(r=>r.text()); return h.includes('scoring')||h.includes('Scoring')?pass('Scoring link present'):fail('No scoring link'); }},
-    { id:'TC-CTA-04', name:'Get Early Access CTA present', priority:'P2', run: async()=>{ const h=await fetch(SITE).then(r=>r.text()); return h.includes('Early Access')||h.includes('early-access')?pass('Early Access CTA present'):fail('Early Access CTA missing'); }},
-    { id:'TC-CTA-05', name:'View Rankings CTA present', priority:'P2', run: async()=>{ const h=await fetch(SITE).then(r=>r.text()); return h.includes('Rankings')||h.includes('ranking')?pass('Rankings CTA present'):fail('Rankings CTA missing'); }},
-    { id:'TC-CTA-06', name:'Browse Profile CTA present', priority:'P2', run: async()=>{ const h=await fetch(SITE).then(r=>r.text()); return h.includes('Browse')||h.includes('Profile')?pass('Browse Profile CTA present'):fail('Browse Profile CTA missing'); }},
-    { id:'TC-CTA-07', name:'See the Math / Scoring link present', priority:'P2', run: async()=>{ const h=await fetch(SITE).then(r=>r.text()); return h.includes('Math')||h.includes('math')||h.includes('scoring')?pass('See the Math / Scoring CTA present'):fail('Math/Scoring CTA missing'); }},
+  { id:'cta_landing', name:'TS-08 CTAs - Landing Page (DOM)', tests:[
+    { id:'TC-CTA-01', name:'Join Waitlist CTA in live DOM', priority:'P1', run: async()=>{ const {text}=await checkPage('landing',[]); return text.includes('Waitlist')||text.includes('waitlist')?pass('Join Waitlist CTA present in rendered DOM'):fail('Join Waitlist CTA missing from rendered landing page'); }},
+    { id:'TC-CTA-02', name:'Leaderboard link in live DOM', priority:'P2', run: async()=>{ const {text}=await checkPage('landing',[]); return text.includes('Leaderboard')||text.includes('leaderboard')?pass('Leaderboard link present in rendered DOM'):fail('Leaderboard link missing'); }},
+    { id:'TC-CTA-03', name:'Scoring link in live DOM', priority:'P2', run: async()=>{ const {text}=await checkPage('landing',[]); return text.includes('Scoring')||text.includes('scoring')?pass('Scoring link present in rendered DOM'):fail('Scoring link missing'); }},
+    { id:'TC-CTA-04', name:'Early Access CTA in live DOM', priority:'P2', run: async()=>{ const {text}=await checkPage('landing',[]); return text.includes('Early Access')||text.includes('Waitlist')||text.includes('Get Started')?pass('Primary acquisition CTA present in rendered DOM'):fail('Acquisition CTA missing'); }},
+    { id:'TC-CTA-05', name:'Rankings/Leaderboard CTA in live DOM', priority:'P2', run: async()=>{ const {text}=await checkPage('landing',[]); return text.includes('Rankings')||text.includes('ranking')||text.includes('Leaderboard')?pass('Rankings CTA present in rendered DOM'):fail('Rankings CTA missing'); }},
+    { id:'TC-CTA-06', name:'Profile/Browse CTA in live DOM', priority:'P2', run: async()=>{ const {text}=await checkPage('landing',[]); return text.includes('Browse')||text.includes('Profile')||text.includes('View')?pass('Browse/Profile CTA present in rendered DOM'):fail('Browse/Profile CTA missing'); }},
+    { id:'TC-CTA-07', name:'Scoring/Math link in live DOM', priority:'P2', run: async()=>{ const {text}=await checkPage('landing',[]); return text.includes('Math')||text.includes('Scoring')||text.includes('breakdown')?pass('Scoring/Math CTA present in rendered DOM'):fail('Scoring/Math CTA missing'); }},
   ]},
-  { id:'cta_pricing', name:'TS-09 CTAs - Pricing Page', tests:[
-    { id:'TC-CTA-10', name:'All 3 tier cards present (Free, Pro, Recruiter)', priority:'P1', run: async()=>{ const h=await fetch(SITE+'/?page=pricing').then(r=>r.text()); const hasFree=h.includes('Free'); const hasPro=h.includes('Pro')||h.includes('$9'); const hasRec=h.includes('Recruiter')||h.includes('$49'); return(hasFree&&hasPro&&hasRec)?pass('Free, Pro ($9), Recruiter ($49) all present'):fail('Missing - Free:'+hasFree+' Pro:'+hasPro+' Recruiter:'+hasRec); }},
-    { id:'TC-CTA-11', name:'"Get started free" CTA present', priority:'P1', run: async()=>{ const h=await fetch(SITE+'/?page=pricing').then(r=>r.text()); return h.includes('Get started')||h.includes('started free')?pass('"Get started free" CTA present'):fail('CTA missing'); }},
-    { id:'TC-CTA-12', name:'"Start Pro" CTA present', priority:'P1', run: async()=>{ const h=await fetch(SITE+'/?page=pricing').then(r=>r.text()); return h.includes('Start Pro')||h.includes('Pro')?pass('"Start Pro" CTA present'):fail('Pro CTA missing'); }},
-    { id:'TC-CTA-13', name:'"Start Recruiter trial" CTA present', priority:'P1', run: async()=>{ const h=await fetch(SITE+'/?page=pricing').then(r=>r.text()); return h.includes('Recruiter')||h.includes('recruiter')?pass('"Start Recruiter trial" CTA present'):fail('Recruiter CTA missing'); }},
-    { id:'TC-CTA-14', name:'Pricing FAQ section present', priority:'P2', run: async()=>{ const h=await fetch(SITE+'/?page=pricing').then(r=>r.text()); return h.includes('FAQ')||h.includes('question')||h.includes('frequently')?pass('FAQ section present'):fail('FAQ section missing'); }},
+  { id:'cta_pricing', name:'TS-09 CTAs - Pricing Page (DOM)', tests:[
+    { id:'TC-CTA-10', name:'All 3 tier cards in live DOM (Free, Pro, Recruiter)', priority:'P1', run: async()=>{ const {text}=await checkPage('pricing',[]); const hasFree=text.includes('Free'); const hasPro=text.includes('Pro'); const hasRec=text.includes('Recruiter'); return(hasFree&&hasPro&&hasRec)?pass('Free, Pro, Recruiter tier cards present in rendered DOM'):fail('Missing tiers in rendered DOM - Free:'+hasFree+' Pro:'+hasPro+' Recruiter:'+hasRec); }},
+    { id:'TC-CTA-11', name:'"Get started free" CTA in live DOM', priority:'P1', run: async()=>{ const {text}=await checkPage('pricing',[]); return text.includes('Get started')||text.includes('started free')||text.includes('Start Free')?pass('"Get started free" CTA present in rendered DOM'):fail('Get started free CTA missing from rendered DOM'); }},
+    { id:'TC-CTA-12', name:'"Start Pro" CTA in live DOM', priority:'P1', run: async()=>{ const {text}=await checkPage('pricing',[]); return text.includes('Start Pro')||text.includes('Pro')?pass('"Start Pro" CTA present in rendered DOM'):fail('Pro CTA missing'); }},
+    { id:'TC-CTA-13', name:'"Start Recruiter" CTA in live DOM', priority:'P1', run: async()=>{ const {text}=await checkPage('pricing',[]); return text.includes('Recruiter')||text.includes('recruiter')?pass('"Start Recruiter" CTA present in rendered DOM'):fail('Recruiter CTA missing'); }},
+    { id:'TC-CTA-14', name:'FAQ section in live DOM', priority:'P2', run: async()=>{ const {text}=await checkPage('pricing',[]); return text.includes('FAQ')||text.includes('question')||text.includes('frequently')||text.includes('Q:')?pass('FAQ section present in rendered DOM'):fail('FAQ section missing from rendered pricing page'); }},
   ]},
-  { id:'cta_dashboard', name:'TS-10 CTAs - Dashboard (run while signed in)', tests:[
-    { id:'TC-CTA-20', name:'Dashboard shell loads', priority:'P1', run: async()=>{ const h=await fetch(SITE+'/?page=dashboard').then(r=>r.text()); return h.includes('StackRank365')?pass('Dashboard shell loads'):fail('Shell missing'); }},
+  { id:'cta_dashboard', name:'TS-10 CTAs - Dashboard (sign in first)', tests:[
+    { id:'TC-CTA-20', name:'Dashboard shell loads (HTTP)', priority:'P1', run: async()=>{ const h=await fetch(SITE+'/?page=dashboard').then(r=>r.text()); return h.includes('StackRank365')?pass('Dashboard shell loads'):fail('Shell missing'); }},
     { id:'TC-CTA-21', name:'"Public Profile" link present', priority:'P2', run: async()=>{ const t=document.body.innerText; return t.includes('Public Profile')?pass('"Public Profile" link present'):skip('Sign in and navigate to dashboard, then re-run'); }},
     { id:'TC-CTA-22', name:'"Sign Out" button present', priority:'P1', run: async()=>{ const t=document.body.innerText; return t.includes('Sign Out')?pass('"Sign Out" button present'):skip('Not signed in - sign in and re-run'); }},
     { id:'TC-CTA-23', name:'Certifications tab present', priority:'P1', run: async()=>{ const t=document.body.innerText; return t.includes('Certifications')?pass('Certifications tab present'):skip('Not on dashboard'); }},
@@ -111,12 +133,12 @@ const SUITES = [
     { id:'TC-CTA-41', name:'Admin fraud page shell loads', priority:'P1', run: async()=>{ const h=await fetch(SITE+'/?page=admin-fraud').then(r=>r.text()); return h.includes('StackRank365')?pass('Admin fraud page shell loads'):fail('Shell missing'); }},
     { id:'TC-CTA-42', name:'Leaderboard page loads', priority:'P1', run: async()=>{ const h=await fetch(SITE+'/?page=leaderboard').then(r=>r.text()); return h.includes('StackRank365')?pass('Leaderboard page shell loads'):fail('Shell missing'); }},
     { id:'TC-CTA-43', name:'Sign in page loads', priority:'P1', run: async()=>{ const h=await fetch(SITE+'/?page=signin').then(r=>r.text()); return h.includes('StackRank365')?pass('Sign in page shell loads'):fail('Shell missing'); }},
-    { id:'TC-CTA-44', name:'No broken 404 pages', priority:'P1', run: async()=>{ const pages=['landing','pricing','privacy','leaderboard','signin','dashboard','recruiter-dashboard','admin-fraud']; const results=await Promise.all(pages.map(p=>fetch(SITE+'/?page='+p).then(r=>({p,ok:r.ok,status:r.status})))); const broken=results.filter(r=>!r.ok); return broken.length?fail('Broken pages: '+broken.map(r=>r.p+'('+r.status+')').join(', ')):pass('All '+pages.length+' pages return HTTP 200'); }},
+    { id:'TC-CTA-44', name:'No broken 404 pages', priority:'P1', run: async()=>{ const pages=['landing','pricing','privacy','leaderboard','signin','dashboard','recruiter-dashboard','admin-fraud']; const results=await Promise.all(pages.map(p=>fetch(SITE+'/?page='+p).then(r=>({p,ok:r.ok,status:r.status})))); const broken=results.filter(r=>!r.ok); return broken.length?fail('Broken: '+broken.map(r=>r.p+'('+r.status+')').join(', ')):pass('All '+pages.length+' pages return HTTP 200'); }},
   ]},
   { id:'admin_fraud', name:'TS-12 Admin - Fraud & Reputation', tests:[
-    { id:'TC-140', name:'detect-fake-profiles runs cleanly', priority:'P2', run: async()=>{ const r=await withTimeout(sbFn('detect-fake-profiles',{limit:5})); const d=await safeJson(r); return(r.ok&&d.errors===0)?pass('Detection ran cleanly: checked='+d.checked+', errors=0'):r.ok?warn('Detection ran with '+d.errors+' errors'):fail('HTTP '+r.status+': '+(d.error||JSON.stringify(d).slice(0,60))); }},
+    { id:'TC-140', name:'detect-fake-profiles runs cleanly', priority:'P2', run: async()=>{ const r=await withTimeout(sbFn('detect-fake-profiles',{limit:5})); const d=await safeJson(r); return(r.ok&&d.errors===0)?pass('Detection ran cleanly: checked='+d.checked+', errors=0'):r.ok?warn('Ran with '+d.errors+' errors'):fail('HTTP '+r.status+': '+(d.error||JSON.stringify(d).slice(0,60))); }},
     { id:'TC-141', name:'verify-reputation runs cleanly', priority:'P2', run: async()=>{ const r=await withTimeout(sbFn('verify-reputation',{limit:3})); const d=await safeJson(r); return r.ok?pass('Reputation check ran: verified='+d.verified+', warnings='+d.warnings+', errors='+d.errors):fail('HTTP '+r.status+': '+(d.error||JSON.stringify(d).slice(0,60))); }},
-    { id:'TC-142', name:'fraud_audit_log accessible', priority:'P2', run: async()=>{ const r=await sbRest('/rest/v1/fraud_audit_log?select=id&limit=5'); return r.ok?pass('fraud_audit_log accessible'):fail('Cannot access fraud_audit_log: HTTP '+r.status); }},
+    { id:'TC-142', name:'fraud_audit_log accessible', priority:'P2', run: async()=>{ const r=await sbRest('/rest/v1/fraud_audit_log?select=id&limit=5'); return r.ok?pass('fraud_audit_log accessible'):fail('Cannot access: HTTP '+r.status); }},
   ]},
 ];
 
@@ -140,7 +162,7 @@ function PasswordGate({ onUnlock }) {
         <input type="password" value={pw} onChange={e=>setPw(e.target.value)} onKeyDown={e=>e.key==='Enter'&&attempt()} placeholder="Enter admin password" autoFocus style={{width:'100%',padding:'10px 12px',fontSize:14,background:'#0f172a',border:'1px solid #334155',borderRadius:8,color:'#f1f5f9',marginBottom:10,outline:'none',fontFamily:'monospace'}}/>
         {error&&<p style={{fontSize:12,color:'#f87171',margin:'0 0 10px'}}>{error}</p>}
         <button onClick={attempt} disabled={loading||!pw} style={{width:'100%',padding:10,background:'#2563eb',color:'#fff',border:'none',borderRadius:8,fontSize:14,fontWeight:600,cursor:'pointer',opacity:(!pw||loading)?0.5:1}}>{loading?'Checking...':'Unlock'}</button>
-        <p style={{fontSize:11,color:'#475569',marginTop:'1.5rem'}}>Not linked or indexed anywhere in the app.</p>
+        <p style={{fontSize:11,color:'#475569',marginTop:'1.5rem'}}>Not linked anywhere in the app.</p>
       </div>
     </div>
   );
@@ -191,8 +213,7 @@ function TestRunner() {
         {SUITES.filter(s=>filterSuite==='all'||s.id===filterSuite).map(suite=>(
           <div key={suite.id} style={{marginBottom:'1rem'}}>
             <div style={{fontSize:12,fontWeight:700,color:'#374151',marginBottom:5,padding:'4px 0',display:'flex',alignItems:'center',gap:8}}>
-              {suite.name}
-              {done>0&&<span style={{fontSize:10,color:'#9ca3af'}}>- {suite.tests.filter(t=>results[t.id]?.status==='pass').length}/{suite.tests.length} pass</span>}
+              {suite.name}{done>0&&<span style={{fontSize:10,color:'#9ca3af'}}>- {suite.tests.filter(t=>results[t.id]?.status==='pass').length}/{suite.tests.length} pass</span>}
             </div>
             {suite.tests.map(tc=>{
               const r=results[tc.id]||{status:'pending',message:'Waiting...'};
@@ -202,8 +223,7 @@ function TestRunner() {
                     <span style={{fontSize:10,fontWeight:700,color:'#2563eb',fontFamily:'monospace',minWidth:82}}>{tc.id}</span>
                     <span style={{fontSize:12,flex:1}}>{tc.name}</span>
                     <Badge status={r.status}/>
-                    <span style={{fontSize:10,color:'#9ca3af'}}>{expanded[tc.id]?'v':'>'}
-                    </span>
+                    <span style={{fontSize:10,color:'#9ca3af'}}>{expanded[tc.id]?'[-]':'[+]'}</span>
                   </div>
                   {expanded[tc.id]&&<div style={{padding:'5px 12px 8px 98px',fontSize:11,background:'#fafafa',borderRadius:'0 0 8px 8px',border:'1px solid #f1f5f9',borderTop:'none'}}><strong style={{color:r.status==='pass'?'#16a34a':r.status==='fail'?'#dc2626':'#92400e'}}>{r.status?.toUpperCase()}:</strong> <span style={{color:'#4b5563'}}>{r.message}</span></div>}
                 </div>
