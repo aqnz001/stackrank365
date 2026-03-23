@@ -12,6 +12,9 @@ export const CAPS = {
   BLOG_PER_YEAR: 10, GITHUB_PER_YEAR: 10,
 };
 
+// Community bonus is capped at this % of primary score (certs + projects)
+export const COMMUNITY_CAP_PCT = 0.15;
+
 export const RANK_TIERS = [
   { name: 'Explorer',           minScore: 0,     maxScore: 999,   icon: '🔍', color: 'var(--muted)',  colorClass: 'badge-muted',   description: 'Beginning the journey' },
   { name: 'Practitioner',       minScore: 1000,  maxScore: 3499,  icon: '⚡', color: 'var(--blue)',   colorClass: 'badge-blue',    description: 'Building credibility' },
