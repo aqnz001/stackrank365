@@ -139,15 +139,24 @@ export function AppProvider({ children }) {
 
   const calcScore = (u = user) => {
     if (!u) return 0;
-    let score = u.foundingMember ? 500 : 0;
+
+    // Primary score: certifications + projects + profile bonuses
+    let primary = 0;
     (u.certifications || []).forEach(c => {
-      if (c.verified !== false) {
-        score += Math.round((c.points || 500) * (c.scarcityMultiplier ? 1.25 : 1));
-      }
+      if (c.verified !== false) primary += (c.points || 0);
     });
-    (u.projects || []).forEach(p => { score += p.points || 800; });
-    if (u.bio) score += 150;
-    return score;
+    (u.projects || []).forEach(p => { primary += (p.points || 0); });
+    if (u.foundingMember) primary += (POINT_VALUES.FOUNDING_MEMBER || 500);
+    if (u.bio && u.headline && u.location && u.specialism) primary += (POINT_VALUES.PROFILE_COMPLETE || 150);
+
+    // Community bonus: capped at 15% of primary score
+    let communityRaw = 0;
+    (u.communityContributions || []).forEach(c => {
+      communityRaw += (c.points_awarded || 0);
+    });
+    const communityBonus = Math.min(communityRaw, Math.floor(primary * COMMUNITY_CAP_PCT));
+
+    return primary + communityBonus;
   };
 
   const getTierInfo = (u = user) => {
