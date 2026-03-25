@@ -324,6 +324,9 @@ export default function Dashboard({ onNavigate }) {
   const [activeTab, setActiveTab] = useState('overview');
   const [showCertModal, setShowCertModal] = useState(false);
   const [showProjectModal, setShowProjectModal] = useState(false);
+  const [communityItems, setCommunityItems] = useState([]);
+  const [showCommunityModal, setShowCommunityModal] = useState(false);
+  const [communityForm, setCommunityForm] = useState({ type: 'speaking_ms', title: '', url: '', event_date: '' });
   const [validations, setValidations] = useState([]);
   const [validationsLoading, setValidationsLoading] = useState(false);
   const [validatingProject, setValidatingProject] = useState(null);
@@ -416,6 +419,14 @@ export default function Dashboard({ onNavigate }) {
     onNavigate('landing');
   };
 
+  const loadCommunityItems = async () => {
+    const sb = await getSupabase();
+    if (!sb || !authUser) return;
+    const { data } = await sb.from('community_contributions')
+      .select('*').eq('user_id', authUser.id).eq('status', 'active').order('created_at', { ascending: false });
+    setCommunityItems(data || []);
+  };
+
   const loadValidations = async () => {
     const sb = await getSupabase();
     if (!sb || !authUser) return;
@@ -449,6 +460,7 @@ export default function Dashboard({ onNavigate }) {
     { id: 'certifications', label: '🎓 Certifications' },
     { id: 'verify',         label: '✅ Verify' },
     { id: 'projects',       label: '🏗️ Projects' },
+    { id: 'community',      label: '⭐ Community' },
     { id: 'validations',    label: '🤝 Validations' },
     { id: 'cv',             label: '📄 CV Analyser' },
     { id: 'settings',       label: '⚙️ Settings' },
@@ -508,7 +520,7 @@ export default function Dashboard({ onNavigate }) {
         {/* Tabs */}
         <div className="tabs" style={{ marginBottom: '1.5rem' }}>
           {tabs.map(t => (
-            <button key={t.id} className={`tab ${activeTab === t.id ? 'active' : ''}`} onClick={() => { setActiveTab(t.id); if (t.id === 'validations') loadValidations(); }}>
+            <button key={t.id} className={`tab ${activeTab === t.id ? 'active' : ''}`} onClick={() => { setActiveTab(t.id); if (t.id === 'validations') loadValidations(); if (t.id === 'community') loadCommunityItems(); }}>
               {t.label}
               {t.id === 'verify' && certs.filter(c => !c.verified).length > 0 && (
                 <span style={{ marginLeft: '0.4rem', background: 'var(--gold)', color: '#000', borderRadius: 10, padding: '0 6px', fontSize: '0.65rem', fontWeight: 700 }}>
@@ -677,6 +689,146 @@ export default function Dashboard({ onNavigate }) {
           </div>
         )}
 
+
+
+        {/* Community */}
+        {activeTab === 'community' && (
+          <div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1.25rem' }}>
+              <div>
+                <h3 style={{ margin: 0 }}>Community Contributions</h3>
+                <p style={{ fontSize: '0.85rem', color: 'var(--muted2)', margin: '0.25rem 0 0' }}>
+                  Earn up to 15% bonus on your primary score. Certifications and projects always lead.
+                </p>
+              </div>
+              <button className="btn btn-primary" onClick={() => setShowCommunityModal(true)}>+ Add Contribution</button>
+            </div>
+
+            {/* Cap progress bar */}
+            {(() => {
+              const primary = certs.filter(c=>c.verified!==false).reduce((s,c)=>s+(c.points||0),0) + projects.reduce((s,p)=>s+(p.points||0),0);
+              const cap = Math.floor(primary * 0.15);
+              const earned = communityItems.reduce((s,c)=>s+(c.points_awarded||0),0);
+              const applied = Math.min(earned, cap);
+              const pct = cap > 0 ? Math.min(100, Math.round(applied/cap*100)) : 0;
+              return (
+                <div className="card" style={{ padding: '1rem', marginBottom: '1.25rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.4rem' }}>
+                    <span style={{ fontSize: '0.85rem', color: 'var(--muted2)' }}>Community bonus applied</span>
+                    <span style={{ fontFamily: 'JetBrains Mono', fontSize: '0.82rem', color: 'var(--gold)', fontWeight: 700 }}>{applied.toLocaleString()} / {cap.toLocaleString()} pts cap</span>
+                  </div>
+                  <div style={{ height: 6, background: 'var(--surface)', borderRadius: 99, overflow: 'hidden', marginBottom: '0.4rem' }}>
+                    <div style={{ height: '100%', width: pct+'%', background: 'var(--gold)', borderRadius: 99, transition: 'width 0.4s' }} />
+                  </div>
+                  <p style={{ fontSize: '0.75rem', color: 'var(--muted2)', margin: 0 }}>Add more certifications or projects to raise your 15% cap ceiling.</p>
+                </div>
+              );
+            })()}
+
+            {/* Quick reference */}
+            <div className="card" style={{ padding: '1rem', marginBottom: '1.25rem' }}>
+              <div style={{ fontWeight: 600, fontSize: '0.88rem', marginBottom: '0.75rem' }}>What earns community points</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
+                {[
+                  { label: 'Microsoft MVP',               pts: '+1,500/yr', auto: true  },
+                  { label: 'Microsoft Certified Trainer', pts: '+800/yr',   auto: true  },
+                  { label: 'Speaking at MS event',        pts: '+500',      auto: false },
+                  { label: 'Speaking at community event', pts: '+300',      auto: false },
+                  { label: 'Published blog or article',   pts: '+200',      auto: false },
+                  { label: 'GitHub contributions',        pts: '+200/yr',   auto: true  },
+                  { label: 'Peer validation given',       pts: '+300',      auto: true  },
+                  { label: 'Peer referral',               pts: '+500',      auto: true  },
+                ].map(item => (
+                  <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '0.8rem' }}>
+                    <span style={{ flex: 1, color: 'var(--muted2)' }}>{item.label}</span>
+                    <span style={{ fontFamily: 'JetBrains Mono', color: 'var(--green)', fontWeight: 700 }}>{item.pts}</span>
+                    <span style={{ fontSize: '0.72rem', color: item.auto ? 'var(--green)' : 'var(--gold)' }}>{item.auto ? '✅ Auto' : '📋 Reported'}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Contributions list */}
+            {communityItems.length === 0 ? (
+              <div className="card" style={{ textAlign: 'center', padding: '3rem', borderStyle: 'dashed' }}>
+                <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>🌟</div>
+                <h3 style={{ marginBottom: '0.5rem' }}>No contributions yet</h3>
+                <p style={{ color: 'var(--muted2)', fontSize: '0.9rem', marginBottom: '1.25rem' }}>Add speaking events, blog posts, MVP status, or link your GitHub to earn bonus points.</p>
+                <button className="btn btn-primary" onClick={() => setShowCommunityModal(true)}>Add your first contribution</button>
+              </div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                {communityItems.map(item => (
+                  <div key={item.id} className="card" style={{ padding: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '1rem' }}>
+                    <div>
+                      <div style={{ fontWeight: 600, marginBottom: '0.2rem' }}>{item.title}</div>
+                      <div style={{ fontSize: '0.8rem', color: 'var(--muted2)' }}>{item.type?.replace(/_/g,' ')} {item.event_date ? '· '+item.event_date : ''}</div>
+                      {item.url && <a href={item.url} target="_blank" rel="noopener" style={{ fontSize: '0.75rem', color: 'var(--blue)', display: 'block', marginTop: '0.2rem' }}>{item.url.slice(0,60)}</a>}
+                    </div>
+                    <div style={{ textAlign: 'right', flexShrink: 0 }}>
+                      <div style={{ fontFamily: 'JetBrains Mono', color: 'var(--gold)', fontWeight: 700 }}>+{(item.points_awarded||0).toLocaleString()}</div>
+                      <div style={{ fontSize: '0.72rem', marginTop: '0.2rem', color: item.verified ? 'var(--green)' : 'var(--gold)' }}>{item.verified ? '✅ Verified' : '📋 Reported'}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Add contribution modal */}
+            {showCommunityModal && (
+              <div className="modal-overlay" onClick={() => setShowCommunityModal(false)}>
+                <div className="modal" onClick={e => e.stopPropagation()}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
+                    <h3 style={{ margin: 0 }}>Add Community Contribution</h3>
+                    <button className="btn btn-ghost btn-sm" onClick={() => setShowCommunityModal(false)}>✕</button>
+                  </div>
+                  <div className="form-group">
+                    <label className="label">Contribution Type</label>
+                    <select className="input" value={communityForm.type} onChange={e => setCommunityForm(f=>({...f,type:e.target.value}))}>
+                      <option value="speaking_ms">Speaking at Microsoft event (+500 pts)</option>
+                      <option value="speaking_community">Speaking at community event (+300 pts)</option>
+                      <option value="blog">Published blog post or article (+200 pts)</option>
+                      <option value="mvp">Microsoft MVP (+1,500 pts/yr)</option>
+                      <option value="mct">Microsoft Certified Trainer (+800 pts/yr)</option>
+                      <option value="github">GitHub contributions (+200 pts/yr)</option>
+                    </select>
+                  </div>
+                  <div className="form-group">
+                    <label className="label">Title or Description</label>
+                    <input className="input" placeholder="e.g. Power Platform session at Global Bootcamp 2026" value={communityForm.title} onChange={e => setCommunityForm(f=>({...f,title:e.target.value}))} />
+                  </div>
+                  <div className="form-group">
+                    <label className="label">URL (event page, blog post, GitHub profile)</label>
+                    <input className="input" type="url" placeholder="https://..." value={communityForm.url} onChange={e => setCommunityForm(f=>({...f,url:e.target.value}))} />
+                  </div>
+                  <div className="form-group">
+                    <label className="label">Date</label>
+                    <input className="input" type="date" value={communityForm.event_date} onChange={e => setCommunityForm(f=>({...f,event_date:e.target.value}))} />
+                  </div>
+                  <div className="card" style={{ background: 'rgba(245,158,11,0.06)', border: '1px solid rgba(245,158,11,0.2)', padding: '0.75rem', marginBottom: '1rem', fontSize: '0.8rem', color: 'var(--muted2)' }}>
+                    📋 Self-declared contributions are labelled Reported and visible on your profile. MVP, MCT and GitHub are auto-verified.
+                  </div>
+                  <div style={{ display: 'flex', gap: '0.75rem' }}>
+                    <button className="btn btn-ghost" onClick={() => setShowCommunityModal(false)}>Cancel</button>
+                    <button className="btn btn-primary" style={{ flex: 1, justifyContent: 'center' }} onClick={async () => {
+                      if (!communityForm.title) { showToast('Add a title', 'error'); return; }
+                      const pts = {speaking_ms:500,speaking_community:300,blog:200,mvp:1500,mct:800,github:200}[communityForm.type]||200;
+                      const newItem = {...communityForm, points_awarded:pts, verified:false, status:'active'};
+                      const sb = await getSupabase();
+                      if (sb && authUser) {
+                        const { data } = await sb.from('community_contributions').insert({user_id:authUser.id,...newItem}).select().single();
+                        if (data) setCommunityItems(items=>[...items,data]);
+                      } else { setCommunityItems(items=>[...items,{id:Date.now(),...newItem}]); }
+                      setShowCommunityModal(false);
+                      setCommunityForm({type:'speaking_ms',title:'',url:'',event_date:''});
+                      showToast('Contribution added', 'success');
+                    }}>Submit Contribution</button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Validations */}
         {activeTab === 'validations' && (
