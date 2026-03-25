@@ -140,7 +140,6 @@ function Footer({ onNavigate }) {
             <style>{'@keyframes _spin{to{transform:rotate(360deg)}}'}</style>
           </div>
         : <Dashboard onNavigate={navigate} />;
-      case 'dashboard':       return <Dashboard onNavigate={navigate} />;
       case 'signup':          return <Auth mode="signup" onNavigate={navigate} />;
       case 'signin':          return <Auth mode="signin" onNavigate={navigate} />;
       case 'reset-password':  return <ResetPassword onNavigate={navigate} />;
