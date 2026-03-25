@@ -191,69 +191,6 @@ export function Scoring({ onNavigate }) {
             </p>
           </div>
         </div>
-
-        {/* Scoring distribution */}
-        <div style={{ marginBottom: '2.5rem' }}>
-          <h2 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '0.5rem' }}>How Your Score Is Built</h2>
-          <p style={{ color: 'var(--muted2)', fontSize: '0.88rem', marginBottom: '1.25rem' }}>
-            Stack Points have two layers. Your <strong style={{ color: 'var(--text)' }}>Primary Score</strong> — certifications, projects, and profile completeness — is the foundation. Community contribution is an amplifier capped at <strong style={{ color: 'var(--text)' }}>15% of your primary score</strong>, so it can never replace verified expertise.
-          </p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1.75rem' }}>
-            {[
-              { label: 'Certifications',        pct: 55, color: 'var(--blue)',   desc: 'Core of your score. Fundamentals through Expert, weighted by tier and verification status.' },
-              { label: 'Projects',              pct: 35, color: 'var(--green)',  desc: 'Real-world implementations. Enterprise and standard weighting, peer validation bonuses.' },
-              { label: 'Profile and Referrals', pct: 5,  color: 'var(--purple)', desc: 'Profile completeness (+150 pts), founding member bonus, and peer referrals.' },
-              { label: 'Community Bonus',       pct: 5,  color: 'var(--gold)',   desc: 'Capped at 15% of primary score. MVP, MCT, speaking, writing, GitHub contributions.' },
-            ].map(function(item) {
-              return (
-                <div key={item.label} className="card" style={{ padding: '0.875rem 1rem' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.3rem' }}>
-                    <span style={{ fontWeight: 600, fontSize: '0.88rem', color: 'var(--text)' }}>{item.label}</span>
-                    <span style={{ fontFamily: 'JetBrains Mono', fontSize: '0.8rem', color: item.color, fontWeight: 700 }}>~{item.pct}%</span>
-                  </div>
-                  <div style={{ height: 5, background: 'var(--surface)', borderRadius: 99, overflow: 'hidden', marginBottom: '0.3rem' }}>
-                    <div style={{ height: '100%', width: item.pct + '%', background: item.color, borderRadius: 99 }} />
-                  </div>
-                  <p style={{ fontSize: '0.77rem', color: 'var(--muted2)', margin: 0 }}>{item.desc}</p>
-                </div>
-              );
-            })}
-          </div>
-          <h3 style={{ fontSize: '1rem', fontWeight: 700, marginBottom: '0.5rem' }}>Community Contribution — What Counts</h3>
-          <p style={{ color: 'var(--muted2)', fontSize: '0.85rem', marginBottom: '0.875rem' }}>
-            If your certifications and projects give you 10,000 pts, your community bonus is capped at 1,500 — regardless of how many events you speak at or articles you write. The leaderboard stays anchored to verified expertise.
-          </p>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.35rem', marginBottom: '1rem' }}>
-            {[
-              { label: 'Microsoft MVP',               pts: '+1,500 / yr', cap: '1 active at a time',  auto: true  },
-              { label: 'Microsoft Certified Trainer', pts: '+800 / yr',   cap: '1 per year',           auto: true  },
-              { label: 'Speaking at MS event',        pts: '+500 each',   cap: '4 events / yr',        auto: false },
-              { label: 'Speaking at community event', pts: '+300 each',   cap: '4 events / yr',        auto: false },
-              { label: 'Published blog or article',   pts: '+200 each',   cap: '10 posts / yr',        auto: false },
-              { label: 'GitHub contributions',        pts: '+200 / yr',   cap: '10 qualifying yrs',    auto: true  },
-              { label: 'Peer validation given',       pts: '+300 each',   cap: '2,000 pts lifetime',   auto: true  },
-              { label: 'Peer referral',               pts: '+500 each',   cap: '3,000 pts lifetime',   auto: true  },
-            ].map(function(row) {
-              return (
-                <div key={row.label} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.5rem 0.85rem', background: 'var(--surface)', borderRadius: 8, border: '1px solid var(--border)', fontSize: '0.8rem', flexWrap: 'wrap' }}>
-                  <span style={{ flex: 1, color: 'var(--text)', minWidth: 160 }}>{row.label}</span>
-                  <span style={{ fontFamily: 'JetBrains Mono', color: 'var(--green)', fontWeight: 700, flexShrink: 0, minWidth: 85, textAlign: 'right' }}>{row.pts}</span>
-                  <span style={{ color: 'var(--muted2)', flexShrink: 0, minWidth: 130, fontSize: '0.77rem' }}>{row.cap}</span>
-                  <span style={{ flexShrink: 0, fontSize: '0.77rem', fontWeight: 600, color: row.auto ? 'var(--green)' : 'var(--gold)' }}>
-                    {row.auto ? '✅ Auto-verified' : '📋 Reported'}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
-          <div className="card" style={{ background: 'rgba(245,158,11,0.06)', border: '1px solid rgba(245,158,11,0.2)', padding: '0.75rem 1rem' }}>
-            <p style={{ fontSize: '0.8rem', color: 'var(--muted2)', margin: 0 }}>
-              <strong style={{ color: 'var(--green)' }}>✅ Auto-verified</strong> — confirmed via Microsoft or GitHub APIs.{' '}
-              <strong style={{ color: 'var(--gold)' }}>📋 Reported</strong> — self-declared with a supporting URL, visible on your profile and flaggable by the community.
-            </p>
-          </div>
-        </div>
-
         {/* Full cert catalog by specialism */}
         {Object.entries(groups).map(([specialism, certs]) => (
           <div key={specialism} style={{ marginBottom: '2rem' }}>
