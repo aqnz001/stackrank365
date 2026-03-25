@@ -68,7 +68,7 @@ function Footer({ onNavigate }) {
   );
 }
 
-function AppInner() {
+  const { user, loading } = useApp();
   const { user } = useApp();
   const [page, setPage] = useState('landing');
   const [pageData, setPageData] = useState(null);
@@ -133,7 +133,13 @@ function AppInner() {
       case 'how-it-works':    return <HowItWorks onNavigate={navigate} />;
       case 'scoring':         return <Scoring onNavigate={navigate} />;
       case 'about':           return <About onNavigate={navigate} />;
-      case 'for-recruiters':  return <ForRecruiters onNavigate={navigate} />;
+      case 'dashboard':          return loading
+        ? <div style={{minHeight:'80vh',display:'flex',alignItems:'center',justifyContent:'center',flexDirection:'column',gap:'1.25rem',background:'var(--bg)'}}>
+            <div style={{width:44,height:44,border:'3px solid rgba(255,255,255,0.08)',borderTopColor:'var(--blue)',borderRadius:'50%',animation:'_spin 0.8s linear infinite'}}/>
+            <p style={{color:'var(--muted2)',fontSize:'0.88rem',margin:0}}>Signing you in…</p>
+            <style>{'@keyframes _spin{to{transform:rotate(360deg)}}'}</style>
+          </div>
+        : <Dashboard onNavigate={navigate} />;
       case 'dashboard':       return <Dashboard onNavigate={navigate} />;
       case 'signup':          return <Auth mode="signup" onNavigate={navigate} />;
       case 'signin':          return <Auth mode="signin" onNavigate={navigate} />;
