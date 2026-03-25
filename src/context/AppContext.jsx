@@ -139,23 +139,14 @@ export function AppProvider({ children }) {
 
   const calcScore = (u = user) => {
     if (!u) return 0;
-
-    // Primary score: certifications + projects + profile bonuses
     let primary = 0;
-    (u.certifications || []).forEach(c => {
-      if (c.verified !== false) primary += (c.points || 0);
-    });
+    (u.certifications || []).forEach(c => { if (c.verified !== false) primary += (c.points || 0); });
     (u.projects || []).forEach(p => { primary += (p.points || 0); });
-    if (u.foundingMember) primary += (POINT_VALUES.FOUNDING_MEMBER || 500);
-    if (u.bio && u.headline && u.location && u.specialism) primary += (POINT_VALUES.PROFILE_COMPLETE || 150);
-
-    // Community bonus: capped at 15% of primary score
+    if (u.foundingMember) primary += 500;
+    if (u.bio && u.specialism && u.location) primary += 150;
     let communityRaw = 0;
-    (u.communityContributions || []).forEach(c => {
-      communityRaw += (c.points_awarded || 0);
-    });
-    const communityBonus = Math.min(communityRaw, Math.floor(primary * COMMUNITY_CAP_PCT));
-
+    (u.communityContributions || []).forEach(c => { communityRaw += (c.points_awarded || 0); });
+    const communityBonus = Math.min(communityRaw, Math.floor(primary * 0.15));
     return primary + communityBonus;
   };
 
