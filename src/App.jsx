@@ -69,7 +69,6 @@ function Footer({ onNavigate }) {
 }
 
   const { user, loading } = useApp();
-  const { user } = useApp();
   const [page, setPage] = useState('landing');
   const [pageData, setPageData] = useState(null);
 
