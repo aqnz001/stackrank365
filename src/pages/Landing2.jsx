@@ -10,27 +10,14 @@ function RankBadge({ score }) {
   );
 }
 
-// ─── EMAIL SETUP (EmailJS — sends directly to your mailbox, no backend) ──
-// One-time setup (5 mins):
-//   1. Go to https://emailjs.com → free account (200 emails/mo free)
-//   2. Email Services → Add Service → connect your Gmail / Outlook / any SMTP
-//      Copy the Service ID  → paste as EMAILJS_SERVICE_ID below
-//   3. Email Templates → Create Template → use these variables in the template:
-//        Subject:  New Waitlist Signup — {{from_email}}
-//        Body:     New signup from the StackRank365 waitlist: {{from_email}}
-//      Copy the Template ID → paste as EMAILJS_TEMPLATE_ID below
-//   4. Account → API Keys → copy Public Key → paste as EMAILJS_PUBLIC_KEY below
-// ─────────────────────────────────────────────────────────────────────────
-const EMAILJS_SERVICE_ID  = 'service_ea940o4';
-const EMAILJS_TEMPLATE_ID = 'template_h8b964q';
-const EMAILJS_PUBLIC_KEY  = 'IH5Ed3xCPPxvXrFzU';
-// ─────────────────────────────────────────────────────────────────────────
+const SB_URL   = 'https://shnuwkjkjthvaovoywju.supabase.co';
+const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNobnV3a2pranRodmFvdm95d2p1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0MjcxODQsImV4cCI6MjA4OTAwMzE4NH0.E3jR8tamdJNdiRMiO_XtbSZU1IrDpPFhVnPJmNSN4X4';
 
 function WaitlistForm({ variant = 'hero' }) {
-  const [email, setEmail]     = useState('');
-  const [joined, setJoined]   = useState(false);
+  const [email,   setEmail]   = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError]     = useState('');
+  const [joined,  setJoined]  = useState(false);
+  const [error,   setError]   = useState('');
 
   const handle = async (e) => {
     e.preventDefault();
@@ -38,21 +25,17 @@ function WaitlistForm({ variant = 'hero' }) {
     setError('');
     setLoading(true);
     try {
-      const res = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
+      const res = await fetch(SB_URL + '/rest/v1/waitlist', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          service_id:  EMAILJS_SERVICE_ID,
-          template_id: EMAILJS_TEMPLATE_ID,
-          user_id:     EMAILJS_PUBLIC_KEY,
-          template_params: {
-            from_email: email,
-            source:     variant,
-            timestamp:  new Date().toISOString(),
-          },
-        }),
+        headers: {
+          apikey:         ANON_KEY,
+          Authorization:  'Bearer ' + ANON_KEY,
+          'Content-Type': 'application/json',
+          Prefer:         'return=minimal',
+        },
+        body: JSON.stringify({ email: email.toLowerCase().trim(), source: variant }),
       });
-      if (res.ok) {
+      if (res.ok || res.status === 409) {
         setJoined(true);
       } else {
         setError('Something went wrong. Please try again.');
@@ -87,19 +70,21 @@ function WaitlistForm({ variant = 'hero' }) {
         type="email"
         placeholder="your@email.com"
         value={email}
-        onChange={e => { setEmail(e.target.value); setError(''); }}
+        onChange={e => setEmail(e.target.value)}
         style={{
           flex: 1, minWidth: 0, maxWidth: 300,
           ...(error ? { borderColor: 'var(--red)' } : {}),
         }}
       />
-      <button type="submit" className={`btn ${variant === 'hero' ? 'btn-gold btn-lg' : 'btn-primary'}`} disabled={loading}>
-        {loading ? '⏳ Sending…' : variant === 'hero' ? '🚀 Join the Waitlist' : 'Get Early Access'}
+      <button className="btn btn-primary" type="submit" disabled={loading}
+        style={{ flexShrink: 0 }}>
+        {loading ? 'Joining...' : 'Join Waitlist →'}
       </button>
-      {error && <div style={{ width: '100%', fontSize: '0.8rem', color: 'var(--red)' }}>{error}</div>}
+      {error && <div style={{ width: '100%', fontSize: '0.8rem', color: 'var(--red)', marginTop: '0.35rem' }}>{error}</div>}
     </form>
   );
 }
+
 
 export default function Landing({ onNavigate }) {
   const top5 = SAMPLE_USERS.slice(0, 5);
