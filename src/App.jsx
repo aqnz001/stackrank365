@@ -6,7 +6,7 @@ import Landing from './pages/Landing2';
 import Dashboard from './pages/Dashboard';
 import Leaderboard from './pages/Leaderboard';
 import Profile from './pages/Profile';
-import { HowItWorks, Scoring, About, ForRecruiters } from './pages/StaticPages';
+import { HowItWorks, Scoring, About, ForRecruiters, PowerPlatformRanking } from './pages/StaticPages';
 import Auth from './pages/Auth';
 import ResetPassword from './pages/ResetPassword';
 import ValidatePage from './pages/ValidatePage';
