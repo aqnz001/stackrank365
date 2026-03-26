@@ -303,3 +303,91 @@ export function About({ onNavigate }) {
     </div>
   );
 }
+
+export function PowerPlatformRanking({ onNavigate }) {
+  return (
+    <div style={{ minHeight: '100vh' }}>
+
+      {/* Hero — keyword rich h1 */}
+      <div className="page-hero" style={{ textAlign: 'center', padding: '5rem 1.5rem 4rem' }}>
+        <div className="badge badge-blue" style={{ marginBottom: '1rem' }}>Live Rankings</div>
+        <h1 className="page-hero__title">
+          Power Platform Architect Ranking
+        </h1>
+        <p style={{ fontSize: '1.1rem', color: 'var(--muted2)', maxWidth: 620, margin: '1rem auto 2rem', lineHeight: 1.65 }}>
+          The verified ranking of Power Platform professionals worldwide. Scores calculated from Microsoft certifications, real project experience, and peer validation — not self-declarations.
+        </p>
+        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+          <button className="btn btn-primary" onClick={() => onNavigate('leaderboard')}>View live rankings →</button>
+          <button className="btn btn-ghost"   onClick={() => onNavigate('signup')}>Get your score free</button>
+        </div>
+      </div>
+
+      <div style={{ maxWidth: 900, margin: '0 auto', padding: '0 1.5rem 5rem' }}>
+
+        {/* What is this */}
+        <div className="card" style={{ padding: '2rem', marginBottom: '2rem', textAlign: 'center' }}>
+          <h2 style={{ marginBottom: '0.75rem' }}>What is the Power Platform Ranking?</h2>
+          <p style={{ color: 'var(--muted2)', maxWidth: 640, margin: '0 auto', lineHeight: 1.7 }}>
+            StackRank365 scores every Power Platform professional based on verified certifications (PL-100 through PL-600), real-world project experience, peer validation from colleagues, and community contribution. The result is a transparent, auditable rank — not a follower count.
+          </p>
+        </div>
+
+        {/* How scoring works for PP */}
+        <h2 style={{ marginBottom: '1rem' }}>How Power Platform professionals are scored</h2>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginBottom: '2.5rem' }}>
+          {[
+            { icon: '🎓', title: 'Microsoft certifications',    desc: 'PL-900 Fundamentals (+500 pts), PL-200 Functional Consultant (+1,500 pts), PL-400 Developer (+1,500 pts), PL-600 Solution Architect (+3,000 pts). All verified against Microsoft Learn records.' },
+            { icon: '🏗️', title: 'Project experience',         desc: 'Enterprise Power Platform implementations (+2,000 pts each) and standard deployments (+800 pts each). Peer-validated by colleagues who worked on the same engagement.' },
+            { icon: '🤝', title: 'Peer validation',             desc: 'Colleagues confirm your involvement in projects. Each validated peer adds credibility to your score and cannot be self-reported.' },
+            { icon: '🌟', title: 'Community contribution',      desc: 'Global Power Platform Bootcamp speaking, blog posts, GitHub contributions, and MVP/MCT status add a bonus capped at 15% of your primary score.' },
+          ].map(item => (
+            <div key={item.title} className="card" style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start', padding: '1.25rem' }}>
+              <span style={{ fontSize: '1.5rem', flexShrink: 0 }}>{item.icon}</span>
+              <div>
+                <div style={{ fontWeight: 700, marginBottom: '0.25rem' }}>{item.title}</div>
+                <div style={{ color: 'var(--muted2)', fontSize: '0.88rem', lineHeight: 1.6 }}>{item.desc}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Rank tiers */}
+        <h2 style={{ marginBottom: '1rem' }}>Rank tiers for Power Platform professionals</h2>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill,minmax(160px,1fr))', gap: '0.75rem', marginBottom: '2.5rem' }}>
+          {[
+            { tier: 'Explorer',           pts: '0–999',      color: 'var(--muted2)', desc: 'Getting started' },
+            { tier: 'Practitioner',       pts: '1,000–3,499',color: 'var(--blue)',   desc: '1–2 certifications' },
+            { tier: 'Specialist',         pts: '3,500–7,999',color: 'var(--green)',  desc: 'Associate level' },
+            { tier: 'Architect',          pts: '8,000–14,999',color:'var(--gold)',   desc: 'Expert certified' },
+            { tier: 'Principal Architect',pts: '15,000+',    color: 'var(--purple)', desc: 'Top 1%' },
+          ].map(t => (
+            <div key={t.tier} className="card" style={{ padding: '1rem', textAlign: 'center' }}>
+              <div style={{ fontWeight: 700, color: t.color, marginBottom: '0.25rem', fontSize: '0.88rem' }}>{t.tier}</div>
+              <div style={{ fontFamily: 'JetBrains Mono', fontSize: '0.75rem', color: 'var(--muted2)' }}>{t.pts} pts</div>
+              <div style={{ fontSize: '0.75rem', color: 'var(--muted2)', marginTop: '0.25rem' }}>{t.desc}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Related specialisms */}
+        <h2 style={{ marginBottom: '1rem' }}>Related Microsoft professional rankings</h2>
+        <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', marginBottom: '2.5rem' }}>
+          {['Dynamics 365','Azure','Microsoft 365','Copilot Studio','Power BI','Security'].map(spec => (
+            <button key={spec} className="btn btn-ghost btn-sm" onClick={() => onNavigate('leaderboard')}>{spec} ranking →</button>
+          ))}
+        </div>
+
+        {/* CTA */}
+        <div className="card" style={{ textAlign: 'center', padding: '3rem', background: 'rgba(59,130,246,0.06)', border: '1px solid rgba(59,130,246,0.2)' }}>
+          <h2 style={{ marginBottom: '0.75rem' }}>Where do you rank among Power Platform professionals?</h2>
+          <p style={{ color: 'var(--muted2)', marginBottom: '1.5rem', fontSize: '0.95rem' }}>Create a free profile in 2 minutes. Add your certifications and get your verified Stack Points score.</p>
+          <button className="btn btn-primary" style={{ fontSize: '1rem', padding: '0.875rem 2rem' }} onClick={() => onNavigate('signup')}>
+            Get my Power Platform ranking →
+          </button>
+        </div>
+
+      </div>
+    </div>
+  );
+}
