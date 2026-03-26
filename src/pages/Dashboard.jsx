@@ -644,6 +644,16 @@ export default function Dashboard({ onNavigate }) {
               </div>
               <button className="btn btn-primary" onClick={() => setShowCertModal(true)}>+ Add Certification</button>
             </div>
+            {/* T16: Cert expiry warnings */}
+            {certs.filter(c => c.issueDate && (() => { const exp = new Date(c.issueDate); exp.setFullYear(exp.getFullYear()+1); const daysLeft = Math.ceil((exp-Date.now())/(1000*60*60*24)); return daysLeft <= 90 && daysLeft > 0; })()).length > 0 && (
+              <div style={{ background:'rgba(245,158,11,0.08)', border:'1px solid rgba(245,158,11,0.25)', borderRadius:10, padding:'0.75rem 1rem', marginBottom:'1rem', fontSize:'0.83rem' }}>
+                <strong style={{ color:'var(--gold)' }}>⏰ Renewal reminder</strong>
+                <span style={{ color:'var(--muted2)', marginLeft:'0.5rem' }}>
+                  {certs.filter(c => c.issueDate && (() => { const exp = new Date(c.issueDate); exp.setFullYear(exp.getFullYear()+1); const daysLeft = Math.ceil((exp-Date.now())/(1000*60*60*24)); return daysLeft <= 90 && daysLeft > 0; })()).map(c => c.code || c.name).join(', ')} expire{certs.filter(c => c.issueDate).length===1?'s':''} within 90 days. Renew on Microsoft Learn to keep your score.
+                </span>
+              </div>
+            )}
+
             {certs.length === 0 ? (
               <div className="card" style={{ textAlign: 'center', padding: '3rem', borderStyle: 'dashed' }}>
                 <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem' }}>🎓</div>
