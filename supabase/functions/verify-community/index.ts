@@ -100,8 +100,28 @@ serve(async (req) => {
         verified = await verifyMVP(profile.name);
         verificationSource = "mvp_api";
       }
+    } else if (contrib.type === "mct") {
+      // T15: MCT verification via Microsoft Learn trainer search
+      const { data: profile } = await sb.from("profiles").select("name, first_name, last_name").eq("id", userId).single();
+      const searchName = profile?.name || ((profile?.first_name||"") + " " + (profile?.last_name||"")).trim();
+      if (searchName) {
+        try {
+          const mctRes = await fetch(
+            `https://learn.microsoft.com/api/contentbrowser/search/trainers?locale=en-us&terms=${encodeURIComponent(searchName)}&roles=trainer&pageSize=5`,
+            { headers: { "User-Agent": "StackRank365-Verify/1.0" } }
+          );
+          if (mctRes.ok) {
+            const mctData = await mctRes.json();
+            const trainers = mctData?.results || mctData?.data || [];
+            verified = trainers.some((t: any) =>
+              (t.displayName || t.name || "").toLowerCase().includes(searchName.toLowerCase().split(" ")[0])
+            );
+            verificationSource = "mct_api";
+          }
+        } catch { /* MCT API unreliable — fall back to self-declared */ }
+      }
     } else {
-      // speaking, blog, mct — mark as reported (self-declared with URL)
+      // speaking, blog — mark as reported (self-declared with URL)
       verified = false;
       verificationSource = "self";
     }
