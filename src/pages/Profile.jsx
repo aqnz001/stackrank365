@@ -641,6 +641,29 @@ export default function Profile({ onNavigate, profileUser }) {
         </div>
       </div>
 
+          {/* T23: Reputation dispute/appeals — visible to profile owner only */}
+          {displayUser.isMe && (
+            <div style={{ marginTop: '1.5rem' }}>
+              <div className="card" style={{ border: '1px solid var(--border)', borderRadius: 12, padding: '1rem 1.25rem' }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '1rem', flexWrap: 'wrap' }}>
+                  <div>
+                    <div style={{ fontWeight: 600, fontSize: '0.88rem', marginBottom: '0.3rem' }}>Score dispute</div>
+                    <div style={{ fontSize: '0.8rem', color: 'var(--muted2)' }}>Think your score is incorrect? Submit a dispute and our team will review your certifications and projects within 48 hours.</div>
+                  </div>
+                  <button className="btn btn-ghost btn-sm" style={{ flexShrink: 0 }}
+                    onClick={() => {
+                      const subject = encodeURIComponent('StackRank365 Score Dispute — ' + (displayUser.username || displayUser.id));
+                      const body    = encodeURIComponent('Hi StackRank365 team,\n\nI would like to dispute my current score.\n\nUsername: ' + (displayUser.username || '') + '\nCurrent score: ' + displayUser.score + '\n\nReason for dispute:\n[Please describe the issue]\n\nThank you');
+                      window.open('mailto:support@stackrank365.com?subject=' + subject + '&body=' + body, '_blank');
+                    }}>
+                    Dispute score →
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+
       <style>{`
         @media (max-width: 960px) {
           .container > div:last-child { grid-template-columns: 1fr !important; }
