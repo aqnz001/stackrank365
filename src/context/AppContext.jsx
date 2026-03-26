@@ -60,6 +60,8 @@ export function AppProvider({ children }) {
         specialism: profile.specialism || 'Dynamics 365',
         yearsExp: profile.years_exp || 0,
         isMVP: profile.is_mvp,
+        profileVisibility: profile.profile_visibility || 'public',
+        referralCode: profile.referral_code || null,
         foundingMember: profile.founding_member,
         msAccountId: profile.ms_account_id,
         certifications: (certs || []).map(c => ({
