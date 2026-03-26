@@ -90,6 +90,21 @@ export default function RecruiterDashboard({ onNavigate }) {
   useEffect(() => { if (user && user.tier !== "recruiter") nav("pricing"); }, [user]);
   useEffect(() => { fetchCandidates(); }, [filters]);
 
+  const ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNobnV3a2pranRodmFvdm95d2p1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0MjcxODQsImV4cCI6MjA4OTAwMzE4NH0.E3jR8tamdJNdiRMiO_XtbSZU1IrDpPFhVnPJmNSN4X4";
+  const runAIMatch = async () => {
+    if (!jobDesc.trim()) return;
+    setAiLoading(true); setAiResults(null);
+    try {
+      const res = await fetch("https://shnuwkjkjthvaovoywju.supabase.co/functions/v1/recruiter-match",{
+        method:"POST", headers:{"Content-Type":"application/json","Authorization":"Bearer "+ANON_KEY},
+        body:JSON.stringify({ job_description:jobDesc, region:filters.region!=="All"?filters.region:undefined, open_to_work_only:filters.openToWork, limit:20 })
+      });
+      const data = await res.json();
+      setAiResults(Array.isArray(data.candidates)?data.candidates:Array.isArray(data.matches)?data.matches:[]);
+    } catch(e){ console.error("AI match:",e); }
+    finally { setAiLoading(false); }
+  };
+
   const fetchCandidates = async () => {
     setLoading(true);
     try {
