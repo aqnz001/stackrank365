@@ -71,14 +71,17 @@ function Footer({ onNavigate }) {
 function AppInner() {
   const { user, loading } = useApp();
   const [page, setPage] = useState('landing');
+  const [profileUsername, setProfileUsername] = useState(null);
   const [pageData, setPageData] = useState(null);
 
   // âââ Handle URL hash routing for early-adopter links + Supabase callbacks ââ
   useEffect(() => {
     const handleHash = () => {
       // Query string routing: ?page=xxx
-      const qPage = new URLSearchParams(window.location.search).get('page');
-      if (qPage) { setPage(qPage); return; }
+      const _params = new URLSearchParams(window.location.search);
+      const qPage = _params.get('page');
+      const qUser = _params.get('u');
+      if (qPage) { setPage(qPage); if (qUser) setProfileUsername(qUser); return; }
       const hash = window.location.hash.replace('#', '');
       const search = window.location.search;
       const fullHash = window.location.hash;
@@ -129,7 +132,7 @@ function AppInner() {
     switch (page) {
       case 'landing':         return <Landing onNavigate={navigate} />;
       case 'leaderboard':     return <Leaderboard onNavigate={navigate} />;
-      case 'profile':         return <Profile onNavigate={navigate} profileUser={pageData?.userData} />;
+      case 'profile':         return <Profile onNavigate={navigate} profileUsername={profileUsername} profileUser={pageData?.userData} />;
       case 'how-it-works':    return <HowItWorks onNavigate={navigate} />;
       case 'scoring':         return <Scoring onNavigate={navigate} />;
       case 'about':           return <About onNavigate={navigate} />;
