@@ -88,7 +88,18 @@ function PricingCard({ tier, navigate }) {
       </div>
 
       <button
-        onClick={() => navigate(tier.ctaAction)}
+        onClick={() => {
+        if (tier.ctaAction === 'signup') { navigate('signup'); return; }
+        if (tier.ctaAction === 'pro') {
+          window.open('https://buy.stripe.com/sr365-pro-placeholder', '_blank');
+          return;
+        }
+        if (tier.ctaAction === 'recruiter') {
+          window.open('https://buy.stripe.com/sr365-recruiter-placeholder', '_blank');
+          return;
+        }
+        navigate(tier.ctaAction);
+      }}
         style={{ width: "100%", padding: "12px", background: tier.highlight ? tier.color : "transparent", color: tier.highlight ? "#fff" : tier.color, border: `1.5px solid ${tier.color}`, borderRadius: "8px", fontSize: "14px", fontWeight: 600, cursor: "pointer", marginBottom: "1.5rem" }}
       >
         {tier.cta}
@@ -120,6 +131,11 @@ export default function Pricing({ onNavigate }) {
         <p style={{ fontSize: "16px", color: "#93c5fd", maxWidth: "520px", margin: "0 auto" }}>
           Free to join and build your verified professional identity. Upgrade when you're ready to stand out.
         </p>
+      </div>
+
+      {/* T21: Stripe payment badge */}
+      <div style={{ textAlign:'center', paddingTop:'0.5rem', paddingBottom:'0', fontSize:'12px', color:'#9ca3af' }}>
+        🔒 Payments secured by <strong>Stripe</strong> · Cancel anytime · No contracts
       </div>
 
       {/* Cards */}
