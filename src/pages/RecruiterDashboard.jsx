@@ -3,6 +3,7 @@ import { supabase } from "../lib/supabaseClient";
 import { useApp } from "../context/AppContext";
 
 const TIERS = ["All","Explorer","Practitioner","Specialist","Principal","Architect"];
+const SPECIALISMS = ["All","Dynamics 365","Power Platform","Azure","Microsoft 365","Copilot Studio","Power BI","Security"];
 const REGIONS = ["All","New Zealand","Australia","United Kingdom","United States","India","Netherlands","Canada"];
 const TIER_COLORS = { Explorer:"#6b7280",Practitioner:"#2563eb",Specialist:"#7c3aed",Principal:"#d97706",Architect:"#dc2626" };
 
@@ -53,7 +54,16 @@ function ContactModal({ candidate, onClose }) {
             <p style={{ fontSize:"12px",color:"#73726c",margin:"0 0 1rem" }}>Message sent to their verified email address.</p>
             <textarea value={message} onChange={e=>setMessage(e.target.value)} rows={8} style={{ width:"100%",padding:"10px 12px",fontSize:"13px",border:"0.5px solid #d3d1c7",borderRadius:"8px",resize:"vertical",fontFamily:"sans-serif",lineHeight:1.6,boxSizing:"border-box" }}/>
             <div style={{ display:"flex",gap:"8px",marginTop:"1rem" }}>
-              <button onClick={()=>setSent(true)} style={{ flex:1,padding:"10px",background:"#1e3a5f",color:"#fff",border:"none",borderRadius:"8px",fontSize:"13px",fontWeight:600,cursor:"pointer" }}>Send message</button>
+              <button onClick={async()=>{
+                try{
+                  await fetch("https://shnuwkjkjthvaovoywju.supabase.co/functions/v1/send-contact-request",{
+                    method:"POST",
+                    headers:{"Content-Type":"application/json","Authorization":"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNobnV3a2pranRodmFvdm95d2p1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0MjcxODQsImV4cCI6MjA4OTAwMzE4NH0.E3jR8tamdJNdiRMiO_XtbSZU1IrDpPFhVnPJmNSN4X4"},
+                    body:JSON.stringify({candidateId:candidate?.id,message})
+                  });
+                }catch(e){console.error("Contact relay error:",e);}
+                setSent(true);
+              }} style={{ flex:1,padding:"10px",background:"#1e3a5f",color:"#fff",border:"none",borderRadius:"8px",fontSize:"13px",fontWeight:600,cursor:"pointer" }}>Send message</button>
               <button onClick={onClose} style={{ flex:1,padding:"10px",background:"transparent",border:"0.5px solid #d3d1c7",borderRadius:"8px",fontSize:"13px",cursor:"pointer" }}>Cancel</button>
             </div>
           </>
@@ -74,7 +84,7 @@ export default function RecruiterDashboard({ onNavigate }) {
   const nav = onNavigate || navigate;
   const [candidates,setCandidates] = useState([]);
   const [loading,setLoading] = useState(true);
-  const [filters,setFilters] = useState({ tier:"All",region:"All",openToWork:false,search:"" });
+  const [filters,setFilters] = useState({ tier:"All",specialism:"All",region:"All",openToWork:false,search:"" });
   const [contactTarget,setContactTarget] = useState(null);
 
   useEffect(() => { if (user && user.tier !== "recruiter") nav("pricing"); }, [user]);
@@ -86,6 +96,7 @@ export default function RecruiterDashboard({ onNavigate }) {
       let query = supabase.from("leaderboard").select("id,name,professional_title,region,tier,score,rank,open_to_work,cert_count").order("rank",{ascending:true}).limit(50);
       if (filters.openToWork) query = query.eq("open_to_work",true);
       if (filters.tier !== "All") query = query.eq("tier",filters.tier);
+      if (filters.specialism !== "All") query = query.ilike("specialism",`%${filters.specialism}%`);
       if (filters.region !== "All") query = query.ilike("region",`%${filters.region}%`);
       if (filters.search) query = query.ilike("name",`%${filters.search}%`);
       const { data,error } = await query;
@@ -124,6 +135,7 @@ export default function RecruiterDashboard({ onNavigate }) {
               <label style={{ fontSize:"11px",fontWeight:600,color:"#73726c",textTransform:"uppercase",letterSpacing:"0.05em" }}>Search</label>
               <input type="text" placeholder="Search by name..." value={filters.search} onChange={e=>setFilter("search",e.target.value)} style={{ padding:"7px 10px",fontSize:"13px",border:"0.5px solid #d3d1c7",borderRadius:"8px" }}/>
             </div>
+            <FilterSelect label="Specialism" value={filters.specialism} onChange={v=>setFilters(f=>({...f,specialism:v}))} options={SPECIALISMS}/>
             <FilterSelect label="Tier" value={filters.tier} onChange={v=>setFilter("tier",v)} options={TIERS}/>
             <FilterSelect label="Region" value={filters.region} onChange={v=>setFilter("region",v)} options={REGIONS}/>
             <label style={{ display:"flex",alignItems:"center",gap:"6px",fontSize:"13px",cursor:"pointer",paddingBottom:"4px" }}>
