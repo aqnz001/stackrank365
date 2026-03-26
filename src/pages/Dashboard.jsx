@@ -970,6 +970,52 @@ export default function Dashboard({ onNavigate }) {
               <SettingsForm user={user} setUser={setUser} showToast={showToast} authUser={authUser} />
 
             </div>
+
+            {/* T22: Profile Visibility */}
+            <div className="card" style={{ marginTop: '1rem' }}>
+              <h3 style={{ marginBottom: '0.75rem', fontSize: '1rem' }}>Profile Visibility</h3>
+              <p style={{ fontSize: '0.83rem', color: 'var(--muted2)', marginBottom: '1rem' }}>Control who can find and view your profile on StackRank365.</p>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                {[
+                  { value: 'public',     label: '🌍 Public',           desc: 'Anyone can find and view your full profile' },
+                  { value: 'recruiters', label: '🔍 Recruiters only',  desc: 'Only verified recruiters can view your full profile' },
+                  { value: 'private',    label: '🔒 Private',          desc: 'Your profile is hidden from search and leaderboard' },
+                ].map(opt => (
+                  <label key={opt.value} style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start', padding: '0.75rem', borderRadius: 8, cursor: 'pointer', border: `1px solid ${(user.profile_visibility||'public')===opt.value?'var(--blue)':'var(--border)'}`, background: (user.profile_visibility||'public')===opt.value?'rgba(59,130,246,0.06)':'transparent' }}>
+                    <input type="radio" name="visibility" value={opt.value} checked={(user.profile_visibility||'public')===opt.value}
+                      onChange={async()=>{
+                        const sb = await getSupabase();
+                        if(!sb||!authUser) return;
+                        await sb.from('profiles').update({profile_visibility:opt.value}).eq('id',authUser.id);
+                        setUser(u=>({...u,profile_visibility:opt.value}));
+                        showToast('Visibility updated','success');
+                      }} style={{ marginTop: '2px', flexShrink: 0 }} />
+                    <div>
+                      <div style={{ fontWeight: 600, fontSize: '0.88rem' }}>{opt.label}</div>
+                      <div style={{ fontSize: '0.78rem', color: 'var(--muted2)' }}>{opt.desc}</div>
+                    </div>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {/* T23: Referral Link */}
+            <div className="card" style={{ marginTop: '1rem' }}>
+              <h3 style={{ marginBottom: '0.5rem', fontSize: '1rem' }}>Your Referral Link</h3>
+              <p style={{ fontSize: '0.83rem', color: 'var(--muted2)', marginBottom: '0.875rem' }}>Invite Microsoft professionals. Earn <strong style={{ color: 'var(--gold)' }}>+500 pts</strong> for each person who joins and completes their profile (up to 3,000 pts).</p>
+              {(() => {
+                const code = user.referral_code || (user.username || user.id || '').slice(0,8);
+                const link = `https://www.stackrank365.com/?ref=${code}`;
+                return (
+                  <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                    <div style={{ flex: 1, minWidth: 0, background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 8, padding: '0.6rem 0.875rem', fontFamily: 'JetBrains Mono', fontSize: '0.8rem', color: 'var(--muted2)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{link}</div>
+                    <button className="btn btn-primary btn-sm" style={{ flexShrink: 0 }} onClick={()=>{
+                      navigator.clipboard.writeText(link).then(()=>showToast('Referral link copied!','success')).catch(()=>showToast(link,'info'));
+                    }}>Copy link</button>
+                  </div>
+                );
+              })()}
+            </div>
           </div>
         )}
       </div>
