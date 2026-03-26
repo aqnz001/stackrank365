@@ -1801,3 +1801,50 @@ html, body { overflow-x: hidden; }
   .rank-box { display: none; }
   .profile-body { grid-template-columns: 1fr; }
 }
+
+
+/* ── T10: Mobile layout fixes ──────────────────────────────────────── */
+@media (max-width: 640px) {
+  /* Dashboard tab bar — horizontal scroll instead of wrapping */
+  .tab-bar {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    flex-wrap: nowrap !important;
+    scrollbar-width: none;
+  }
+  .tab-bar::-webkit-scrollbar { display: none; }
+  .tab { white-space: nowrap; flex-shrink: 0; }
+
+  /* Grid collapses to single column */
+  .grid-2, .grid-3 { grid-template-columns: 1fr !important; }
+
+  /* Forms stack vertically */
+  .waitlist-form-row { flex-direction: column; align-items: stretch; }
+  .waitlist-form-row input { max-width: 100% !important; }
+  .waitlist-form-row .btn { width: 100%; justify-content: center; }
+
+  /* Cards get tighter padding on mobile */
+  .card { padding: 1rem !important; }
+
+  /* Hero text scales down */
+  .page-hero__title { font-size: clamp(1.5rem,8vw,2.8rem) !important; }
+
+  /* Leaderboard rows — hide less important cols */
+  .lb-row-b .lb-score { min-width: 0; }
+
+  /* Modal full screen on mobile */
+  .modal { max-width: 100% !important; margin: 0.5rem !important; border-radius: 12px !important; }
+  .modal-overlay { align-items: flex-end !important; }
+
+  /* Dashboard container padding */
+  .dashboard-container { padding: 1rem !important; }
+
+  /* Recruiter dashboard filter row stacks */
+  .recruiter-filters { flex-direction: column !important; }
+}
+
+@media (max-width: 480px) {
+  body { font-size: 15px; }
+  .btn { padding: 0.6rem 1rem; font-size: 0.82rem; }
+  .nav-logo-text { font-size: 1.15rem; }
+}
