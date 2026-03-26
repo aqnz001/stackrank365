@@ -64,7 +64,7 @@ export default function Leaderboard({ onNavigate }) {
   // Load real users from Supabase — only for signed-in users
   useEffect(() => {
     (async () => {
-      if (!user) return; // guests see demo data only
+      // T20: All visitors see real leaderboard data
       const sb = await getSupabase();
       if (!sb) return;
       try {
@@ -159,9 +159,6 @@ export default function Leaderboard({ onNavigate }) {
               <div className="badge badge-green" style={{ fontSize: '0.68rem' }}>
                 ✓ Live · {liveUsers.length} {liveUsers.length === 1 ? 'member' : 'members'}
               </div>
-            )}
-            {!usingLive && liveUsers !== null && (
-              <div className="badge badge-muted" style={{ fontSize: '0.68rem' }}>Sample data — sign up to appear here</div>
             )}
           </div>
           <h1 style={{ marginBottom: '0.4rem' }}>
