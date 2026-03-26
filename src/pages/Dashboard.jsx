@@ -319,6 +319,51 @@ function VerifyTab({ user, setUser, showToast, authUser }) {
 }
 
 // ─── Dashboard ────────────────────────────────────────────────────────────────
+function ProfileCompleteBar({ user, certs, projects }) {
+  const fields = [
+    { label: 'Name', done: !!(user && user.name) },
+    { label: 'Headline', done: !!(user && user.headline) },
+    { label: 'Bio', done: !!(user && user.bio) },
+    { label: 'Location', done: !!(user && user.location) },
+    { label: 'Specialism', done: !!(user && user.specialism) },
+    { label: 'First certification', done: certs && certs.length > 0 },
+    { label: 'First project', done: projects && projects.length > 0 },
+  ];
+  const done = fields.filter(f => f.done).length;
+  const pct = Math.round(done / fields.length * 100);
+  const missing = fields.filter(f => !f.done).map(f => f.label).join(', ');
+  if (pct === 100) return null;
+  return (
+    <div className="card" style={{ padding: '1rem', marginBottom: '1.25rem' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+        <span style={{ fontWeight: 600, fontSize: '0.88rem' }}>Profile completeness</span>
+        <span style={{ fontFamily: 'JetBrains Mono', fontSize: '0.82rem', color: 'var(--blue)', fontWeight: 700 }}>{pct}%</span>
+      </div>
+      <div style={{ height: 6, background: 'var(--surface)', borderRadius: 99, overflow: 'hidden', marginBottom: '0.4rem' }}>
+        <div style={{ height: '100%', width: pct + '%', background: 'var(--blue)', borderRadius: 99 }} />
+      </div>
+      {missing && <p style={{ fontSize: '0.75rem', color: 'var(--muted2)', margin: 0 }}>Still needed: <strong style={{ color: 'var(--text)', fontWeight: 500 }}>{missing}</strong></p>}
+    </div>
+  );
+}
+
+function OnboardingBanner({ score, setActiveTab }) {
+  if (score > 0) return null;
+  return (
+    <div style={{ background: 'rgba(59,130,246,0.08)', border: '1px solid rgba(59,130,246,0.25)', borderRadius: 12, padding: '1rem 1.25rem', marginBottom: '1.25rem', display: 'flex', alignItems: 'flex-start', gap: '1rem' }}>
+      <span style={{ fontSize: '1.75rem', flexShrink: 0 }}>👋</span>
+      <div style={{ flex: 1 }}>
+        <div style={{ fontWeight: 700, fontSize: '0.95rem', marginBottom: '0.3rem' }}>Welcome to StackRank365!</div>
+        <p style={{ fontSize: '0.83rem', color: 'var(--muted2)', marginBottom: '0.75rem' }}>Complete your profile to get your Stack Points score and appear on the leaderboard.</p>
+        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+          <button className="btn btn-primary btn-sm" onClick={() => setActiveTab('certifications')}>🎓 Add a certification</button>
+          <button className="btn btn-ghost btn-sm" onClick={() => setActiveTab('settings')}>✏️ Complete profile</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Dashboard({ onNavigate }) {
   const { user, setUser, showToast, calcScore, getTierInfo, authUser } = useApp();
   const [activeTab, setActiveTab] = useState('overview');
@@ -533,6 +578,9 @@ export default function Dashboard({ onNavigate }) {
 
         {/* Overview */}
         {activeTab === 'overview' && (
+          <>
+          <OnboardingBanner score={calcScore()} setActiveTab={setActiveTab} />
+          <ProfileCompleteBar user={user} certs={certs} projects={projects} />
           <div className="grid-2">
             <div className="card">
               <h3 style={{ marginBottom: '1.25rem', fontSize: '1.1rem' }}>📊 Score Breakdown</h3>
@@ -579,6 +627,9 @@ export default function Dashboard({ onNavigate }) {
               </div>
             </div>
           </div>
+        )}
+
+          </>
         )}
 
         {/* Certifications */}
