@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { SAMPLE_USERS, getRankTier, getNextRankTier } from '../data/data';
 import { useApp } from '../context/AppContext';
 
@@ -91,6 +91,35 @@ export default function Profile({ onNavigate, profileUser }) {
         foundingMember: user.foundingMember,
       }
     : profileUser;
+
+  // F19: Track profile views + load view count for profile owner
+  const { authUser } = useApp();
+  const [viewCount, setViewCount] = useState(null);
+
+  useEffect(() => {
+    if (!displayUser) return;
+    (async () => {
+      try {
+        const mod = await import('/src/lib/supabase.js').catch(()=>import('/src/lib/supabaseClient.js'));
+        const sb  = mod.supabase || mod.default;
+        // Log the view (only if viewing someone else's profile)
+        if (!displayUser.isMe && displayUser.id && displayUser.id !== 'me') {
+          await sb.from('profile_views').insert({
+            profile_id: displayUser.id,
+            viewer_id: authUser?.id || null,
+          }).catch(()=>{});
+        }
+        // Load view count for profile owner (Pro feature)
+        if (displayUser.isMe) {
+          const { count } = await sb.from('profile_views')
+            .select('*', { count: 'exact', head: true })
+            .eq('profile_id', authUser?.id)
+            .gte('viewed_at', new Date(Date.now() - 7*24*60*60*1000).toISOString());
+          setViewCount(count || 0);
+        }
+      } catch {}
+    })();
+  }, [displayUser?.id]);
 
   if (!displayUser) {
     return (
@@ -686,6 +715,22 @@ export default function Profile({ onNavigate, profileUser }) {
           </div>
         </div>
       </div>
+
+          {/* F19: Profile view count — Pro feature, shown to owner only */}
+          {displayUser.isMe && viewCount !== null && (
+            <div style={{ marginTop: '1.25rem' }}>
+              <div className="card" style={{ padding: '1rem 1.25rem', display: 'flex', alignItems: 'center', gap: '1rem', background: 'rgba(59,130,246,0.06)', border: '1px solid rgba(59,130,246,0.2)' }}>
+                <div style={{ fontSize: '1.5rem' }}>👁</div>
+                <div>
+                  <div style={{ fontWeight: 700, fontSize: '1.1rem' }}>{viewCount}</div>
+                  <div style={{ fontSize: '0.78rem', color: 'var(--muted2)' }}>profile views this week</div>
+                </div>
+                {viewCount === 0 && (
+                  <div style={{ fontSize: '0.78rem', color: 'var(--muted2)', marginLeft: 'auto' }}>Share your profile link to get discovered by recruiters.</div>
+                )}
+              </div>
+            </div>
+          )}
 
           {/* T23: Reputation dispute/appeals — visible to profile owner only */}
           {displayUser.isMe && (
