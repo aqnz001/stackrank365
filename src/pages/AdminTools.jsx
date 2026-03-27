@@ -262,6 +262,37 @@ function EmailConfigPanel() {
 
   const curTpl = templates.find(t=>t.key===selTpl) || templates[0];
 
+  // Load saved SMTP config and templates on mount
+  useEffect(() => {
+    (async () => {
+      try {
+        const [cfgRes, tplRes] = await Promise.all([
+          fetch(SB_URL+'/rest/v1/rpc/get_app_config', { method:'POST', headers:{ apikey:SB_ANON, Authorization:'Bearer '+SB_ANON, 'Content-Type':'application/json' }, body:'{}' }).then(r=>r.json()),
+          fetch(SB_URL+'/rest/v1/rpc/get_email_templates', { method:'POST', headers:{ apikey:SB_ANON, Authorization:'Bearer '+SB_ANON, 'Content-Type':'application/json' }, body:'{}' }).then(r=>r.json()),
+        ]);
+        // Restore SMTP config
+        if (Array.isArray(cfgRes) && cfgRes.length > 0) {
+          const m = {};
+          cfgRes.forEach(r => { m[r.key] = r.value; });
+          setSmtpCfg(c => ({
+            host: m.smtp_host || c.host,
+            port: m.smtp_port || c.port,
+            user: m.smtp_user || c.user,
+            pass: m.smtp_pass || c.pass,
+            from: m.smtp_from || c.from,
+          }));
+        }
+        // Restore saved templates (merge with defaults)
+        if (Array.isArray(tplRes) && tplRes.length > 0) {
+          setTemplates(prev => prev.map(t => {
+            const saved = tplRes.find(s => s.key === t.key);
+            return saved ? { ...t, subject: saved.subject, body: saved.body } : t;
+          }));
+        }
+      } catch { /* silent — defaults stay in place */ }
+    })();
+  }, []);
+
   const updateTpl = (field, val) => {
     setTemplates(ts => ts.map(t => t.key===selTpl ? {...t,[field]:val} : t));
   };
