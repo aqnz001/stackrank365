@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react';
+import React, { useState, useMemo } from 'react';
 import { SAMPLE_USERS, getRankTier, getNextRankTier } from '../data/data';
 import { useApp } from '../context/AppContext';
 
@@ -18,6 +18,52 @@ function RankBadge({ score, large }) {
     <span className={`badge ${tier.colorClass}`} style={{ fontSize: large ? '0.88rem' : '0.75rem', padding: large ? '0.35rem 0.9rem' : undefined }}>
       {tier.icon} {tier.name}
     </span>
+  );
+}
+
+
+function DisputeButton({ userId, score, showToast }) {
+  const [open,    setOpen]    = React.useState(false);
+  const [reason,  setReason]  = React.useState('');
+  const [sending, setSending] = React.useState(false);
+  const [sent,    setSent]    = React.useState(false);
+
+  const submit = async () => {
+    if (!reason.trim()) return;
+    setSending(true);
+    try {
+      const mod = await import('/src/lib/supabase.js').catch(()=>import('/src/lib/supabaseClient.js'));
+      const sb  = mod.supabase || mod.default;
+      await sb.from('disputes').insert({
+        user_id: userId, score_at_dispute: score,
+        reason: reason.trim(), status: 'open',
+      });
+      setSent(true);
+      showToast && showToast('Dispute submitted — we will review within 48h', 'success');
+    } catch(e) {
+      showToast && showToast('Could not submit dispute — try again', 'error');
+    }
+    setSending(false);
+  };
+
+  if (sent) return <span style={{ fontSize:'0.78rem', color:'var(--green)' }}>✓ Dispute submitted</span>;
+  if (!open) return (
+    <button className="btn btn-ghost btn-sm" style={{ flexShrink:0 }} onClick={()=>setOpen(true)}>
+      Dispute score →
+    </button>
+  );
+  return (
+    <div style={{ display:'flex', flexDirection:'column', gap:'0.5rem', minWidth:220 }}>
+      <textarea value={reason} onChange={e=>setReason(e.target.value)} rows={3}
+        placeholder="Describe the issue with your score..."
+        style={{ padding:'0.5rem', borderRadius:6, border:'1px solid var(--border)', background:'var(--surface)', color:'var(--text)', fontSize:'0.78rem', resize:'vertical', fontFamily:'inherit' }} />
+      <div style={{ display:'flex', gap:'0.5rem' }}>
+        <button className="btn btn-primary btn-sm" disabled={sending||!reason.trim()} onClick={submit}>
+          {sending ? 'Submitting…' : 'Submit dispute'}
+        </button>
+        <button className="btn btn-ghost btn-sm" onClick={()=>setOpen(false)}>Cancel</button>
+      </div>
+    </div>
   );
 }
 
@@ -650,14 +696,7 @@ export default function Profile({ onNavigate, profileUser }) {
                     <div style={{ fontWeight: 600, fontSize: '0.88rem', marginBottom: '0.3rem' }}>Score dispute</div>
                     <div style={{ fontSize: '0.8rem', color: 'var(--muted2)' }}>Think your score is incorrect? Submit a dispute and our team will review your certifications and projects within 48 hours.</div>
                   </div>
-                  <button className="btn btn-ghost btn-sm" style={{ flexShrink: 0 }}
-                    onClick={() => {
-                      const subject = encodeURIComponent('StackRank365 Score Dispute — ' + (displayUser.username || displayUser.id));
-                      const body    = encodeURIComponent('Hi StackRank365 team,\n\nI would like to dispute my current score.\n\nUsername: ' + (displayUser.username || '') + '\nCurrent score: ' + displayUser.score + '\n\nReason for dispute:\n[Please describe the issue]\n\nThank you');
-                      window.open('mailto:support@stackrank365.com?subject=' + subject + '&body=' + body, '_blank');
-                    }}>
-                    Dispute score →
-                  </button>
+                  <DisputeButton userId={displayUser.id} score={displayUser.score} showToast={showToast} />
                 </div>
               </div>
             </div>
