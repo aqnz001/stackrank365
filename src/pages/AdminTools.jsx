@@ -251,6 +251,80 @@ const DEFAULT_TEMPLATES = [
   { key: 'dispute_update', label: 'Dispute status update',   subject: 'Your score dispute has been updated',          body: 'Hi {{name}},\n\nYour score dispute has been updated to: {{status}}.\n\n{{message}}\n\nThe StackRank365 Team' },
 ];
 
+
+function DisputesPanel() {
+  const SB_URL2 = 'https://shnuwkjkjthvaovoywju.supabase.co';
+  const SB_SK   = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNobnV3a2pranRodmFvdm95d2p1Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MzQyNzE4NCwiZXhwIjoyMDg5MDAzMTg0fQ.kEW4Z_H-kHOnOBbNI4GlPWCejLIz7AIxHW3qwb6uhjU';
+  const DH = { apikey:SB_SK, Authorization:'Bearer '+SB_SK, 'Content-Type':'application/json' };
+  const [disputes, setDisputes] = useState([]);
+  const [loading,  setLoading]  = useState(true);
+  const [filter,   setFilter]   = useState('open');
+  const [updating, setUpdating] = useState(null);
+
+  const load = async () => {
+    setLoading(true);
+    const url = SB_URL2+'/rest/v1/disputes?select=id,reason,status,score_at_dispute,created_at,admin_notes,user_id,profiles(username,name)&order=created_at.desc'+(filter!=='all'?'&status=eq.'+filter:'');
+    const res = await fetch(url, {headers:{apikey:SB_SK,Authorization:'Bearer '+SB_SK,Accept:'application/json'}});
+    const data = await res.json();
+    setDisputes(Array.isArray(data)?data:[]);
+    setLoading(false);
+  };
+
+  useEffect(()=>{ load(); }, [filter]);
+
+  const updateStatus = async (id, status, notes) => {
+    setUpdating(id);
+    await fetch(SB_URL2+'/rest/v1/disputes?id=eq.'+id, {
+      method:'PATCH', headers:{...DH, Prefer:'return=minimal'},
+      body: JSON.stringify({ status, admin_notes: notes, resolved_at: status==='resolved'?new Date().toISOString():null }),
+    });
+    await load();
+    setUpdating(null);
+  };
+
+  const STATUS_COLORS = { open:'#ef4444', reviewing:'#f59e0b', resolved:'#10b981', dismissed:'#6b7fa3' };
+
+  return (
+    <div style={{ maxWidth:860, margin:'0 auto', padding:'1.5rem 0' }}>
+      <div style={{ display:'flex', gap:'0.5rem', marginBottom:'1rem', flexWrap:'wrap' }}>
+        {['open','reviewing','resolved','dismissed','all'].map(s=>(
+          <button key={s} onClick={()=>setFilter(s)}
+            style={{ padding:'0.3rem 0.75rem', borderRadius:6, border:'1px solid '+(filter===s?'#3b82f6':'#1e2d45'), background:filter===s?'rgba(59,130,246,0.15)':'#111827', color:filter===s?'#3b82f6':'#6b7fa3', fontSize:'0.75rem', fontWeight:500, cursor:'pointer', textTransform:'capitalize' }}>
+            {s}
+          </button>
+        ))}
+        <button onClick={load} style={{ marginLeft:'auto', padding:'0.3rem 0.75rem', borderRadius:6, border:'1px solid #1e2d45', background:'#111827', color:'#6b7fa3', fontSize:'0.75rem', cursor:'pointer' }}>↻ Refresh</button>
+      </div>
+      {loading ? <p style={{ color:'#6b7fa3', fontSize:'0.85rem' }}>Loading disputes…</p> :
+       disputes.length === 0 ? <p style={{ color:'#6b7fa3', fontSize:'0.85rem' }}>No {filter!=='all'?filter:''} disputes found.</p> :
+       <div style={{ display:'flex', flexDirection:'column', gap:'0.75rem' }}>
+        {disputes.map(d=>(
+          <div key={d.id} style={{ background:'#1a2235', border:'1px solid #1e2d45', borderRadius:10, padding:'1rem 1.25rem' }}>
+            <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-start', gap:'1rem', flexWrap:'wrap', marginBottom:'0.6rem' }}>
+              <div>
+                <span style={{ fontWeight:600, fontSize:'0.88rem' }}>{d.profiles?.name || d.profiles?.username || d.user_id?.slice(0,8)}</span>
+                <span style={{ color:'#6b7fa3', fontSize:'0.75rem', marginLeft:'0.75rem' }}>Score at dispute: {d.score_at_dispute}</span>
+                <span style={{ color:'#6b7fa3', fontSize:'0.75rem', marginLeft:'0.75rem' }}>{new Date(d.created_at).toLocaleDateString()}</span>
+              </div>
+              <span style={{ fontSize:'0.72rem', fontWeight:700, padding:'0.15rem 0.5rem', borderRadius:4, background:'rgba('+{open:'239,68,68',reviewing:'245,158,11',resolved:'16,185,129',dismissed:'107,127,163'}[d.status]+',0.15)', color:STATUS_COLORS[d.status]||'#6b7fa3', border:'1px solid currentColor', textTransform:'capitalize' }}>{d.status}</span>
+            </div>
+            <p style={{ fontSize:'0.82rem', color:'#d1d5db', marginBottom:'0.75rem', lineHeight:1.5 }}>{d.reason}</p>
+            <div style={{ display:'flex', gap:'0.5rem', flexWrap:'wrap', alignItems:'center' }}>
+              {['reviewing','resolved','dismissed'].filter(s=>s!==d.status).map(s=>(
+                <button key={s} disabled={updating===d.id} onClick={()=>updateStatus(d.id, s, d.admin_notes||'')}
+                  style={{ padding:'0.3rem 0.75rem', borderRadius:6, border:'1px solid #1e2d45', background:'#111827', color:'#6b7fa3', fontSize:'0.75rem', cursor:'pointer', textTransform:'capitalize', opacity:updating===d.id?0.5:1 }}>
+                  Mark {s}
+                </button>
+              ))}
+            </div>
+          </div>
+        ))}
+       </div>
+      }
+    </div>
+  );
+}
+
 function EmailConfigPanel() {
   const [smtpCfg,   setSmtpCfg]   = useState({ host:'', port:'587', user:'', pass:'', from:'noreply@stackrank365.com' });
   const [templates, setTemplates] = useState(DEFAULT_TEMPLATES);
@@ -424,7 +498,7 @@ export default function AdminTools() {
   return (
     <div>
       <div style={{ display:'flex', gap:'0.5rem', padding:'1rem 1.5rem 0', borderBottom:'1px solid #1e2d45', background:'#0a0e1a' }}>
-        {[['tests','🧪 Tests'],['email','📧 Email Config']].map(([k,lbl])=>(
+        {[['tests','🧪 Tests'],['email','📧 Email Config'],['disputes','⚖️ Disputes']].map(([k,lbl])=>(
           <button key={k} onClick={()=>setAdminTab(k)}
             style={{ padding:'0.5rem 1rem', borderRadius:'6px 6px 0 0', border:'1px solid '+(adminTab===k?'#1e2d45':'transparent'), borderBottom:'none', background:adminTab===k?'#111827':'transparent', color:adminTab===k?'#f0f4ff':'#6b7fa3', fontSize:'0.83rem', fontWeight:600, cursor:'pointer' }}>
             {lbl}
@@ -432,7 +506,7 @@ export default function AdminTools() {
         ))}
       </div>
       <div style={{ padding:'0 1.5rem', background:'#0a0e1a', minHeight:'80vh' }}>
-        {adminTab==='tests' ? <TestRunner/> : <EmailConfigPanel/>}
+        {adminTab==='tests' ? <TestRunner/> : adminTab==='disputes' ? <DisputesPanel/> : <EmailConfigPanel/>}
       </div>
     </div>
   );
