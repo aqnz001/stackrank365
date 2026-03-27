@@ -38,3 +38,6 @@ verify_jwt = false
 # batch-verify-certs: runs every Sunday at 2am UTC
 # verify-reputation:  runs every Monday at 3am UTC
 # cert-expiry-reminders: runs every day at 8am UTC
+
+[functions.send-email]
+verify_jwt = false
