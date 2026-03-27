@@ -236,9 +236,172 @@ function TestRunner() {
   );
 }
 
+
+// ── Email Config Panel ────────────────────────────────────────────────────
+const SB_URL = 'https://shnuwkjkjthvaovoywju.supabase.co';
+const SB_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNobnV3a2pranRodmFvdm95d2p1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0MjcxODQsImV4cCI6MjA4OTAwMzE4NH0.E3jR8tamdJNdiRMiO_XtbSZU1IrDpPFhVnPJmNSN4X4';
+
+const DEFAULT_TEMPLATES = [
+  { key: 'welcome',        label: 'Welcome email',           subject: 'Welcome to StackRank365!',                     body: 'Hi {{name}},\n\nWelcome to StackRank365! Your profile is now live.\n\nStart building your verified Microsoft professional identity today.\n\nhttps://www.stackrank365.com\n\nThe StackRank365 Team' },
+  { key: 'profile_nudge',  label: 'Complete profile nudge',  subject: 'Your StackRank365 profile is incomplete',      body: 'Hi {{name}},\n\nYour profile is {{pct}}% complete. Profiles with certifications and a bio rank 3x higher.\n\nComplete your profile: https://www.stackrank365.com/?page=dashboard\n\nThe StackRank365 Team' },
+  { key: 'cert_expiry',    label: 'Cert expiry reminder',    subject: '⏰ Your Microsoft certification expires soon',  body: 'Hi {{name}},\n\nYour certification {{cert_name}} expires within 90 days. Renew it on Microsoft Learn to keep your Stack Points score.\n\nhttps://learn.microsoft.com\n\nThe StackRank365 Team' },
+  { key: 'rank_change',    label: 'Rank change digest',      subject: 'Your StackRank365 ranking this week',          body: 'Hi {{name}},\n\nYour weekly ranking update:\n\nCurrent rank: #{{rank}}\nScore: {{score}} pts\nChange: {{change}}\n\nView your full profile: https://www.stackrank365.com/?page=profile\n\nThe StackRank365 Team' },
+  { key: 'peer_validated', label: 'Peer validation received',subject: '🤝 {{validator}} validated your project',      body: 'Hi {{name}},\n\n{{validator}} has validated your project "{{project}}" on StackRank365. Your score has been updated.\n\nView your profile: https://www.stackrank365.com/?page=profile\n\nThe StackRank365 Team' },
+  { key: 'dispute_update', label: 'Dispute status update',   subject: 'Your score dispute has been updated',          body: 'Hi {{name}},\n\nYour score dispute has been updated to: {{status}}.\n\n{{message}}\n\nThe StackRank365 Team' },
+];
+
+function EmailConfigPanel() {
+  const [smtpCfg,   setSmtpCfg]   = useState({ host:'', port:'587', user:'', pass:'', from:'noreply@stackrank365.com' });
+  const [templates, setTemplates] = useState(DEFAULT_TEMPLATES);
+  const [selTpl,    setSelTpl]    = useState(DEFAULT_TEMPLATES[0].key);
+  const [saving,    setSaving]    = useState(false);
+  const [testEmail, setTestEmail] = useState('');
+  const [testing,   setTesting]   = useState(false);
+  const [msg,       setMsg]       = useState('');
+
+  const curTpl = templates.find(t=>t.key===selTpl) || templates[0];
+
+  const updateTpl = (field, val) => {
+    setTemplates(ts => ts.map(t => t.key===selTpl ? {...t,[field]:val} : t));
+  };
+
+  const saveAll = async () => {
+    setSaving(true); setMsg('');
+    try {
+      // Save SMTP config to app_config table
+      const cfgRes = await fetch(SB_URL+'/rest/v1/app_config', {
+        method:'POST',
+        headers:{ apikey:SB_ANON, Authorization:'Bearer '+SB_ANON, 'Content-Type':'application/json', Prefer:'resolution=merge-duplicates' },
+        body: JSON.stringify([
+          { key:'smtp_host',  value: smtpCfg.host },
+          { key:'smtp_port',  value: smtpCfg.port },
+          { key:'smtp_user',  value: smtpCfg.user },
+          { key:'smtp_pass',  value: smtpCfg.pass },
+          { key:'smtp_from',  value: smtpCfg.from },
+        ])
+      });
+      // Save templates to email_templates table
+      for (const tpl of templates) {
+        await fetch(SB_URL+'/rest/v1/email_templates', {
+          method:'POST',
+          headers:{ apikey:SB_ANON, Authorization:'Bearer '+SB_ANON, 'Content-Type':'application/json', Prefer:'resolution=merge-duplicates' },
+          body: JSON.stringify({ key:tpl.key, subject:tpl.subject, body:tpl.body, label:tpl.label })
+        });
+      }
+      setMsg('✓ Saved successfully');
+    } catch(e) { setMsg('Error: '+e.message); }
+    setSaving(false);
+  };
+
+  const sendTest = async () => {
+    if (!testEmail) return;
+    setTesting(true); setMsg('');
+    try {
+      const res = await fetch(SB_URL+'/functions/v1/send-email', {
+        method:'POST',
+        headers:{ apikey:SB_ANON, Authorization:'Bearer '+SB_ANON, 'Content-Type':'application/json' },
+        body: JSON.stringify({ to: testEmail, template_key: selTpl, variables: { name:'Test User', cert_name:'PL-600', rank:'42', score:'8500', change:'+200', pct:'75', validator:'John Smith', project:'D365 Implementation', status:'Under Review', message:'We are reviewing your case.' } })
+      });
+      const d = await res.json();
+      setMsg(res.ok ? '✓ Test email sent to '+testEmail : '✗ Failed: '+(d.error||'Unknown error'));
+    } catch(e) { setMsg('✗ Error: '+e.message); }
+    setTesting(false);
+  };
+
+  return (
+    <div style={{ display:'flex', flexDirection:'column', gap:'1.5rem', maxWidth:860, margin:'0 auto', padding:'1.5rem 0' }}>
+
+      {/* SMTP Settings */}
+      <div style={{ background:'#1a2235', border:'1px solid #1e2d45', borderRadius:12, padding:'1.25rem' }}>
+        <div style={{ fontWeight:700, marginBottom:'1rem', fontSize:'0.95rem', color:'#f0f4ff' }}>📧 SMTP Configuration</div>
+        <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'0.75rem' }}>
+          {[
+            { k:'host', label:'SMTP Host', ph:'smtp.gmail.com' },
+            { k:'port', label:'Port',      ph:'587' },
+            { k:'user', label:'Username',  ph:'you@yourdomain.com' },
+            { k:'pass', label:'Password',  ph:'••••••••', type:'password' },
+            { k:'from', label:'From address', ph:'noreply@stackrank365.com' },
+          ].map(f=>(
+            <div key={f.k} style={{ display:'flex', flexDirection:'column', gap:'0.3rem' }}>
+              <label style={{ fontSize:'0.72rem', color:'#6b7fa3', textTransform:'uppercase', letterSpacing:'0.06em' }}>{f.label}</label>
+              <input type={f.type||'text'} value={smtpCfg[f.k]} onChange={e=>setSmtpCfg(c=>({...c,[f.k]:e.target.value}))}
+                placeholder={f.ph} style={{ padding:'0.5rem 0.7rem', borderRadius:6, border:'1px solid #1e2d45', background:'#111827', color:'#f0f4ff', fontSize:'0.83rem', fontFamily:'JetBrains Mono,monospace' }} />
+            </div>
+          ))}
+        </div>
+        <div style={{ fontSize:'0.75rem', color:'#6b7fa3', marginTop:'0.75rem' }}>
+          💡 Use Gmail: host=smtp.gmail.com, port=587, use an App Password (not your account password).
+          For Microsoft 365: host=smtp.office365.com, port=587.
+        </div>
+      </div>
+
+      {/* Template Editor */}
+      <div style={{ background:'#1a2235', border:'1px solid #1e2d45', borderRadius:12, padding:'1.25rem' }}>
+        <div style={{ fontWeight:700, marginBottom:'1rem', fontSize:'0.95rem', color:'#f0f4ff' }}>✉️ Email Templates</div>
+        <div style={{ display:'flex', gap:'0.5rem', flexWrap:'wrap', marginBottom:'1rem' }}>
+          {templates.map(t=>(
+            <button key={t.key} onClick={()=>setSelTpl(t.key)}
+              style={{ padding:'0.35rem 0.75rem', borderRadius:6, border:'1px solid '+(selTpl===t.key?'#3b82f6':'#1e2d45'), background:selTpl===t.key?'rgba(59,130,246,0.15)':'#111827', color:selTpl===t.key?'#3b82f6':'#6b7fa3', fontSize:'0.75rem', fontWeight:500, cursor:'pointer' }}>
+              {t.label}
+            </button>
+          ))}
+        </div>
+        <div style={{ display:'flex', flexDirection:'column', gap:'0.75rem' }}>
+          <div>
+            <label style={{ fontSize:'0.72rem', color:'#6b7fa3', textTransform:'uppercase', letterSpacing:'0.06em', display:'block', marginBottom:'0.3rem' }}>Subject</label>
+            <input value={curTpl.subject} onChange={e=>updateTpl('subject',e.target.value)}
+              style={{ width:'100%', padding:'0.5rem 0.7rem', borderRadius:6, border:'1px solid #1e2d45', background:'#111827', color:'#f0f4ff', fontSize:'0.83rem' }} />
+          </div>
+          <div>
+            <label style={{ fontSize:'0.72rem', color:'#6b7fa3', textTransform:'uppercase', letterSpacing:'0.06em', display:'block', marginBottom:'0.3rem' }}>
+              Body <span style={{ color:'#4b6a8a', fontWeight:400 }}>· Variables: {'{{name}} {{rank}} {{score}} {{cert_name}} {{pct}} {{validator}} {{project}} {{status}} {{message}} {{change}}'}</span>
+            </label>
+            <textarea value={curTpl.body} onChange={e=>updateTpl('body',e.target.value)} rows={8}
+              style={{ width:'100%', padding:'0.5rem 0.7rem', borderRadius:6, border:'1px solid #1e2d45', background:'#111827', color:'#f0f4ff', fontSize:'0.83rem', fontFamily:'JetBrains Mono,monospace', resize:'vertical', lineHeight:1.6 }} />
+          </div>
+        </div>
+
+        {/* Test send */}
+        <div style={{ marginTop:'1rem', display:'flex', gap:'0.75rem', alignItems:'center', flexWrap:'wrap' }}>
+          <input value={testEmail} onChange={e=>setTestEmail(e.target.value)} placeholder="Send test to: email@example.com"
+            style={{ flex:1, minWidth:200, padding:'0.45rem 0.7rem', borderRadius:6, border:'1px solid #1e2d45', background:'#111827', color:'#f0f4ff', fontSize:'0.83rem' }} />
+          <button onClick={sendTest} disabled={testing||!testEmail}
+            style={{ padding:'0.45rem 1rem', borderRadius:6, background:'#1e2d45', border:'1px solid #3b82f6', color:'#3b82f6', fontSize:'0.8rem', fontWeight:600, cursor:'pointer' }}>
+            {testing ? 'Sending…' : 'Send test →'}
+          </button>
+        </div>
+      </div>
+
+      {/* Save */}
+      <div style={{ display:'flex', gap:'1rem', alignItems:'center' }}>
+        <button onClick={saveAll} disabled={saving}
+          style={{ padding:'0.6rem 1.5rem', borderRadius:8, background:'#3b82f6', border:'none', color:'#fff', fontSize:'0.88rem', fontWeight:700, cursor:'pointer' }}>
+          {saving ? 'Saving…' : 'Save all settings'}
+        </button>
+        {msg && <span style={{ fontSize:'0.83rem', color: msg.startsWith('✓') ? '#10b981' : '#ef4444' }}>{msg}</span>}
+      </div>
+    </div>
+  );
+}
+
 export default function AdminTools() {
   const [unlocked,setUnlocked]=useState(false);
   useEffect(()=>{ if(sessionStorage.getItem(SESSION_KEY)==='1') setUnlocked(true); },[]);
   if(!unlocked) return <PasswordGate onUnlock={()=>setUnlocked(true)}/>;
-  return <TestRunner/>;
+  const [adminTab, setAdminTab] = useState('tests');
+  return (
+    <div>
+      <div style={{ display:'flex', gap:'0.5rem', padding:'1rem 1.5rem 0', borderBottom:'1px solid #1e2d45', background:'#0a0e1a' }}>
+        {[['tests','🧪 Tests'],['email','📧 Email Config']].map(([k,lbl])=>(
+          <button key={k} onClick={()=>setAdminTab(k)}
+            style={{ padding:'0.5rem 1rem', borderRadius:'6px 6px 0 0', border:'1px solid '+(adminTab===k?'#1e2d45':'transparent'), borderBottom:'none', background:adminTab===k?'#111827':'transparent', color:adminTab===k?'#f0f4ff':'#6b7fa3', fontSize:'0.83rem', fontWeight:600, cursor:'pointer' }}>
+            {lbl}
+          </button>
+        ))}
+      </div>
+      <div style={{ padding:'0 1.5rem', background:'#0a0e1a', minHeight:'80vh' }}>
+        {adminTab==='tests' ? <TestRunner/> : <EmailConfigPanel/>}
+      </div>
+    </div>
+  );
 }
