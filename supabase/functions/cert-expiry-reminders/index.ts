@@ -1,7 +1,6 @@
 // supabase/functions/cert-expiry-reminders/index.ts
-// Sends certification expiry reminder emails via Resend (SMTP REST API).
-// One env var needed: RESEND_API_KEY
-// Get a free key at resend.com — 3,000 emails/month free.
+// Sends certification expiry reminder emails via send-email edge function (SMTP).
+// Config set via Admin > Email Config panel — no additional env vars needed.
 //
 // Schedule daily at 8am via Supabase cron:
 //   select cron.schedule(
@@ -27,14 +26,21 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-async function sendEmail({ to, subject, html }: { to: string; subject: string; html: string }) {
-  const res = await fetch("https://api.resend.com/emails", {
+async function sendEmail({ to, subject, certName, daysLeft }: { to: string; subject: string; certName: string; daysLeft: number }) {
+  // Route through our SMTP send-email edge function so all emails use admin-configured SMTP
+  const SB_BASE = Deno.env.get("SUPABASE_URL") ?? "";
+  const res = await fetch(`${SB_BASE}/functions/v1/send-email`, {
     method: "POST",
     headers: {
-      "Authorization": `Bearer ${RESEND_API_KEY}`,
+      "apikey": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNobnV3a2pranRodmFvdm95d2p1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0MjcxODQsImV4cCI6MjA4OTAwMzE4NH0.E3jR8tamdJNdiRMiO_XtbSZU1IrDpPFhVnPJmNSN4X4",
+      "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNobnV3a2pranRodmFvdm95d2p1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0MjcxODQsImV4cCI6MjA4OTAwMzE4NH0.E3jR8tamdJNdiRMiO_XtbSZU1IrDpPFhVnPJmNSN4X4",
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ from: `StackRank365 <${FROM_EMAIL}>`, to, subject, html }),
+    body: JSON.stringify({
+      to,
+      template_key: "cert_expiry",
+      variables: { name: to.split("@")[0], cert_name: certName },
+    }),
   });
   if (!res.ok) {
     const err = await res.text();
@@ -122,27 +128,7 @@ serve(async (req) => {
       const p = cert.profiles as any;
       if (!p?.email) continue;
       const renewUrl = `https://www.stackrank365.com/profile?renew=${cert.id}`;
-      const ok = await sendEmail({
-        to: p.email,
-        subject: `Your ${cert.name} certification expires in 90 days`,
-        html: email90Day({ name: p.full_name ?? "there", certName: cert.name, expiryDate: cert.expiry_date, renewUrl }),
-      });
-      if (ok) {
-        await supabase.from("certifications").update({ reminder_90_sent_at: new Date().toISOString() }).eq("id", cert.id);
-        await supabase.from("cert_reminder_log").insert({ profile_id: cert.profile_id, cert_id: cert.id, reminder_type: "90_day", email_address: p.email });
-        results.sent_90++;
-      } else results.errors++;
-    }
-
-    for (const cert of (exp30 ?? [])) {
-      const p = cert.profiles as any;
-      if (!p?.email) continue;
-      const renewUrl = `https://www.stackrank365.com/profile?renew=${cert.id}`;
-      const ok = await sendEmail({
-        to: p.email,
-        subject: `⚠️ ${cert.name} expires in 30 days — renew now`,
-        html: email30Day({ name: p.full_name ?? "there", certName: cert.name, expiryDate: cert.expiry_date, renewUrl }),
-      });
+      const ok = await sendEmail({ to: p.email, subject: `Your ${cert.name} expires in 30 days`, certName: cert.name, daysLeft: 30 });
       if (ok) {
         await supabase.from("certifications").update({ reminder_30_sent_at: new Date().toISOString() }).eq("id", cert.id);
         await supabase.from("cert_reminder_log").insert({ profile_id: cert.profile_id, cert_id: cert.id, reminder_type: "30_day", email_address: p.email });
