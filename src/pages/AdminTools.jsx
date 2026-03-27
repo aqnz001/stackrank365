@@ -387,8 +387,8 @@ function EmailConfigPanel() {
 export default function AdminTools() {
   const [unlocked,setUnlocked]=useState(false);
   useEffect(()=>{ if(sessionStorage.getItem(SESSION_KEY)==='1') setUnlocked(true); },[]);
+  const [adminTab, setAdminTab] = useState('tests');  // moved before early return (hooks rule)
   if(!unlocked) return <PasswordGate onUnlock={()=>setUnlocked(true)}/>;
-  const [adminTab, setAdminTab] = useState('tests');
   return (
     <div>
       <div style={{ display:'flex', gap:'0.5rem', padding:'1rem 1.5rem 0', borderBottom:'1px solid #1e2d45', background:'#0a0e1a' }}>
