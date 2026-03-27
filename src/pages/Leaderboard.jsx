@@ -72,6 +72,7 @@ export default function Leaderboard({ onNavigate }) {
           .from('leaderboard').select('*')
           .order('score', { ascending: false }).limit(200);
         if (!error && data && data.length > 0) {
+          setLoadedAt(new Date());
           const normalised = data.map(u => ({
             id: u.id,
             name: u.name || 'Anonymous',
@@ -155,6 +156,11 @@ export default function Leaderboard({ onNavigate }) {
         <div style={{ marginBottom: '2rem' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.75rem', flexWrap: 'wrap' }}>
             <div className="badge badge-gold">🏆 Live Rankings</div>
+            {loadedAt && (
+              <div style={{ fontSize:'0.68rem', color:'var(--muted2)' }}>
+                Updated {Math.round((Date.now()-loadedAt.getTime())/60000) < 1 ? 'just now' : Math.round((Date.now()-loadedAt.getTime())/60000)+' min ago'}
+              </div>
+            )}
             {usingLive && (
               <div className="badge badge-green" style={{ fontSize: '0.68rem' }}>
                 ✓ Live · {liveUsers.length} {liveUsers.length === 1 ? 'member' : 'members'}
