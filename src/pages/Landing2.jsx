@@ -132,7 +132,7 @@ export default function Landing({ onNavigate }) {
                 marginBottom: '2rem', maxWidth: 480,
               }}>
                 StackRank365 is the verified talent ranking community for Dynamics 365, Power Platform,
-                Copilot Studio, and Azure OpenAI professionals. Stop listing certifications. Start proving expertise.
+                Copilot Studio, and Azure OpenAI professionals. Verified proof of applied Microsoft expertise.
               </p>
 
               <div className="stagger-3" style={{ marginBottom: '2rem' }}>
