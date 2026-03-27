@@ -62,6 +62,15 @@ export function AppProvider({ children }) {
         isMVP: profile.is_mvp,
         profileVisibility: profile.profile_visibility || 'public',
         referralCode: profile.referral_code || null,
+        tier:          (() => {
+          // F17: enforce tier expiry — downgrade to free if subscription lapsed
+          if (profile.tier && profile.tier !== 'free' && profile.tier_expires_at) {
+            const expired = new Date(profile.tier_expires_at) < new Date();
+            return expired ? 'free' : profile.tier;
+          }
+          return profile.tier || 'free';
+        })(),
+        tierExpiresAt: profile.tier_expires_at || null,
         foundingMember: profile.founding_member,
         msAccountId: profile.ms_account_id,
         certifications: (certs || []).map(c => ({
@@ -155,6 +164,18 @@ export function AppProvider({ children }) {
     return primary + communityBonus;
   };
 
+  // F07: fetch authoritative server-side score (prevents client-side tampering)
+  const refreshServerScore = async () => {
+    try {
+      const sb = await getSupabase();
+      if (!sb || !authUser) return;
+      const { data } = await sb.rpc('calculate_user_score', { p_user_id: authUser.id });
+      if (data !== null && data !== undefined) {
+        setUserState(prev => ({ ...prev, serverScore: data }));
+      }
+    } catch { /* silent — fall back to client-side calcScore */ }
+  };
+
   const getTierInfo = (u = user) => {
     const score = calcScore(u);
     const rank = RANK_TIERS.find(t => score >= t.minScore && score <= t.maxScore) || RANK_TIERS[0];
@@ -163,7 +184,7 @@ export function AppProvider({ children }) {
   };
 
   return (
-    <AppContext.Provider value={{ user, setUser: saveUser, authUser, showToast, calcScore, getTierInfo, toast, loading }}>
+    <AppContext.Provider value={{ user, setUser: saveUser, authUser, showToast, calcScore, refreshServerScore, getTierInfo, toast, loading }}>
       {children}
       {toast && <div className={`toast toast-${toast.type}`}>{toast.msg}</div>}
     </AppContext.Provider>
