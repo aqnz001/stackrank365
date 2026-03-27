@@ -374,26 +374,28 @@ function EmailConfigPanel() {
   const saveAll = async () => {
     setSaving(true); setMsg('');
     try {
-      // Save SMTP config to app_config table
-      const cfgRes = await fetch(SB_URL+'/rest/v1/app_config', {
-        method:'POST',
-        headers:{ apikey:SB_ANON, Authorization:'Bearer '+SB_ANON, 'Content-Type':'application/json', Prefer:'resolution=merge-duplicates' },
-        body: JSON.stringify([
-          { key:'smtp_host',  value: smtpCfg.host },
-          { key:'smtp_port',  value: smtpCfg.port },
-          { key:'smtp_user',  value: smtpCfg.user },
-          { key:'smtp_pass',  value: smtpCfg.pass },
-          { key:'smtp_from',  value: smtpCfg.from },
-        ])
-      });
-      // Save templates to email_templates table
-      for (const tpl of templates) {
-        await fetch(SB_URL+'/rest/v1/email_templates', {
+        // Save SMTP config via SECURITY DEFINER RPC (bypasses RLS)
+        const cfgRes = await fetch(SB_URL+'/rest/v1/rpc/upsert_app_config', {
           method:'POST',
-          headers:{ apikey:SB_ANON, Authorization:'Bearer '+SB_ANON, 'Content-Type':'application/json', Prefer:'resolution=merge-duplicates' },
-          body: JSON.stringify({ key:tpl.key, subject:tpl.subject, body:tpl.body, label:tpl.label })
+          headers:{ apikey:SB_ANON, Authorization:'Bearer '+SB_ANON, 'Content-Type':'application/json' },
+          body: JSON.stringify({ p_entries:[
+            { key:'smtp_host', value: smtpCfg.host },
+            { key:'smtp_port', value: smtpCfg.port },
+            { key:'smtp_user', value: smtpCfg.user },
+            { key:'smtp_pass', value: smtpCfg.pass },
+            { key:'smtp_from', value: smtpCfg.from },
+          ]})
         });
-      }
+        if (!cfgRes.ok) { const e = await cfgRes.json(); throw new Error(e.message||cfgRes.status); }
+        // Save templates via SECURITY DEFINER RPC
+        for (const tpl of templates) {
+          const tr = await fetch(SB_URL+'/rest/v1/rpc/upsert_email_template', {
+            method:'POST',
+            headers:{ apikey:SB_ANON, Authorization:'Bearer '+SB_ANON, 'Content-Type':'application/json' },
+            body: JSON.stringify({ p_key:tpl.key, p_label:tpl.label, p_subject:tpl.subject, p_body:tpl.body })
+          });
+          if (!tr.ok) { const e = await tr.json(); throw new Error('Template '+tpl.key+': '+(e.message||tr.status)); }
+        }
       setMsg('✓ Saved successfully');
     } catch(e) { setMsg('Error: '+e.message); }
     setSaving(false);
