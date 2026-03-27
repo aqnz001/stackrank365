@@ -143,7 +143,10 @@ export function AppProvider({ children }) {
     if (!u) return 0;
     let primary = 0;
     (u.certifications || []).forEach(c => { if (c.verified !== false) primary += (c.points || 0); });
-    (u.projects || []).forEach(p => { primary += (p.points || 0); });
+    // F02: cap unverified projects at 3 contributing to score
+    const verifiedProjects   = (u.projects || []).filter(p => p.validated || p.verified);
+    const unverifiedProjects = (u.projects || []).filter(p => !p.validated && !p.verified).slice(0, 3);
+    [...verifiedProjects, ...unverifiedProjects].forEach(p => { primary += (p.points || 0); });
     if (u.foundingMember) primary += 500;
     if (u.bio && u.specialism && u.location) primary += 150;
     let communityRaw = 0;
