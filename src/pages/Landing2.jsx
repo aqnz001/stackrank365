@@ -37,6 +37,16 @@ function WaitlistForm({ variant = 'hero' }) {
       });
       if (res.ok || res.status === 409) {
         setJoined(true);
+        // Auto-reply email — fire and forget (don't block UI on failure)
+        fetch(SB_URL.replace('/rest/v1','') + '/functions/v1/send-email', {
+          method: 'POST',
+          headers: { apikey: ANON_KEY, Authorization: 'Bearer ' + ANON_KEY, 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            to: email.toLowerCase().trim(),
+            template_key: 'waitlist_signup',
+            variables: { name: email.split('@')[0] },
+          }),
+        }).catch(() => {}); // silent fail — don't break join flow
       } else {
         setError('Something went wrong. Please try again.');
       }
