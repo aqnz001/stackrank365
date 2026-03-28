@@ -54,6 +54,7 @@ export default function Leaderboard({ onNavigate }) {
   const [search, setSearch] = useState('');
   const [liveUsers, setLiveUsers] = useState(null);
   const [usingLive, setUsingLive] = useState(false);
+  const [loadedAt, setLoadedAt] = useState(null);
 
   // Detect user's country on mount
   useEffect(() => {

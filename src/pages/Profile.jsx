@@ -68,7 +68,7 @@ function DisputeButton({ userId, score, showToast }) {
 }
 
 export default function Profile({ onNavigate, profileUser }) {
-  const { user, calcScore } = useApp();
+  const { user, calcScore, showToast } = useApp();
   const [copied, setCopied] = useState(false);
 
   // Determine whose profile to show
