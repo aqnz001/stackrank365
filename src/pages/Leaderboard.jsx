@@ -64,8 +64,8 @@ export default function Leaderboard({ onNavigate }) {
 
   // Load real users from Supabase — only for signed-in users
   useEffect(() => {
+    if (!user) return;
     (async () => {
-      // T20: All visitors see real leaderboard data
       const sb = await getSupabase();
       if (!sb) return;
       try {
@@ -262,7 +262,7 @@ export default function Leaderboard({ onNavigate }) {
                       display: 'flex', flexDirection: 'column', gap: '0.5rem',
                       cursor: 'pointer', transition: 'filter 0.15s',
                       borderRight: i < podiumUsers.length - 1 ? '1px solid var(--border)' : 'none',
-                      background: isMe ? 'rgba(0,194,255,0.04)' : 'transparent',
+                      background: isMe ? 'var(--blue-dim)' : 'transparent',
                     }}
                     onMouseEnter={e => e.currentTarget.style.filter = 'brightness(1.08)'}
                     onMouseLeave={e => e.currentTarget.style.filter = ''}
@@ -329,11 +329,11 @@ export default function Leaderboard({ onNavigate }) {
                       </td>
                       <td>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                          <div style={{ width: 36, height: 36, borderRadius: '50%', flexShrink: 0, background: 'var(--surface2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.9rem', fontWeight: 700, color: '#fff', border: isMe ? '2px solid var(--blue)' : '1px solid var(--border)' }}>
+                          <div style={{ width: 36, height: 36, borderRadius: '50%', flexShrink: 0, background: 'var(--grad-blue)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.9rem', fontWeight: 700, color: '#fff', border: isMe ? '2px solid var(--blue)' : '1px solid var(--border)' }}>
                             {(u.name || '?')[0]}
                           </div>
                           <div>
-                            <div style={{ fontWeight: 600, fontSize: '0.9rem', color: '#fff' }}>
+                            <div style={{ fontWeight: 600, fontSize: '0.9rem', color: 'var(--text)' }}>
                               {u.name}
                               {isMe && <span style={{ color: 'var(--blue)', fontSize: '0.72rem', marginLeft: '0.4rem' }}>(you)</span>}
                               {u.isMVP && <span className="badge badge-gold" style={{ fontSize: '0.6rem', marginLeft: '0.4rem' }}>MVP</span>}
@@ -371,7 +371,7 @@ export default function Leaderboard({ onNavigate }) {
         {/* CTA */}
         <div style={{
           marginTop: '2.5rem', padding: '2rem 2.5rem',
-          background: 'linear-gradient(135deg, rgba(0,194,255,0.07), rgba(167,139,250,0.05))',
+          background: 'linear-gradient(135deg, rgba(37,99,235,0.06), rgba(124,58,237,0.04))',
           border: '1px solid var(--border-blue)', borderRadius: 18,
           display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '1.25rem',
         }}>
