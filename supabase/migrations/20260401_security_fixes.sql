@@ -24,15 +24,11 @@ CREATE POLICY "auth users can insert fraud audit logs"
 
 
 -- 3. resume_analyses
---    Written by analyse-resume edge function (service_role).
---    Users may read their own analysis results.
+--    Written and read by the analyse-resume edge function (service_role).
+--    service_role bypasses RLS, so no user-facing policies are needed.
+--    (Column name for user reference is unknown — add a SELECT policy later
+--     once the schema is confirmed.)
 ALTER TABLE public.resume_analyses ENABLE ROW LEVEL SECURITY;
-
-CREATE POLICY "users can read own resume analyses"
-  ON public.resume_analyses
-  FOR SELECT
-  TO authenticated
-  USING (auth.uid() = user_id);
 
 
 -- 4. leaderboard view — switch from SECURITY DEFINER to SECURITY INVOKER
