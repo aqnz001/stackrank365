@@ -253,9 +253,9 @@ const DEFAULT_TEMPLATES = [
 
 
 function DisputesPanel() {
-  const SB_URL2 = 'https://shnuwkjkjthvaovoywju.supabase.co';
-  const SB_SK   = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNobnV3a2pranRodmFvdm95d2p1Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MzQyNzE4NCwiZXhwIjoyMDg5MDAzMTg0fQ.kEW4Z_H-kHOnOBbNI4GlPWCejLIz7AIxHW3qwb6uhjU';
-  const DH = { apikey:SB_SK, Authorization:'Bearer '+SB_SK, 'Content-Type':'application/json' };
+  const FN_URL = SB + '/functions/v1/admin-disputes';
+  const authHdr = () => ({ Authorization: 'Bearer ' + ADMIN_HASH, 'Content-Type': 'application/json' });
+
   const [disputes, setDisputes] = useState([]);
   const [loading,  setLoading]  = useState(true);
   const [filter,   setFilter]   = useState('open');
@@ -263,10 +263,9 @@ function DisputesPanel() {
 
   const load = async () => {
     setLoading(true);
-    const url = SB_URL2+'/rest/v1/disputes?select=id,reason,status,score_at_dispute,created_at,admin_notes,user_id,profiles(username,name)&order=created_at.desc'+(filter!=='all'?'&status=eq.'+filter:'');
-    const res = await fetch(url, {headers:{apikey:SB_SK,Authorization:'Bearer '+SB_SK,Accept:'application/json'}});
-    const data = await res.json();
-    setDisputes(Array.isArray(data)?data:[]);
+    const res = await fetch(FN_URL, { method: 'POST', headers: authHdr(), body: JSON.stringify({ action: 'list', filter }) });
+    const { data } = await res.json();
+    setDisputes(Array.isArray(data) ? data : []);
     setLoading(false);
   };
 
@@ -274,10 +273,7 @@ function DisputesPanel() {
 
   const updateStatus = async (id, status, notes) => {
     setUpdating(id);
-    await fetch(SB_URL2+'/rest/v1/disputes?id=eq.'+id, {
-      method:'PATCH', headers:{...DH, Prefer:'return=minimal'},
-      body: JSON.stringify({ status, admin_notes: notes, resolved_at: status==='resolved'?new Date().toISOString():null }),
-    });
+    await fetch(FN_URL, { method: 'POST', headers: authHdr(), body: JSON.stringify({ action: 'update', id, status, admin_notes: notes }) });
     await load();
     setUpdating(null);
   };
