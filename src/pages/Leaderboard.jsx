@@ -289,7 +289,7 @@ export default function Leaderboard({ onNavigate }) {
                     <div style={{ fontSize: '0.82rem', color: 'var(--muted2)', lineHeight: 1.4 }}>{u.headline}</div>
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '0.2rem' }}>
                       <RankBadge score={u.score} />
-                      <span style={{ fontFamily: 'JetBrains Mono', fontWeight: 700, fontSize: '1.1rem', color: medalColors[i] || 'var(--text)' }}>
+                      <span style={{ fontFamily: 'Open Sans', fontWeight: 700, fontSize: '1.1rem', color: medalColors[i] || 'var(--text)' }}>
                         {u.score.toLocaleString()}
                       </span>
                     </div>
@@ -325,7 +325,7 @@ export default function Leaderboard({ onNavigate }) {
                       onMouseLeave={e => { Array.from(e.currentTarget.cells).forEach(td => td.style.background = isMe ? 'rgba(0,194,255,0.04)' : ''); }}
                     >
                       <td style={{ paddingLeft: '1.25rem' }}>
-                        <span style={{ fontFamily: 'JetBrains Mono', fontSize: '0.78rem', color: 'var(--muted)' }}>{rank}</span>
+                        <span style={{ fontFamily: 'Open Sans', fontSize: '0.78rem', color: 'var(--muted)' }}>{rank}</span>
                       </td>
                       <td>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
@@ -347,7 +347,7 @@ export default function Leaderboard({ onNavigate }) {
                       <td><RankBadge score={u.score} /></td>
                       <td><span style={{ fontSize: '0.85rem', color: 'var(--text)' }}>{(u.certifications || []).length}</span></td>
                       <td style={{ textAlign: 'right', paddingRight: '1.25rem' }}>
-                        <span style={{ fontFamily: 'JetBrains Mono', fontWeight: 700, fontSize: '0.9rem', color: isMe ? 'var(--gold)' : 'var(--blue)' }}>
+                        <span style={{ fontFamily: 'Open Sans', fontWeight: 700, fontSize: '0.9rem', color: isMe ? 'var(--gold)' : 'var(--blue)' }}>
                           {u.score.toLocaleString()}
                         </span>
                       </td>

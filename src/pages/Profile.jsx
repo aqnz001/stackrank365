@@ -319,7 +319,7 @@ export default function Profile({ onNavigate, profileUser }) {
                   <div style={{ marginBottom: '1.1rem' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', color: 'rgba(255,255,255,0.45)', marginBottom: '0.35rem' }}>
                       <span>→ {nextTier.icon} {nextTier.name}</span>
-                      <span style={{ fontFamily: 'JetBrains Mono' }}>{pointsToNext.toLocaleString()} pts</span>
+                      <span style={{ fontFamily: 'Open Sans' }}>{pointsToNext.toLocaleString()} pts</span>
                     </div>
                     <div className="progress-track" style={{ height: 6 }}>
                       <div className="progress-fill" style={{ width: `${progressPct}%` }} />
@@ -413,7 +413,7 @@ export default function Profile({ onNavigate, profileUser }) {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1.25rem' }}>
                   <span style={{ fontSize: '1.3rem' }}>🎓</span>
                   <h3 style={{ margin: 0, fontSize: '1.15rem' }}>Certifications</h3>
-                  <span style={{ marginLeft: 'auto', fontFamily: 'JetBrains Mono', fontSize: '0.8rem', color: 'var(--green)' }}>
+                  <span style={{ marginLeft: 'auto', fontFamily: 'Open Sans', fontSize: '0.8rem', color: 'var(--green)' }}>
                     +{certPts.toLocaleString()} pts
                   </span>
                 </div>
@@ -439,10 +439,10 @@ export default function Profile({ onNavigate, profileUser }) {
                           {cert.name}
                         </div>
                         <div style={{ display: 'flex', gap: '0.35rem', flexWrap: 'wrap', alignItems: 'center' }}>
-                          <span style={{ fontFamily: 'JetBrains Mono', fontSize: '0.68rem', color: 'var(--muted)' }}>{cert.code}</span>
+                          <span style={{ fontFamily: 'Open Sans', fontSize: '0.68rem', color: 'var(--muted)' }}>{cert.code}</span>
                           <span className={`badge ${TIER_BADGE[cert.tier] || 'badge-muted'}`} style={{ fontSize: '0.62rem' }}>{cert.tier}</span>
                           {cert.scarcityMultiplier && <span className="badge badge-purple" style={{ fontSize: '0.58rem' }}>1.25×</span>}
-                          <span style={{ marginLeft: 'auto', fontFamily: 'JetBrains Mono', fontSize: '0.72rem', color: 'var(--green)', fontWeight: 700 }}>+{cert.points}</span>
+                          <span style={{ marginLeft: 'auto', fontFamily: 'Open Sans', fontSize: '0.72rem', color: 'var(--green)', fontWeight: 700 }}>+{cert.points}</span>
                         </div>
                       </div>
                     </div>
@@ -457,7 +457,7 @@ export default function Profile({ onNavigate, profileUser }) {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1.25rem' }}>
                   <span style={{ fontSize: '1.3rem' }}>🏗️</span>
                   <h3 style={{ margin: 0, fontSize: '1.15rem' }}>Projects</h3>
-                  <span style={{ marginLeft: 'auto', fontFamily: 'JetBrains Mono', fontSize: '0.8rem', color: 'var(--blue)' }}>
+                  <span style={{ marginLeft: 'auto', fontFamily: 'Open Sans', fontSize: '0.8rem', color: 'var(--blue)' }}>
                     {projects.length} logged
                   </span>
                 </div>
@@ -587,7 +587,7 @@ export default function Profile({ onNavigate, profileUser }) {
                           <div style={{ fontSize: '0.7rem', color: 'var(--muted2)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{u.headline}</div>
                         </div>
                         <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                          <div style={{ fontFamily: 'JetBrains Mono', fontSize: '0.72rem', color: 'var(--blue)', fontWeight: 700 }}>#{uRank}</div>
+                          <div style={{ fontFamily: 'Open Sans', fontSize: '0.72rem', color: 'var(--blue)', fontWeight: 700 }}>#{uRank}</div>
                           <div style={{ fontSize: '0.68rem', color: 'var(--muted)' }}>{(u.score || 0).toLocaleString()}</div>
                         </div>
                       </div>
@@ -613,7 +613,7 @@ export default function Profile({ onNavigate, profileUser }) {
                 <div key={item.label} style={{ marginBottom: '0.95rem' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.28rem', alignItems: 'center' }}>
                     <span style={{ fontSize: '0.8rem', color: 'var(--muted2)' }}>{item.icon} {item.label}</span>
-                    <span style={{ fontFamily: 'JetBrains Mono', fontSize: '0.78rem', color: item.color, fontWeight: 700 }}>
+                    <span style={{ fontFamily: 'Open Sans', fontSize: '0.78rem', color: item.color, fontWeight: 700 }}>
                       {item.pts.toLocaleString()}
                     </span>
                   </div>
@@ -628,7 +628,7 @@ export default function Profile({ onNavigate, profileUser }) {
               <div className="divider" style={{ margin: '1rem 0 0.75rem' }} />
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--text)' }}>Total</span>
-                <span style={{ fontFamily: 'JetBrains Mono', fontWeight: 700, color: 'var(--blue)', fontSize: '1rem' }}>
+                <span style={{ fontFamily: 'Open Sans', fontWeight: 700, color: 'var(--blue)', fontSize: '1rem' }}>
                   {score.toLocaleString()} pts
                 </span>
               </div>
@@ -644,7 +644,7 @@ export default function Profile({ onNavigate, profileUser }) {
                     <div style={{ fontFamily: 'Rajdhani', fontWeight: 700, fontSize: '0.95rem', color: t.name === tier.name ? t.color : 'var(--muted2)' }}>
                       {t.name} {t.name === tier.name && '← current'}
                     </div>
-                    <div style={{ fontSize: '0.7rem', color: 'var(--muted)', fontFamily: 'JetBrains Mono' }}>
+                    <div style={{ fontSize: '0.7rem', color: 'var(--muted)', fontFamily: 'Open Sans' }}>
                       {t.minScore.toLocaleString()}{t.maxScore === Infinity ? '+' : `–${t.maxScore.toLocaleString()}`} pts
                     </div>
                   </div>
@@ -652,7 +652,7 @@ export default function Profile({ onNavigate, profileUser }) {
               ))}
               {nextTier && (
                 <div style={{ background: 'var(--surface2)', borderRadius: 8, padding: '0.65rem 0.85rem', fontSize: '0.78rem', color: 'var(--muted2)' }}>
-                  <span style={{ color: 'var(--blue)', fontWeight: 700, fontFamily: 'JetBrains Mono' }}>{pointsToNext.toLocaleString()} pts</span>
+                  <span style={{ color: 'var(--blue)', fontWeight: 700, fontFamily: 'Open Sans' }}>{pointsToNext.toLocaleString()} pts</span>
                   {' '}to reach {nextTier.icon} {nextTier.name}
                 </div>
               )}
@@ -685,7 +685,7 @@ export default function Profile({ onNavigate, profileUser }) {
                         <div style={{ fontSize: '0.7rem', color: 'var(--muted2)' }}>{u.location}</div>
                       </div>
                       <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                        <div style={{ fontFamily: 'JetBrains Mono', fontSize: '0.72rem', color: 'var(--blue)', fontWeight: 700 }}>
+                        <div style={{ fontFamily: 'Open Sans', fontSize: '0.72rem', color: 'var(--blue)', fontWeight: 700 }}>
                           {(u.score || 0).toLocaleString()}
                         </div>
                         <div style={{ fontSize: '0.62rem' }}>{uTier.icon}</div>

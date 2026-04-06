@@ -44,7 +44,7 @@ export function HowItWorks({ onNavigate }) {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '3rem' }}>
           {steps.map((s, i) => (
             <div key={s.n} className="card" style={{ display: 'flex', gap: '1.25rem', alignItems: 'flex-start', borderLeft: `3px solid var(--blue)`, borderRadius: '0 16px 16px 0' }}>
-              <div style={{ width: 48, height: 48, borderRadius: 12, background: 'var(--blue-dim)', border: '1px solid var(--border-blue)', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'JetBrains Mono', fontWeight: 700, fontSize: '0.85rem', color: 'var(--blue)' }}>{s.n}</div>
+              <div style={{ width: 48, height: 48, borderRadius: 12, background: 'var(--blue-dim)', border: '1px solid var(--border-blue)', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Open Sans', fontWeight: 700, fontSize: '0.85rem', color: 'var(--blue)' }}>{s.n}</div>
               <div>
                 <h3 style={{ fontSize: '1.05rem', marginBottom: '0.4rem' }}>{s.icon} {s.title}</h3>
                 <p style={{ color: 'var(--muted2)', fontSize: '0.9rem', margin: 0, lineHeight: 1.65 }}>{s.desc}</p>
@@ -63,7 +63,7 @@ export function HowItWorks({ onNavigate }) {
                 <div style={{ fontFamily: 'Rajdhani', fontWeight: 700, color: tier.color, fontSize: '1.1rem' }}>{tier.name}</div>
                 <div style={{ fontSize: '0.82rem', color: 'var(--muted2)' }}>{tier.description}</div>
               </div>
-              <div style={{ fontFamily: 'JetBrains Mono', fontSize: '0.8rem', color: 'var(--muted)', textAlign: 'right', flexShrink: 0 }}>
+              <div style={{ fontFamily: 'Open Sans', fontSize: '0.8rem', color: 'var(--muted)', textAlign: 'right', flexShrink: 0 }}>
                 {tier.minScore.toLocaleString()}{tier.maxScore === Infinity ? '+' : `–${tier.maxScore.toLocaleString()}`} pts
               </div>
             </div>
@@ -104,7 +104,7 @@ export function Scoring({ onNavigate }) {
             {[['Fundamentals', 500, 'badge-muted'], ['Associate', 1500, 'badge-blue'], ['Expert', 3000, 'badge-gold'], ['Applied Skills', 400, 'badge-green']].map(([tier, pts, cls]) => (
               <div key={tier} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.5rem 0', borderBottom: '1px solid var(--border)' }}>
                 <span className={`badge ${cls}`} style={{ fontSize: '0.72rem' }}>{tier}</span>
-                <span style={{ fontFamily: 'JetBrains Mono', color: 'var(--gold)', fontWeight: 700 }}>+{pts.toLocaleString()} pts</span>
+                <span style={{ fontFamily: 'Open Sans', color: 'var(--gold)', fontWeight: 700 }}>+{pts.toLocaleString()} pts</span>
               </div>
             ))}
           </div>
@@ -113,7 +113,7 @@ export function Scoring({ onNavigate }) {
             {[['Enterprise Project', 2000, 'badge-gold'], ['Standard Project', 800, 'badge-blue'], ['Peer Validation', 300, 'badge-green'], ['Community / Referral', 500, 'badge-purple']].map(([label, pts, cls]) => (
               <div key={label} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.5rem 0', borderBottom: '1px solid var(--border)' }}>
                 <span style={{ fontSize: '0.85rem', color: 'var(--muted2)' }}>{label}</span>
-                <span style={{ fontFamily: 'JetBrains Mono', color: 'var(--gold)', fontWeight: 700 }}>+{pts.toLocaleString()} pts</span>
+                <span style={{ fontFamily: 'Open Sans', color: 'var(--gold)', fontWeight: 700 }}>+{pts.toLocaleString()} pts</span>
               </div>
             ))}
           </div>
@@ -149,7 +149,7 @@ export function Scoring({ onNavigate }) {
                 <div key={item.label} className="card" style={{ padding: '0.875rem 1rem' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.3rem' }}>
                     <span style={{ fontWeight: 600, fontSize: '0.88rem', color: 'var(--text)' }}>{item.label}</span>
-                    <span style={{ fontFamily: 'JetBrains Mono', fontSize: '0.8rem', color: item.color, fontWeight: 700 }}>~{item.pct}%</span>
+                    <span style={{ fontFamily: 'Open Sans', fontSize: '0.8rem', color: item.color, fontWeight: 700 }}>~{item.pct}%</span>
                   </div>
                   <div style={{ height: 5, background: 'var(--surface)', borderRadius: 99, overflow: 'hidden', marginBottom: '0.3rem' }}>
                     <div style={{ height: '100%', width: item.pct + '%', background: item.color, borderRadius: 99 }} />
@@ -177,7 +177,7 @@ export function Scoring({ onNavigate }) {
               return (
                 <div key={row.label} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.5rem 0.85rem', background: 'var(--surface)', borderRadius: 8, border: '1px solid var(--border)', fontSize: '0.8rem', flexWrap: 'wrap' }}>
                   <span style={{ flex: 1, color: 'var(--text)', minWidth: 160 }}>{row.label}</span>
-                  <span style={{ fontFamily: 'JetBrains Mono', color: 'var(--green)', fontWeight: 700, flexShrink: 0, minWidth: 85, textAlign: 'right' }}>{row.pts}</span>
+                  <span style={{ fontFamily: 'Open Sans', color: 'var(--green)', fontWeight: 700, flexShrink: 0, minWidth: 85, textAlign: 'right' }}>{row.pts}</span>
                   <span style={{ color: 'var(--muted2)', flexShrink: 0, minWidth: 120, fontSize: '0.77rem' }}>{row.cap}</span>
                   <span style={{ flexShrink: 0, fontSize: '0.77rem', fontWeight: 600, color: row.auto ? 'var(--green)' : 'var(--gold)' }}>{row.auto ? '✅ Auto-verified' : '📋 Reported'}</span>
                 </div>
@@ -200,12 +200,12 @@ export function Scoring({ onNavigate }) {
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
               {certs.map(cert => (
                 <div key={cert.code} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', padding: '0.6rem 0.85rem', background: 'var(--surface)', borderRadius: 8, border: '1px solid var(--border)' }}>
-                  <span style={{ fontFamily: 'JetBrains Mono', fontSize: '0.75rem', color: 'var(--muted)', width: 70, flexShrink: 0 }}>{cert.code}</span>
+                  <span style={{ fontFamily: 'Open Sans', fontSize: '0.75rem', color: 'var(--muted)', width: 70, flexShrink: 0 }}>{cert.code}</span>
                   <span style={{ flex: 1, fontSize: '0.85rem', color: 'var(--text)' }}>{cert.name}</span>
                   {cert.status === 'upcoming' && <span className="badge badge-orange" style={{ fontSize: '0.62rem' }}>Coming Soon</span>}
                   {cert.scarcityMultiplier && <span className="badge badge-purple" style={{ fontSize: '0.62rem' }}>1.25×</span>}
                   <span className={`badge ${tierStyle[cert.tier]}`} style={{ fontSize: '0.62rem' }}>{cert.tier}</span>
-                  <span style={{ fontFamily: 'JetBrains Mono', fontSize: '0.8rem', color: 'var(--green)', fontWeight: 700, flexShrink: 0 }}>+{cert.points.toLocaleString()}</span>
+                  <span style={{ fontFamily: 'Open Sans', fontSize: '0.8rem', color: 'var(--green)', fontWeight: 700, flexShrink: 0 }}>+{cert.points.toLocaleString()}</span>
                 </div>
               ))}
             </div>
@@ -364,7 +364,7 @@ export function PowerPlatformRanking({ onNavigate }) {
           ].map(t => (
             <div key={t.tier} className="card" style={{ padding: '1rem', textAlign: 'center' }}>
               <div style={{ fontWeight: 700, color: t.color, marginBottom: '0.25rem', fontSize: '0.88rem' }}>{t.tier}</div>
-              <div style={{ fontFamily: 'JetBrains Mono', fontSize: '0.75rem', color: 'var(--muted2)' }}>{t.pts} pts</div>
+              <div style={{ fontFamily: 'Open Sans', fontSize: '0.75rem', color: 'var(--muted2)' }}>{t.pts} pts</div>
               <div style={{ fontSize: '0.75rem', color: 'var(--muted2)', marginTop: '0.25rem' }}>{t.desc}</div>
             </div>
           ))}

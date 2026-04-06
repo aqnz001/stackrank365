@@ -429,7 +429,7 @@ function EmailConfigPanel() {
             <div key={f.k} style={{ display:'flex', flexDirection:'column', gap:'0.3rem' }}>
               <label style={{ fontSize:'0.72rem', color:'#6b7fa3', textTransform:'uppercase', letterSpacing:'0.06em' }}>{f.label}</label>
               <input type={f.type||'text'} value={smtpCfg[f.k]} onChange={e=>setSmtpCfg(c=>({...c,[f.k]:e.target.value}))}
-                placeholder={f.ph} style={{ padding:'0.5rem 0.7rem', borderRadius:6, border:'1px solid #1e2d45', background:'#111827', color:'#f0f4ff', fontSize:'0.83rem', fontFamily:'JetBrains Mono,monospace' }} />
+                placeholder={f.ph} style={{ padding:'0.5rem 0.7rem', borderRadius:6, border:'1px solid #1e2d45', background:'#111827', color:'#f0f4ff', fontSize:'0.83rem', fontFamily:'Open Sans,monospace' }} />
             </div>
           ))}
         </div>
@@ -461,7 +461,7 @@ function EmailConfigPanel() {
               Body <span style={{ color:'#4b6a8a', fontWeight:400 }}>· Variables: {'{{name}} {{rank}} {{score}} {{cert_name}} {{pct}} {{validator}} {{project}} {{status}} {{message}} {{change}}'}</span>
             </label>
             <textarea value={curTpl.body} onChange={e=>updateTpl('body',e.target.value)} rows={8}
-              style={{ width:'100%', padding:'0.5rem 0.7rem', borderRadius:6, border:'1px solid #1e2d45', background:'#111827', color:'#f0f4ff', fontSize:'0.83rem', fontFamily:'JetBrains Mono,monospace', resize:'vertical', lineHeight:1.6 }} />
+              style={{ width:'100%', padding:'0.5rem 0.7rem', borderRadius:6, border:'1px solid #1e2d45', background:'#111827', color:'#f0f4ff', fontSize:'0.83rem', fontFamily:'Open Sans,monospace', resize:'vertical', lineHeight:1.6 }} />
           </div>
         </div>
 
