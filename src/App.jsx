@@ -16,61 +16,51 @@ import RecruiterDashboard from './pages/RecruiterDashboard';
 import AdminFraud from './pages/AdminFraud';
 import AdminTools from './pages/AdminTools';
 import AdminSitemap from './pages/AdminSitemap';
-import QADashboard from './pages/QADashboard';
 
 function Footer({ onNavigate }) {
   return (
-    <footer style={{ background: '#f6f7f8', borderTop: '1px solid rgba(0,0,0,0.06)', padding: '4rem 0 2rem', marginTop: 'auto' }}>
+    <footer style={{ background: 'var(--bg2)', borderTop: '1px solid var(--border)', padding: '3rem 0 1.75rem', marginTop: 'auto' }}>
       <div className="container">
-        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr', gap: '2.5rem', marginBottom: '3rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gap: '2.5rem', marginBottom: '2.5rem' }}>
           <div>
             <button onClick={() => onNavigate('landing')}
-              style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '1rem' }}>
+              style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.85rem' }}>
               <LogoMark size={34} />
-              <span style={{ fontFamily: 'Rubik', fontWeight: 700, fontSize: '1.25rem', color: 'var(--text)', letterSpacing: '-0.5px' }}>
-                StackRank<span style={{ color: 'var(--blue)', fontWeight: 800 }}>365</span>
+              <span style={{ fontFamily: 'Rajdhani', fontWeight: 700, fontSize: '1.15rem', color: 'var(--text)' }}>
+                StackRank<span style={{ color: 'var(--blue)' }}>365</span>
               </span>
             </button>
-            <p style={{ color: 'var(--muted)', fontSize: '0.9rem', lineHeight: 1.75, maxWidth: 280 }}>
+            <p style={{ color: 'var(--muted)', fontSize: '0.85rem', lineHeight: 1.7, maxWidth: 260 }}>
               The verified talent ranking community for Microsoft Dynamics 365, Power Platform, Copilot Studio, and Azure OpenAI professionals.
             </p>
-            <div style={{ marginTop: '1.5rem' }}>
+            <div style={{ marginTop: '1.25rem' }}>
               <button className="btn btn-gold btn-sm" onClick={() => onNavigate('landing')}>
                 ð Join the Waitlist
               </button>
             </div>
           </div>
           <div>
-            <div style={{ fontWeight: 600, fontSize: '0.88rem', color: 'var(--text)', marginBottom: '1.1rem' }}>Platform</div>
-            {[['how-it-works','How It Works'],['scoring','Scoring'],['leaderboard','Leaderboard'],['pricing','Pricing']].map(([id, label]) => (
-              <div key={id} style={{ marginBottom: '0.65rem' }}>
-                <button onClick={() => onNavigate(id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--muted)', fontSize: '0.9rem', padding: 0, fontFamily: "'Rubik', sans-serif", transition: 'color 400ms ease-in-out' }}
+            <div style={{ fontWeight: 700, fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '0.07em', color: 'var(--muted2)', marginBottom: '0.9rem' }}>Platform</div>
+            {[['how-it-works','How It Works'],['scoring','Scoring'],['leaderboard','Leaderboard']].map(([id, label]) => (
+              <div key={id} style={{ marginBottom: '0.5rem' }}>
+                <button onClick={() => onNavigate(id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--muted)', fontSize: '0.88rem', padding: 0, fontFamily: 'Outfit', transition: 'color 0.15s' }}
                   onMouseEnter={e => e.currentTarget.style.color='var(--text)'} onMouseLeave={e => e.currentTarget.style.color='var(--muted)'}>{label}</button>
               </div>
             ))}
           </div>
           <div>
-            <div style={{ fontWeight: 600, fontSize: '0.88rem', color: 'var(--text)', marginBottom: '1.1rem' }}>Company</div>
-            {[['about','About'],['for-recruiters','For Recruiters']].map(([id, label]) => (
-              <div key={id} style={{ marginBottom: '0.65rem' }}>
-                <button onClick={() => onNavigate(id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--muted)', fontSize: '0.9rem', padding: 0, fontFamily: "'Rubik', sans-serif", transition: 'color 400ms ease-in-out' }}
-                  onMouseEnter={e => e.currentTarget.style.color='var(--text)'} onMouseLeave={e => e.currentTarget.style.color='var(--muted)'}>{label}</button>
-              </div>
-            ))}
-          </div>
-          <div>
-            <div style={{ fontWeight: 600, fontSize: '0.88rem', color: 'var(--text)', marginBottom: '1.1rem' }}>Legal</div>
-            {[['privacy-policy','Privacy Policy']].map(([id, label]) => (
-              <div key={id} style={{ marginBottom: '0.65rem' }}>
-                <button onClick={() => onNavigate(id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--muted)', fontSize: '0.9rem', padding: 0, fontFamily: "'Rubik', sans-serif", transition: 'color 400ms ease-in-out' }}
+            <div style={{ fontWeight: 700, fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '0.07em', color: 'var(--muted2)', marginBottom: '0.9rem' }}>Company</div>
+            {[['about','About']].map(([id, label]) => (
+              <div key={id} style={{ marginBottom: '0.5rem' }}>
+                <button onClick={() => onNavigate(id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--muted)', fontSize: '0.88rem', padding: 0, fontFamily: 'Outfit', transition: 'color 0.15s' }}
                   onMouseEnter={e => e.currentTarget.style.color='var(--text)'} onMouseLeave={e => e.currentTarget.style.color='var(--muted)'}>{label}</button>
               </div>
             ))}
           </div>
         </div>
-        <div style={{ borderTop: '1px solid rgba(0,0,0,0.07)', paddingTop: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem' }}>
-          <div style={{ fontSize: '0.82rem', color: 'var(--muted)' }}>© 2025 StackRank365 · All rights reserved.</div>
-          <div style={{ fontSize: '0.82rem', color: 'var(--muted)' }}>Built for the Microsoft community</div>
+        <div style={{ borderTop: '1px solid var(--border)', paddingTop: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem' }}>
+          <div style={{ fontSize: '0.78rem', color: 'var(--muted)' }}>Â© 2025 StackRank365. All rights reserved.</div>
+          <div style={{ fontSize: '0.78rem', color: 'var(--muted)' }}>Built for the Microsoft community ð</div>
         </div>
       </div>
       <style>{`@media(max-width:768px){ footer .container > div:first-child { grid-template-columns: 1fr !important; } }`}</style>
@@ -149,7 +139,7 @@ function AppInner() {
       case 'for-recruiters':  return <ForRecruiters onNavigate={navigate} />;
       case 'dashboard':          return (loading ? (
         <div style={{minHeight:'80vh',display:'flex',alignItems:'center',justifyContent:'center',flexDirection:'column',gap:'1.25rem',background:'var(--bg)'}}>
-          <div style={{width:44,height:44,border:'3px solid var(--border-bright)',borderTopColor:'var(--blue)',borderRadius:'50%',animation:'_spin 0.8s linear infinite'}}/>
+          <div style={{width:44,height:44,border:'3px solid rgba(255,255,255,0.08)',borderTopColor:'var(--blue)',borderRadius:'50%',animation:'_spin 0.8s linear infinite'}}/>
           <p style={{color:'var(--muted2)',fontSize:'0.88rem',margin:0}}>Signing you in…</p>
           <style>{'@keyframes _spin{to{transform:rotate(360deg)}}'}</style>
         </div>
@@ -160,7 +150,6 @@ function AppInner() {
       case 'validate':        return <ValidatePage token={pageData?.token} onNavigate={navigate} />;
       case 'sr365-sitemap':          return <AdminSitemap />;
       case 'sr365-admin-tools':   return <AdminTools />;
-      case 'sr365-qa':             return <QADashboard />;
       case 'admin-fraud':          return <AdminFraud onNavigate={navigate} />;
       case 'pricing':              return <Pricing onNavigate={navigate} />;
       case 'recruiter-dashboard':  return <RecruiterDashboard onNavigate={navigate} />;
