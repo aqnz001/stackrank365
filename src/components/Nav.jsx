@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { LayoutDashboard, User, Settings, LogOut, Menu, X, ChevronDown } from 'lucide-react';
 
@@ -32,14 +32,7 @@ export default function Nav({ currentPage, onNavigate }) {
   const { user } = useApp();
   const [menuOpen, setMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
   const navTo = (page) => { onNavigate(page); setMenuOpen(false); setUserMenuOpen(false); };
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 10);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
 
   const handleSignOut = async () => {
     try {
@@ -61,7 +54,7 @@ export default function Nav({ currentPage, onNavigate }) {
   ];
 
   return (
-    <nav className={`nav${scrolled ? ' scrolled' : ''}`}>
+    <nav className="nav">
       <div className="nav-inner">
 
         {/* Logo */}
