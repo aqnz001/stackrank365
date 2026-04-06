@@ -39,10 +39,10 @@ function CertModal({ onClose, onAdd }) {
             }}>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontWeight: 600, fontSize: '0.88rem', color: '#fff' }}>{cert.name}</div>
-                <div style={{ fontSize: '0.72rem', color: 'var(--muted)', fontFamily: 'JetBrains Mono' }}>{cert.code} · {cert.specialism}</div>
+                <div style={{ fontSize: '0.72rem', color: 'var(--muted)', fontFamily: 'Open Sans' }}>{cert.code} · {cert.specialism}</div>
               </div>
               <span className={`badge ${tierColors[cert.tier]}`} style={{ fontSize: '0.68rem', flexShrink: 0 }}>{cert.tier}</span>
-              <span style={{ fontFamily: 'JetBrains Mono', fontSize: '0.78rem', color: 'var(--green)', flexShrink: 0 }}>+{cert.points}</span>
+              <span style={{ fontFamily: 'Open Sans', fontSize: '0.78rem', color: 'var(--green)', flexShrink: 0 }}>+{cert.points}</span>
             </div>
           ))}
           {filtered.length === 0 && <div style={{ padding: '1.5rem', textAlign: 'center', color: 'var(--muted2)' }}>No certifications found</div>}
@@ -306,7 +306,7 @@ function VerifyTab({ user, setUser, showToast, authUser }) {
                 <span style={{ fontSize: '1.1rem' }}>🎓</span>
                 <div style={{ flex: 1 }}>
                   <div style={{ fontWeight: 600, fontSize: '0.88rem' }}>{cert.name}</div>
-                  <div style={{ fontSize: '0.72rem', color: 'var(--muted)', fontFamily: 'JetBrains Mono' }}>{cert.code}</div>
+                  <div style={{ fontSize: '0.72rem', color: 'var(--muted)', fontFamily: 'Open Sans' }}>{cert.code}</div>
                 </div>
                 <span className="badge badge-orange" style={{ fontSize: '0.65rem' }}>Pending</span>
               </div>
@@ -337,7 +337,7 @@ function ProfileCompleteBar({ user, certs, projects }) {
     <div className="card" style={{ padding: '1rem', marginBottom: '1.25rem' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
         <span style={{ fontWeight: 600, fontSize: '0.88rem' }}>Profile completeness</span>
-        <span style={{ fontFamily: 'JetBrains Mono', fontSize: '0.82rem', color: 'var(--blue)', fontWeight: 700 }}>{pct}%</span>
+        <span style={{ fontFamily: 'Open Sans', fontSize: '0.82rem', color: 'var(--blue)', fontWeight: 700 }}>{pct}%</span>
       </div>
       <div style={{ height: 6, background: 'var(--surface)', borderRadius: 99, overflow: 'hidden', marginBottom: '0.4rem' }}>
         <div style={{ height: '100%', width: pct + '%', background: 'var(--blue)', borderRadius: 99 }} />
@@ -541,7 +541,7 @@ export default function Dashboard({ onNavigate }) {
               <div style={{ marginTop: '0.75rem' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.7rem', color: 'var(--muted2)', marginBottom: '0.3rem' }}>
                   <span>→ {nextRank.name}</span>
-                  <span style={{ fontFamily: 'JetBrains Mono' }}>{pointsToNext.toLocaleString()} pts</span>
+                  <span style={{ fontFamily: 'Open Sans' }}>{pointsToNext.toLocaleString()} pts</span>
                 </div>
                 <div className="progress-track" style={{ height: 5 }}>
                   <div className="progress-fill" style={{ width: `${progressPct}%` }} />
@@ -593,7 +593,7 @@ export default function Dashboard({ onNavigate }) {
                 <div key={item.label} style={{ marginBottom: '1rem' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.3rem' }}>
                     <span style={{ fontSize: '0.85rem', color: 'var(--muted2)' }}>{item.label}</span>
-                    <span style={{ fontFamily: 'JetBrains Mono', fontSize: '0.8rem', color: item.color }}>{item.pts.toLocaleString()} pts</span>
+                    <span style={{ fontFamily: 'Open Sans', fontSize: '0.8rem', color: item.color }}>{item.pts.toLocaleString()} pts</span>
                   </div>
                   <div className="progress-track">
                     <div className="progress-fill" style={{ width: `${Math.min((item.pts/item.max)*100,100)}%`, background: item.color }} />
@@ -671,13 +671,13 @@ export default function Dashboard({ onNavigate }) {
                     <div style={{ flex: 1, minWidth: 0 }}>
                       <div style={{ fontWeight: 600, fontSize: '0.9rem', color: '#fff' }}>{cert.name}</div>
                       <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', marginTop: '0.25rem', flexWrap: 'wrap' }}>
-                        <span style={{ fontFamily: 'JetBrains Mono', fontSize: '0.72rem', color: 'var(--muted)' }}>{cert.code}</span>
+                        <span style={{ fontFamily: 'Open Sans', fontSize: '0.72rem', color: 'var(--muted)' }}>{cert.code}</span>
                         <span className={`badge ${cert.tier === 'Fundamentals' ? 'badge-muted' : cert.tier === 'Associate' ? 'badge-blue' : cert.tier === 'Expert' ? 'badge-gold' : 'badge-green'}`} style={{ fontSize: '0.65rem' }}>{cert.tier}</span>
                         {cert.verified ? <span className="badge badge-green" style={{ fontSize: '0.65rem' }}>✓ Verified via {cert.verifiedVia === 'ms_learn' ? 'MS Learn' : 'Credly'}</span>
                           : <span className="badge badge-orange" style={{ fontSize: '0.65rem' }}>⏳ Pending verification</span>}
                       </div>
                     </div>
-                    <span style={{ fontFamily: 'JetBrains Mono', fontWeight: 700, color: cert.verified ? 'var(--green)' : 'var(--muted)', fontSize: '0.9rem', flexShrink: 0 }}>
+                    <span style={{ fontFamily: 'Open Sans', fontWeight: 700, color: cert.verified ? 'var(--green)' : 'var(--muted)', fontSize: '0.9rem', flexShrink: 0 }}>
                       {cert.verified ? `+${cert.points.toLocaleString()}` : 'verify to earn'}
                     </span>
                     <button className="btn btn-ghost btn-sm" onClick={() => removeCert(cert.code, cert.dbId)} style={{ color: 'var(--red)', padding: '0.3rem 0.5rem' }}>✕</button>
@@ -732,7 +732,7 @@ export default function Dashboard({ onNavigate }) {
                         {proj.description && <p style={{ fontSize: '0.82rem', color: 'var(--muted2)', margin: '0.4rem 0 0' }}>{proj.description}</p>}
                       </div>
                       <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
-                        <span style={{ fontFamily: 'JetBrains Mono', fontWeight: 700, color: 'var(--blue)', fontSize: '0.85rem' }}>+{(proj.enterprise ? 2000 : 800).toLocaleString()}</span>
+                        <span style={{ fontFamily: 'Open Sans', fontWeight: 700, color: 'var(--blue)', fontSize: '0.85rem' }}>+{(proj.enterprise ? 2000 : 800).toLocaleString()}</span>
                         {!proj.validated && (
                           <button className="btn btn-outline btn-sm"
                             style={{ fontSize: '0.75rem', gap: '0.3rem' }}
@@ -776,7 +776,7 @@ export default function Dashboard({ onNavigate }) {
                 <div className="card" style={{ padding: '1rem', marginBottom: '1.25rem' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.4rem' }}>
                     <span style={{ fontSize: '0.85rem', color: 'var(--muted2)' }}>Community bonus applied</span>
-                    <span style={{ fontFamily: 'JetBrains Mono', fontSize: '0.82rem', color: 'var(--gold)', fontWeight: 700 }}>{applied.toLocaleString()} / {cap.toLocaleString()} pts cap</span>
+                    <span style={{ fontFamily: 'Open Sans', fontSize: '0.82rem', color: 'var(--gold)', fontWeight: 700 }}>{applied.toLocaleString()} / {cap.toLocaleString()} pts cap</span>
                   </div>
                   <div style={{ height: 6, background: 'var(--surface)', borderRadius: 99, overflow: 'hidden', marginBottom: '0.4rem' }}>
                     <div style={{ height: '100%', width: pct+'%', background: 'var(--gold)', borderRadius: 99, transition: 'width 0.4s' }} />
@@ -802,7 +802,7 @@ export default function Dashboard({ onNavigate }) {
                 ].map(item => (
                   <div key={item.label} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontSize: '0.8rem' }}>
                     <span style={{ flex: 1, color: 'var(--muted2)' }}>{item.label}</span>
-                    <span style={{ fontFamily: 'JetBrains Mono', color: 'var(--green)', fontWeight: 700 }}>{item.pts}</span>
+                    <span style={{ fontFamily: 'Open Sans', color: 'var(--green)', fontWeight: 700 }}>{item.pts}</span>
                     <span style={{ fontSize: '0.72rem', color: item.auto ? 'var(--green)' : 'var(--gold)' }}>{item.auto ? '✅ Auto' : '📋 Reported'}</span>
                   </div>
                 ))}
@@ -827,7 +827,7 @@ export default function Dashboard({ onNavigate }) {
                       {item.url && <a href={item.url} target="_blank" rel="noopener" style={{ fontSize: '0.75rem', color: 'var(--blue)', display: 'block', marginTop: '0.2rem' }}>{item.url.slice(0,60)}</a>}
                     </div>
                     <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                      <div style={{ fontFamily: 'JetBrains Mono', color: 'var(--gold)', fontWeight: 700 }}>+{(item.points_awarded||0).toLocaleString()}</div>
+                      <div style={{ fontFamily: 'Open Sans', color: 'var(--gold)', fontWeight: 700 }}>+{(item.points_awarded||0).toLocaleString()}</div>
                       <div style={{ fontSize: '0.72rem', marginTop: '0.2rem', color: item.verified ? 'var(--green)' : 'var(--gold)' }}>{item.verified ? '✅ Verified' : '📋 Reported'}</div>
                     </div>
                   </div>
@@ -1018,7 +1018,7 @@ export default function Dashboard({ onNavigate }) {
                 const link = `https://www.stackrank365.com/?ref=${code}`;
                 return (
                   <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
-                    <div style={{ flex: 1, minWidth: 0, background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 8, padding: '0.6rem 0.875rem', fontFamily: 'JetBrains Mono', fontSize: '0.8rem', color: 'var(--muted2)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{link}</div>
+                    <div style={{ flex: 1, minWidth: 0, background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 8, padding: '0.6rem 0.875rem', fontFamily: 'Open Sans', fontSize: '0.8rem', color: 'var(--muted2)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{link}</div>
                     <button className="btn btn-primary btn-sm" style={{ flexShrink: 0 }} onClick={()=>{
                       navigator.clipboard.writeText(link).then(()=>showToast('Referral link copied!','success')).catch(()=>showToast(link,'info'));
                     }}>Copy link</button>

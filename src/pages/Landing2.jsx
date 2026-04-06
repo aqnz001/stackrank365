@@ -213,7 +213,7 @@ export default function Landing({ onNavigate }) {
                               {u.name.split(' ')[0]}
                             </div>
                             {/* Score */}
-                            <div style={{ fontFamily: 'JetBrains Mono', fontSize: '0.65rem', color: 'var(--blue)', letterSpacing: '0.02em' }}>
+                            <div style={{ fontFamily: 'Open Sans', fontSize: '0.65rem', color: 'var(--blue)', letterSpacing: '0.02em' }}>
                               {u.score.toLocaleString()}
                             </div>
                             {/* Medal */}
@@ -241,7 +241,7 @@ export default function Landing({ onNavigate }) {
                     onMouseEnter={e => e.currentTarget.style.background = 'var(--surface2)'}
                     onMouseLeave={e => e.currentTarget.style.background = ''}
                   >
-                    <span style={{ width: 22, textAlign: 'right', fontSize: '0.75rem', color: 'var(--muted)', fontFamily: 'JetBrains Mono', flexShrink: 0 }}>
+                    <span style={{ width: 22, textAlign: 'right', fontSize: '0.75rem', color: 'var(--muted)', fontFamily: 'Open Sans', flexShrink: 0 }}>
                       {i + 4}
                     </span>
                     <div style={{
@@ -255,7 +255,7 @@ export default function Landing({ onNavigate }) {
                       <div style={{ fontSize: '0.7rem', color: 'var(--muted2)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{u.headline}</div>
                     </div>
                     <RankBadge score={u.score} />
-                    <span style={{ fontFamily: 'JetBrains Mono', fontWeight: 700, fontSize: '0.82rem', color: 'var(--blue)', flexShrink: 0 }}>
+                    <span style={{ fontFamily: 'Open Sans', fontWeight: 700, fontSize: '0.82rem', color: 'var(--blue)', flexShrink: 0 }}>
                       {u.score.toLocaleString()}
                     </span>
                   </div>
@@ -358,7 +358,7 @@ export default function Landing({ onNavigate }) {
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.85rem' }}>
                   <span style={{ fontSize: '1.75rem' }}>{f.icon}</span>
-                  <span style={{ fontFamily: 'JetBrains Mono', fontSize: '0.72rem', color: f.color, fontWeight: 700 }}>{f.num}</span>
+                  <span style={{ fontFamily: 'Open Sans', fontSize: '0.72rem', color: f.color, fontWeight: 700 }}>{f.num}</span>
                 </div>
                 <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>{f.title}</h3>
                 <p style={{ color: 'var(--muted2)', fontSize: '0.88rem', lineHeight: 1.7, margin: 0 }}>{f.desc}</p>
@@ -392,7 +392,7 @@ export default function Landing({ onNavigate }) {
                   {tier.name}
                 </div>
                 <div style={{ fontSize: '0.75rem', color: 'var(--muted2)', marginBottom: '0.85rem' }}>{tier.description}</div>
-                <div style={{ fontFamily: 'JetBrains Mono', fontSize: '0.72rem', color: 'var(--muted)', padding: '0.3rem 0.6rem', background: 'var(--surface2)', borderRadius: 6, display: 'inline-block' }}>
+                <div style={{ fontFamily: 'Open Sans', fontSize: '0.72rem', color: '#fff', padding: '0.3rem 0.6rem', background: tier.color, borderRadius: 6, display: 'inline-block' }}>
                   {tier.minScore.toLocaleString()}{tier.maxScore === Infinity ? '+' : `–${tier.maxScore.toLocaleString()}`} pts
                 </div>
               </div>
@@ -527,7 +527,7 @@ export default function Landing({ onNavigate }) {
                   width: 52, height: 52, borderRadius: 12, flexShrink: 0,
                   background: 'var(--blue-dim)', border: '1px solid var(--border-blue)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontFamily: 'JetBrains Mono', fontWeight: 700, fontSize: '0.82rem', color: 'var(--blue)',
+                  fontFamily: 'Open Sans', fontWeight: 700, fontSize: '0.82rem', color: 'var(--blue)',
                 }}>{s.n}</div>
                 <div style={{ paddingTop: '0.25rem' }}>
                   <h3 style={{ fontSize: '1.05rem', marginBottom: '0.35rem' }}>{s.icon} {s.title}</h3>
@@ -580,7 +580,7 @@ export default function Landing({ onNavigate }) {
 
               {/* Example box */}
               <div style={{ padding: '1.1rem 1.4rem', background: 'var(--blue-dim)', border: '1px solid var(--border-blue)', borderRadius: 8 }}>
-                <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.58rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--blue)', marginBottom: '0.6rem' }}>
+                <div style={{ fontFamily: 'Open Sans, sans-serif', fontSize: '0.58rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--blue)', marginBottom: '0.6rem' }}>
                   Example Profile Score
                 </div>
                 <p style={{ fontSize: '0.85rem', color: 'var(--muted2)', lineHeight: 1.8, margin: '0 0 0.65rem' }}>
@@ -605,7 +605,7 @@ export default function Landing({ onNavigate }) {
               <div style={{
                 background: 'var(--blue-dim)', padding: '1rem 1.5rem',
                 borderBottom: '1px solid var(--border-blue)',
-                fontFamily: 'JetBrains Mono, monospace', fontSize: '0.65rem',
+                fontFamily: 'Open Sans, sans-serif', fontSize: '0.65rem',
                 letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--blue)',
                 display: 'flex', alignItems: 'center', gap: '0.5rem',
               }}>
@@ -629,7 +629,7 @@ export default function Landing({ onNavigate }) {
                   }}>
                     <span style={{ fontSize: '0.85rem', color: 'var(--text)' }}>{row.name}</span>
                     <span className="pts-weight" style={{
-                      fontFamily: 'JetBrains Mono, monospace', fontSize: '0.68rem',
+                      fontFamily: 'Open Sans, sans-serif', fontSize: '0.68rem',
                       color: 'var(--muted)', background: 'var(--surface2)',
                       padding: '0.2rem 0.5rem', borderRadius: 4,
                     }}>{row.weight}</span>
@@ -644,7 +644,7 @@ export default function Landing({ onNavigate }) {
                 background: 'var(--blue-dim)', borderTop: '1px solid var(--border-blue)',
                 padding: '1rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center',
               }}>
-                <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.6rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--blue)' }}>
+                <span style={{ fontFamily: 'Open Sans, sans-serif', fontSize: '0.6rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--blue)' }}>
                   All points verified — zero self-reported
                 </span>
                 <span style={{ fontFamily: 'Rajdhani', fontWeight: 700, fontSize: '1.35rem', color: 'var(--gold)' }}>Transparent</span>
@@ -669,7 +669,7 @@ export default function Landing({ onNavigate }) {
             <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
               <div style={{ background: 'var(--surface2)', padding: '0.85rem 1.4rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border)' }}>
                 <span style={{ fontFamily: 'Rajdhani', fontWeight: 700, fontSize: '0.9rem', letterSpacing: '0.05em', textTransform: 'uppercase' }}>⚡ Power Platform</span>
-                <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.6rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--muted)' }}>United Kingdom</span>
+                <span style={{ fontFamily: 'Open Sans, sans-serif', fontSize: '0.6rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--muted)' }}>United Kingdom</span>
               </div>
               {[
                 { initials: 'SK', name: 'Sarah K.',  tags: [{ label: 'PL-600', c: 'var(--gold)'   }, { label: 'MVP',    c: 'var(--gold)'   }], pts: 9840,  bg: 'linear-gradient(135deg,#0078d4,#9b72f5)', rank: 0 },
@@ -685,7 +685,7 @@ export default function Landing({ onNavigate }) {
                     onMouseEnter={e => e.currentTarget.style.background = 'var(--surface2)'}
                     onMouseLeave={e => e.currentTarget.style.background = ''}
                   >
-                    <div style={{ width: '1.75rem', textAlign: 'center', fontFamily: 'JetBrains Mono, monospace', fontSize: '0.72rem', color: i < 3 ? rankColors[i] : 'var(--muted)', flexShrink: 0 }}>
+                    <div style={{ width: '1.75rem', textAlign: 'center', fontFamily: 'Open Sans, sans-serif', fontSize: '0.72rem', color: i < 3 ? rankColors[i] : 'var(--muted)', flexShrink: 0 }}>
                       {i < 3 ? medals[i] : i + 1}
                     </div>
                     <div style={{ width: 36, height: 36, borderRadius: '50%', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Rajdhani', fontWeight: 700, fontSize: '0.72rem', color: '#fff', background: row.bg }}>
@@ -695,13 +695,13 @@ export default function Landing({ onNavigate }) {
                       <div className="lb-name">{row.name}</div>
                       <div style={{ display: 'flex', gap: '0.3rem', marginTop: '0.2rem', flexWrap: 'wrap' }}>
                         {row.tags.map(t => (
-                          <span key={t.label} style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.55rem', padding: '0.12rem 0.4rem', borderRadius: 3, background: 'var(--surface3)', color: t.c }}>{t.label}</span>
+                          <span key={t.label} style={{ fontFamily: 'Open Sans, sans-serif', fontSize: '0.55rem', padding: '0.12rem 0.4rem', borderRadius: 3, background: 'var(--surface3)', color: t.c }}>{t.label}</span>
                         ))}
                       </div>
                     </div>
                     <div className="lb-pts-b">
                       <div style={{ fontFamily: 'Rajdhani', fontWeight: 700, fontSize: '1.1rem', color: 'var(--blue)' }}>{row.pts.toLocaleString()}</div>
-                      <div className="lb-pts-label" style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.5rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Stack Pts</div>
+                      <div className="lb-pts-label" style={{ fontFamily: 'Open Sans, sans-serif', fontSize: '0.5rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Stack Pts</div>
                     </div>
                   </div>
                 );
@@ -716,7 +716,7 @@ export default function Landing({ onNavigate }) {
                   {[{ n: '#8', l: 'UK Rank' }, { n: '#34', l: 'Global' }].map(r => (
                     <div key={r.l} style={{ textAlign: 'center' }}>
                       <div style={{ fontFamily: 'Rajdhani', fontWeight: 700, fontSize: '1.6rem', color: 'var(--gold)', lineHeight: 1 }}>{r.n}</div>
-                      <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.52rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--muted)' }}>{r.l}</div>
+                      <div style={{ fontFamily: 'Open Sans, sans-serif', fontSize: '0.52rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--muted)' }}>{r.l}</div>
                     </div>
                   ))}
                 </div>
@@ -727,7 +727,7 @@ export default function Landing({ onNavigate }) {
             <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
               <div style={{ background: 'var(--surface2)', padding: '0.85rem 1.4rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border)' }}>
                 <span style={{ fontFamily: 'Rajdhani', fontWeight: 700, fontSize: '0.9rem', letterSpacing: '0.05em', textTransform: 'uppercase' }}>🤖 Copilot Studio</span>
-                <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.6rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--muted)' }}>Global · Emerging</span>
+                <span style={{ fontFamily: 'Open Sans, sans-serif', fontSize: '0.6rem', letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--muted)' }}>Global · Emerging</span>
               </div>
               {SAMPLE_USERS.filter(u => u.specialism === 'Copilot Studio').slice(0, 4).map((u, i) => {
                 const medals = ['🥇', '🥈', '🥉'];
@@ -745,7 +745,7 @@ export default function Landing({ onNavigate }) {
                     onMouseEnter={e => e.currentTarget.style.background = 'var(--surface2)'}
                     onMouseLeave={e => e.currentTarget.style.background = ''}
                   >
-                    <div style={{ width: '1.75rem', textAlign: 'center', fontFamily: 'JetBrains Mono, monospace', fontSize: '0.72rem', color: i < 3 ? rankColors[i] : 'var(--muted)', flexShrink: 0 }}>
+                    <div style={{ width: '1.75rem', textAlign: 'center', fontFamily: 'Open Sans, sans-serif', fontSize: '0.72rem', color: i < 3 ? rankColors[i] : 'var(--muted)', flexShrink: 0 }}>
                       {i < 3 ? medals[i] : i + 1}
                     </div>
                     <div style={{ width: 36, height: 36, borderRadius: '50%', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Rajdhani', fontWeight: 700, fontSize: '0.72rem', color: '#fff', background: avatarBgs[i] }}>
@@ -755,13 +755,13 @@ export default function Landing({ onNavigate }) {
                       <div style={{ fontFamily: 'Rajdhani', fontWeight: 600, fontSize: '0.95rem' }}>{u.name}</div>
                       <div style={{ display: 'flex', gap: '0.3rem', marginTop: '0.2rem', flexWrap: 'wrap' }}>
                         {(u.certifications || []).slice(0, 2).map(c => (
-                          <span key={c.code} style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.55rem', padding: '0.12rem 0.4rem', borderRadius: 3, background: 'var(--surface3)', color: 'var(--purple)' }}>{c.code}</span>
+                          <span key={c.code} style={{ fontFamily: 'Open Sans, sans-serif', fontSize: '0.55rem', padding: '0.12rem 0.4rem', borderRadius: 3, background: 'var(--surface3)', color: 'var(--purple)' }}>{c.code}</span>
                         ))}
                       </div>
                     </div>
                     <div className="lb-pts-b">
                       <div style={{ fontFamily: 'Rajdhani', fontWeight: 700, fontSize: '1.1rem', color: 'var(--blue)' }}>{u.score.toLocaleString()}</div>
-                      <div className="lb-pts-label" style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.5rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Stack Pts</div>
+                      <div className="lb-pts-label" style={{ fontFamily: 'Open Sans, sans-serif', fontSize: '0.5rem', color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>Stack Pts</div>
                     </div>
                   </div>
                 );
@@ -775,7 +775,7 @@ export default function Landing({ onNavigate }) {
                   <span style={{ color: 'var(--green)', fontSize: '1.1rem' }}>↑</span>
                   <span style={{ fontFamily: 'Rajdhani', fontWeight: 700, fontSize: '1.4rem', color: 'var(--green)' }}>Fast</span>
                 </div>
-                <div style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.52rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--muted)', marginTop: '0.1rem' }}>Growing</div>
+                <div style={{ fontFamily: 'Open Sans, sans-serif', fontSize: '0.52rem', letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--muted)', marginTop: '0.1rem' }}>Growing</div>
               </div>
             </div>
           </div>
