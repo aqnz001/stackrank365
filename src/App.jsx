@@ -16,6 +16,7 @@ import RecruiterDashboard from './pages/RecruiterDashboard';
 import AdminFraud from './pages/AdminFraud';
 import AdminTools from './pages/AdminTools';
 import AdminSitemap from './pages/AdminSitemap';
+import Survey from './pages/Survey';
 
 function Footer({ onNavigate }) {
   return (
@@ -154,6 +155,7 @@ function AppInner() {
       case 'pricing':              return <Pricing onNavigate={navigate} />;
       case 'recruiter-dashboard':  return <RecruiterDashboard onNavigate={navigate} />;
       case 'privacy':              return <PrivacyPolicy onNavigate={navigate} />;
+      case 'survey':               return <Survey onNavigate={navigate} />;
       default:                return <Landing onNavigate={navigate} />;
     }
   };
