@@ -556,7 +556,7 @@ const TEST_PLAN_SUITES = [
   { id: 'TS-03', name: 'Dashboard - Certifications', count: 10, priority: 'P1', desc: 'Add/delete certs, modal search, Credly/MS Learn verification, multiplier checks.' },
   { id: 'TS-04', name: 'Dashboard - Projects', count: 7, priority: 'P1', desc: 'CRUD operations, enterprise toggle, privacy mode, validation request.' },
   { id: 'TS-05', name: 'Scoring Logic', count: 7, priority: 'P1', desc: 'POINT_VALUES formula, server RPC match, rank tier thresholds.' },
-  { id: 'TS-06', name: 'Leaderboard', count: 8, priority: 'P1', desc: 'Load, ranking order, specialism/country/tier filters, profile links.' },
+  { id: 'TS-06', name: 'Leaderboard', count: 8, priority: 'P1', desc: 'Load, ranking order, specialization/country/tier filters, profile links.' },
   { id: 'TS-07', name: 'Profile', count: 8, priority: 'P1', desc: 'Public view, own view, dispute score, view tracking (F19/F09), badge share.' },
   { id: 'TS-08', name: 'Validation Flow', count: 7, priority: 'P1', desc: 'Token routing, accept/decline, invalid token error, DB status updates.' },
   { id: 'TS-09', name: 'Tier Enforcement', count: 5, priority: 'P1', desc: 'Free/Pro/Recruiter access gates, expired tier downgrade (F17).' },

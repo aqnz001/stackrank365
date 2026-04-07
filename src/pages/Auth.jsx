@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useApp } from '../context/AppContext';
-import { SPECIALISMS } from '../data/data';
+import { SPECIALIZATIONS } from '../data/data';
 
 async function getSupabase() {
   try {
@@ -33,7 +33,7 @@ export default function Auth({ mode = 'signup', onNavigate }) {
 
   const [form, setForm] = useState({
     first_name: '', last_name: '', email: '', username: '', password: '',
-    headline: '', specialism: 'Dynamics 365', location: '', yearsExp: '',
+    headline: '', specialization: 'Dynamics 365', location: '', yearsExp: '',
   });
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
 
@@ -44,7 +44,7 @@ export default function Auth({ mode = 'signup', onNavigate }) {
     if (!sb) {
       // Dev fallback
       setUser({ name: 'Demo User (MS)', email: 'demo@microsoft.com', username: 'demo.user',
-        headline: 'Microsoft Professional', specialism: 'Dynamics 365',
+        headline: 'Microsoft Professional', specialization: 'Dynamics 365',
         certifications: [], projects: [], foundingMember: true });
       showToast('Signed in with Microsoft (demo mode)', 'success');
       onNavigate('dashboard');
@@ -92,7 +92,7 @@ export default function Auth({ mode = 'signup', onNavigate }) {
   // ─── Signup ───────────────────────────────────────────────────────────────
   const handleSignup = async (e) => {
     e.preventDefault();
-    if (!form.headline || !form.specialism) { showToast('Fill in all fields', 'error'); return; }
+    if (!form.headline || !form.specialization) { showToast('Fill in all fields', 'error'); return; }
     setLoading(true);
     const sb = await getSupabase();
     if (sb) {
@@ -113,7 +113,7 @@ export default function Auth({ mode = 'signup', onNavigate }) {
       if (data.user) {
         await sb.from('profiles').update({
           headline: form.headline,
-          specialism: form.specialism,
+          specialization: form.specialization,
           location: form.location,
           years_exp: parseInt(form.yearsExp) || 0,
           username: form.username || (form.first_name + ' ' + form.last_name).toLowerCase().replace(/\s+/g, '.'),
@@ -126,7 +126,7 @@ export default function Auth({ mode = 'signup', onNavigate }) {
       setUser({
         name: (form.first_name + ' ' + form.last_name).trim(), first_name: form.first_name, last_name: form.last_name, email: form.email,
         username: form.username || (form.first_name + ' ' + form.last_name).toLowerCase().replace(/\s+/g, '.'),
-        headline: form.headline, specialism: form.specialism,
+        headline: form.headline, specialization: form.specialization,
         location: form.location, yearsExp: parseInt(form.yearsExp) || 0,
         certifications: [], projects: [], foundingMember: true,
       });
@@ -149,7 +149,7 @@ export default function Auth({ mode = 'signup', onNavigate }) {
       onNavigate('dashboard');
     } else {
       setUser({ name: 'Demo User', first_name: 'Demo', last_name: 'User', email: form.email, username: 'demo.user',
-        headline: 'Microsoft Professional', specialism: 'Dynamics 365',
+        headline: 'Microsoft Professional', specialization: 'Dynamics 365',
         certifications: [], projects: [], foundingMember: true });
       showToast('Welcome back! (demo mode)', 'success');
       onNavigate('dashboard');
@@ -308,9 +308,9 @@ export default function Auth({ mode = 'signup', onNavigate }) {
                     <input className="input" placeholder="Dynamics 365 Solution Architect" value={form.headline} onChange={e => set('headline', e.target.value)} />
                   </div>
                   <div className="form-group">
-                    <label className="label">Primary Specialism</label>
-                    <select className="input" value={form.specialism} onChange={e => set('specialism', e.target.value)}>
-                      {SPECIALISMS.map(s => <option key={s} value={s}>{s}</option>)}
+                    <label className="label">Primary Specialization</label>
+                    <select className="input" value={form.specialization} onChange={e => set('specialization', e.target.value)}>
+                      {SPECIALIZATIONS.map(s => <option key={s} value={s}>{s}</option>)}
                     </select>
                   </div>
                   <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>

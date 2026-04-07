@@ -830,7 +830,7 @@ html, body { overflow-x: hidden; }
   color: #484848 !important;
 }
 
-/* ── 10. SPECIALISM PILLS ──────────────────────────────────────
+/* ── 10. SPECIALIZATION PILLS ──────────────────────────────────────
    Pill colour text and count */
 .light [style*="0.9rem"][style*="fontWeight: 700"] { color: inherit; }
 .light [style*="0.72rem"][style*="var(--muted2)"] {
@@ -1045,7 +1045,7 @@ html, body { overflow-x: hidden; }
 .light .btn-ghost { font-size: 0.9rem !important; font-weight: 600 !important; color: #0067b8 !important; }
 .light .btn-ghost:hover { color: #004e8c !important; }
 
-/* Specialism pill labels */
+/* Specialization pill labels */
 .light [style*="display: 'flex'"][style*="fontWeight: 700"][style*="var(--blue)"] {
   font-size: 0.95rem !important;
 }
@@ -1149,7 +1149,7 @@ html, body { overflow-x: hidden; }
   font-size: 1rem !important;
 }
 
-/* ── Specialism pill cards — ensure readable ── */
+/* ── Specialization pill cards — ensure readable ── */
 .light [style*="glow"] { background: #f5f5f5 !important; border: 1px solid rgba(0,0,0,0.10) !important; }
 
 /* ── Points reference table ── */

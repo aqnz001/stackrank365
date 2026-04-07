@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useApp } from '../context/AppContext';
-import { CERTIFICATIONS, getRankTier, getNextRankTier, SPECIALISMS } from '../data/data';
+import { CERTIFICATIONS, getRankTier, getNextRankTier, SPECIALIZATIONS } from '../data/data';
 import ResumeAnalyser from '../components/ResumeAnalyser';
 
 async function getSupabase() {
@@ -19,7 +19,7 @@ function CertModal({ onClose, onAdd }) {
   const tierColors = { Fundamentals: 'badge-muted', Associate: 'badge-blue', Expert: 'badge-gold', 'Applied Skills': 'badge-green' };
   const filtered = CERTIFICATIONS.filter(c =>
     c.status !== 'retiring' &&
-    (c.name.toLowerCase().includes(search.toLowerCase()) || c.code.toLowerCase().includes(search.toLowerCase()) || c.specialism.toLowerCase().includes(search.toLowerCase()))
+    (c.name.toLowerCase().includes(search.toLowerCase()) || c.code.toLowerCase().includes(search.toLowerCase()) || c.specialization.toLowerCase().includes(search.toLowerCase()))
   );
   return (
     <div className="modal-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
@@ -28,7 +28,7 @@ function CertModal({ onClose, onAdd }) {
           <h3 style={{ margin: 0 }}>Add Certification</h3>
           <button className="btn btn-ghost btn-sm" onClick={onClose}>✕</button>
         </div>
-        <input className="input" placeholder="Search by name, code or specialism..." value={search} onChange={e => setSearch(e.target.value)} style={{ marginBottom: '1rem' }} autoFocus />
+        <input className="input" placeholder="Search by name, code or specialization..." value={search} onChange={e => setSearch(e.target.value)} style={{ marginBottom: '1rem' }} autoFocus />
         <div style={{ maxHeight: 280, overflowY: 'auto', marginBottom: '1rem', display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
           {filtered.map(cert => (
             <div key={cert.code} onClick={() => setSelected(cert)} style={{
@@ -39,7 +39,7 @@ function CertModal({ onClose, onAdd }) {
             }}>
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontWeight: 600, fontSize: '0.88rem', color: '#fff' }}>{cert.name}</div>
-                <div style={{ fontSize: '0.72rem', color: 'var(--muted)', fontFamily: 'Open Sans' }}>{cert.code} · {cert.specialism}</div>
+                <div style={{ fontSize: '0.72rem', color: 'var(--muted)', fontFamily: 'Open Sans' }}>{cert.code} · {cert.specialization}</div>
               </div>
               <span className={`badge ${tierColors[cert.tier]}`} style={{ fontSize: '0.68rem', flexShrink: 0 }}>{cert.tier}</span>
               <span style={{ fontFamily: 'Open Sans', fontSize: '0.78rem', color: 'var(--green)', flexShrink: 0 }}>+{cert.points}</span>
@@ -325,7 +325,7 @@ function ProfileCompleteBar({ user, certs, projects }) {
     { label: 'Headline', done: !!(user && user.headline) },
     { label: 'Bio', done: !!(user && user.bio) },
     { label: 'Location', done: !!(user && user.location) },
-    { label: 'Specialism', done: !!(user && user.specialism) },
+    { label: 'Specialization', done: !!(user && user.specialization) },
     { label: 'First certification', done: certs && certs.length > 0 },
     { label: 'First project', done: projects && projects.length > 0 },
   ];
@@ -403,7 +403,7 @@ export default function Dashboard({ onNavigate }) {
     if (sb && authUser) {
       const { data } = await sb.from('certifications').insert({
         user_id: authUser.id, code: cert.code, name: cert.name, tier: cert.tier,
-        specialism: cert.specialism, points: cert.points, issue_date: cert.issueDate,
+        specialization: cert.specialization, points: cert.points, issue_date: cert.issueDate,
         scarcity_multiplier: !!cert.scarcityMultiplier, verified: false,
       }).select().single();
       dbId = data?.id;
@@ -521,7 +521,7 @@ export default function Dashboard({ onNavigate }) {
             <h1 style={{ fontSize: 'clamp(1.6rem, 3vw, 2.4rem)', marginBottom: '0.25rem' }}>
               Welcome back, {user.first_name || (user.name || '').split(' ')[0]} 👋
             </h1>
-            <p style={{ color: 'var(--muted2)', fontSize: '0.95rem' }}>{user.headline} · {user.specialism}</p>
+            <p style={{ color: 'var(--muted2)', fontSize: '0.95rem' }}>{user.headline} · {user.specialization}</p>
           </div>
           <div style={{ display: 'flex', gap: '0.75rem' }}>
             <button className="btn btn-outline" onClick={() => onNavigate('profile')}>👁️ Public Profile</button>
@@ -1049,7 +1049,7 @@ function SettingsForm({ user, setUser, showToast, authUser }) {
   const [form, setForm] = useState({
     name: user.name || '', headline: user.headline || '',
     bio: user.bio || '', location: user.location || '',
-    specialism: user.specialism || 'Dynamics 365', yearsExp: user.yearsExp || '',
+    specialization: user.specialization || 'Dynamics 365', yearsExp: user.yearsExp || '',
   });
   const set = (k, v) => setForm(f => ({ ...f, [k]: v }));
 
@@ -1059,7 +1059,7 @@ function SettingsForm({ user, setUser, showToast, authUser }) {
     if (sb && authUser) {
       await sb.from('profiles').update({
         name: form.name, headline: form.headline, bio: form.bio,
-        location: form.location, specialism: form.specialism,
+        location: form.location, specialization: form.specialization,
         years_exp: parseInt(form.yearsExp) || 0, updated_at: new Date().toISOString(),
       }).eq('id', authUser.id);
     }
@@ -1092,9 +1092,9 @@ function SettingsForm({ user, setUser, showToast, authUser }) {
         </div>
       </div>
       <div className="form-group">
-        <label className="label">Primary Specialism</label>
-        <select className="input" value={form.specialism} onChange={e => set('specialism', e.target.value)}>
-          {SPECIALISMS.map(s => <option key={s} value={s}>{s}</option>)}
+        <label className="label">Primary Specialization</label>
+        <select className="input" value={form.specialization} onChange={e => set('specialization', e.target.value)}>
+          {SPECIALIZATIONS.map(s => <option key={s} value={s}>{s}</option>)}
         </select>
       </div>
       {user.msAccountId && (

@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react';
-import { SAMPLE_USERS, getRankTier, RANK_TIERS, SPECIALISMS } from '../data/data';
+import { SAMPLE_USERS, getRankTier, RANK_TIERS, SPECIALIZATIONS } from '../data/data';
 import { useApp } from '../context/AppContext';
 
 async function getSupabase() {
@@ -80,7 +80,7 @@ export default function Leaderboard({ onNavigate }) {
             username: u.username || u.id,
             headline: u.headline || '',
             location: u.location || '',
-            specialism: u.specialism || 'Dynamics 365',
+            specialization: u.specialization || 'Dynamics 365',
             score: Number(u.score) || 0,
             certifications: Array(Number(u.cert_count) || 0).fill({}),
             projects: Array(Number(u.project_count) || 0).fill({}),
@@ -109,7 +109,7 @@ export default function Leaderboard({ onNavigate }) {
         const userCountry = u.location?.split(',').pop()?.trim() || '';
         if (!userCountry.toLowerCase().includes(filterCountry.toLowerCase())) return false;
       }
-      if (filterSpec !== 'all' && u.specialism !== filterSpec) return false;
+      if (filterSpec !== 'all' && u.specialization !== filterSpec) return false;
       if (filterRank !== 'all') {
         const tier = getRankTier(u.score);
         if (tier.name !== filterRank) return false;
@@ -129,7 +129,7 @@ export default function Leaderboard({ onNavigate }) {
     const total = src.length;
     const avg = total ? Math.round(src.reduce((s, u) => s + u.score, 0) / total) : 0;
     const top = src[0]?.score || 0;
-    const specs = new Set(src.map(u => u.specialism)).size;
+    const specs = new Set(src.map(u => u.specialization)).size;
     return { total, avg, top, specs };
   }, [allUsers, filtered, filterScope, filterCountry]);
 
@@ -207,7 +207,7 @@ export default function Leaderboard({ onNavigate }) {
             { label: filterScope === 'country' && filterCountry ? `In ${filterCountry}` : 'Professionals', value: stats.total,               icon: '👥', color: 'var(--blue)'   },
             { label: 'Avg Score',     value: stats.avg.toLocaleString(), icon: '📊', color: 'var(--purple)' },
             { label: 'Top Score',     value: stats.top.toLocaleString(), icon: '🥇', color: 'var(--gold)'   },
-            { label: 'Specialisms',   value: stats.specs,                icon: '🎯', color: 'var(--green)'  },
+            { label: 'Specializations',   value: stats.specs,                icon: '🎯', color: 'var(--green)'  },
           ].map(s => (
             <div key={s.label} className="card" style={{ textAlign: 'center', padding: '1.1rem' }}>
               <div style={{ fontSize: '1.4rem', marginBottom: '0.3rem' }}>{s.icon}</div>
@@ -223,8 +223,8 @@ export default function Leaderboard({ onNavigate }) {
             value={search} onChange={e => setSearch(e.target.value)}
             style={{ flex: 1, minWidth: 180, maxWidth: 280 }} />
           <select className="input" value={filterSpec} onChange={e => setFilterSpec(e.target.value)} style={{ width: 'auto', minWidth: 160 }}>
-            <option value="all">All Specialisms</option>
-            {SPECIALISMS.map(s => <option key={s} value={s}>{s}</option>)}
+            <option value="all">All Specializations</option>
+            {SPECIALIZATIONS.map(s => <option key={s} value={s}>{s}</option>)}
           </select>
           <select className="input" value={filterRank} onChange={e => setFilterRank(e.target.value)} style={{ width: 'auto', minWidth: 160 }}>
             <option value="all">All Ranks</option>

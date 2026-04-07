@@ -3,7 +3,7 @@ import { supabase } from "../lib/supabaseClient";
 import { useApp } from "../context/AppContext";
 
 const TIERS = ["All","Explorer","Practitioner","Specialist","Principal","Architect"];
-const SPECIALISMS = ["All","Dynamics 365","Power Platform","Azure","Microsoft 365","Copilot Studio","Power BI","Security"];
+const SPECIALIZATIONS = ["All","Dynamics 365","Power Platform","Azure","Microsoft 365","Copilot Studio","Power BI","Security"];
 const REGIONS = ["All","New Zealand","Australia","United Kingdom","United States","India","Netherlands","Canada"];
 const TIER_COLORS = { Explorer:"#6b7280",Practitioner:"#2563eb",Specialist:"#7c3aed",Principal:"#d97706",Architect:"#dc2626" };
 
@@ -84,7 +84,7 @@ export default function RecruiterDashboard({ onNavigate }) {
   const nav = onNavigate || navigate;
   const [candidates,setCandidates] = useState([]);
   const [loading,setLoading] = useState(true);
-  const [filters,setFilters] = useState({ tier:"All",specialism:"All",region:"All",openToWork:false,search:"" });
+  const [filters,setFilters] = useState({ tier:"All",specialization:"All",region:"All",openToWork:false,search:"" });
   const [contactTarget,setContactTarget] = useState(null);
 
   useEffect(() => { if (user && user.tier !== "recruiter") nav("pricing"); }, [user]);
@@ -111,7 +111,7 @@ export default function RecruiterDashboard({ onNavigate }) {
       let query = supabase.from("leaderboard").select("id,name,professional_title,region,tier,score,rank,open_to_work,cert_count").order("rank",{ascending:true}).limit(50);
       if (filters.openToWork) query = query.eq("open_to_work",true);
       if (filters.tier !== "All") query = query.eq("tier",filters.tier);
-      if (filters.specialism !== "All") query = query.ilike("specialism",`%${filters.specialism}%`);
+      if (filters.specialization !== "All") query = query.ilike("specialization",`%${filters.specialization}%`);
       if (filters.region !== "All") query = query.ilike("region",`%${filters.region}%`);
       if (filters.search) query = query.ilike("name",`%${filters.search}%`);
       const { data,error } = await query;
@@ -150,7 +150,7 @@ export default function RecruiterDashboard({ onNavigate }) {
               <label style={{ fontSize:"11px",fontWeight:600,color:"#73726c",textTransform:"uppercase",letterSpacing:"0.05em" }}>Search</label>
               <input type="text" placeholder="Search by name..." value={filters.search} onChange={e=>setFilter("search",e.target.value)} style={{ padding:"7px 10px",fontSize:"13px",border:"0.5px solid #d3d1c7",borderRadius:"8px" }}/>
             </div>
-            <FilterSelect label="Specialism" value={filters.specialism} onChange={v=>setFilters(f=>({...f,specialism:v}))} options={SPECIALISMS}/>
+            <FilterSelect label="Specialization" value={filters.specialization} onChange={v=>setFilters(f=>({...f,specialization:v}))} options={SPECIALIZATIONS}/>
             <FilterSelect label="Tier" value={filters.tier} onChange={v=>setFilter("tier",v)} options={TIERS}/>
             <FilterSelect label="Region" value={filters.region} onChange={v=>setFilter("region",v)} options={REGIONS}/>
             <label style={{ display:"flex",alignItems:"center",gap:"6px",fontSize:"13px",cursor:"pointer",paddingBottom:"4px" }}>
