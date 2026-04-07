@@ -234,7 +234,8 @@ export default function Survey({ onNavigate }) {
     setError('');
     try {
       const { supabase } = await import('../lib/supabase.js');
-      const { error: dbErr } = await supabase.from('survey_responses').insert([form]);
+      const payload = { ...form, will_revisit: form.will_revisit.toLowerCase().replace(' ', '_') };
+      const { error: dbErr } = await supabase.from('survey_responses').insert([payload]);
       if (dbErr) throw dbErr;
       setSubmitted(true);
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -348,7 +349,7 @@ export default function Survey({ onNavigate }) {
                 <RadioList
                   options={['Yes', 'No', 'Not sure']}
                   selected={form.will_revisit}
-                  onSelect={v => set('will_revisit', v.toLowerCase().replace(' ', '_'))}
+                  onSelect={v => set('will_revisit', v)}
                 />
               </Question>
               <Question number="10" text="Overall, how would you rate StackRank365 at this stage?">
