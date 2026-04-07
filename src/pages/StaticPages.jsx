@@ -7,7 +7,7 @@ export function HowItWorks({ onNavigate }) {
     { n: '03', icon: '🏗️', title: 'Log Real-World Projects', desc: 'Add project implementations with privacy controls. Enterprise clients can be kept confidential while still earning points.' },
     { n: '04', icon: '✅', title: 'Get Peer Validated', desc: 'Invite colleagues to confirm your project work. Each validation adds 300 points and strengthens your credibility score.' },
     { n: '05', icon: '📊', title: 'Climb the Leaderboard', desc: 'Your Stack Points determine your global, country, and city rank. Explorer → Practitioner → Specialist → Architect → Principal Architect.' },
-    { n: '06', icon: '💼', title: 'Get Discovered', desc: 'Recruiters and hiring managers can filter by verified rank, specialism, and location — finding genuinely qualified candidates.' },
+    { n: '06', icon: '💼', title: 'Get Discovered', desc: 'Recruiters and hiring managers can filter by verified rank, specialization, and location — finding genuinely qualified candidates.' },
   ];
 
   return (
@@ -80,8 +80,8 @@ export function HowItWorks({ onNavigate }) {
 
 export function Scoring({ onNavigate }) {
   const groups = CERTIFICATIONS.reduce((acc, cert) => {
-    if (!acc[cert.specialism]) acc[cert.specialism] = [];
-    acc[cert.specialism].push(cert);
+    if (!acc[cert.specialization]) acc[cert.specialization] = [];
+    acc[cert.specialization].push(cert);
     return acc;
   }, {});
 
@@ -191,11 +191,11 @@ export function Scoring({ onNavigate }) {
             </p>
           </div>
         </div>
-        {/* Full cert catalog by specialism */}
-        {Object.entries(groups).map(([specialism, certs]) => (
-          <div key={specialism} style={{ marginBottom: '2rem' }}>
+        {/* Full cert catalog by specialization */}
+        {Object.entries(groups).map(([specialization, certs]) => (
+          <div key={specialization} style={{ marginBottom: '2rem' }}>
             <h3 style={{ marginBottom: '1rem', fontSize: '1.15rem', borderBottom: '1px solid var(--border)', paddingBottom: '0.5rem' }}>
-              {specialism}
+              {specialization}
             </h3>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
               {certs.map(cert => (
@@ -240,7 +240,7 @@ export function ForRecruiters({ onNavigate }) {
           {[
             { icon: '✅', title: 'Verified, not self-declared', desc: 'Every certification is backed by a Microsoft credential ID. Points are weighted by tier so an Expert badge means something.' },
             { icon: '🏗️', title: 'Real project evidence', desc: 'Professionals log actual implementations. Peer validation adds a second layer of confirmation from colleagues who worked alongside them.' },
-            { icon: '📊', title: 'Ranked, not just listed', desc: 'Every candidate has a global rank, country rank, and city rank. Filter by specialism to find the right specialist instantly.' },
+            { icon: '📊', title: 'Ranked, not just listed', desc: 'Every candidate has a global rank, country rank, and city rank. Filter by specialization to find the right specialist instantly.' },
             { icon: '🔒', title: 'Enterprise confidentiality', desc: 'Professionals at enterprise consultancies can list confidential projects. You still see the volume and scale of work without NDA issues.' },
           ].map(f => (
             <div key={f.title} className="card" style={{ borderTop: `3px solid var(--blue)` }}>
@@ -370,7 +370,7 @@ export function PowerPlatformRanking({ onNavigate }) {
           ))}
         </div>
 
-        {/* Related specialisms */}
+        {/* Related specializations */}
         <h2 style={{ marginBottom: '1rem' }}>Related Microsoft professional rankings</h2>
         <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap', marginBottom: '2.5rem' }}>
           {['Dynamics 365','Azure','Microsoft 365','Copilot Studio','Power BI','Security'].map(spec => (

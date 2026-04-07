@@ -107,7 +107,7 @@ export default function Landing3({ onNavigate }) {
                   ['Free', 'to join'],
                   ['+500 pts', 'founding bonus'],
                   ['35+', 'cert types tracked'],
-                  ['6', 'specialisms'],
+                  ['6', 'specializations'],
                 ].map(([val, label]) => (
                   <div key={val}>
                     <div style={{ fontFamily: 'Rajdhani', fontWeight: 700, fontSize: '1.5rem', color: '#0067b8' }}>{val}</div>
@@ -364,11 +364,11 @@ export default function Landing3({ onNavigate }) {
         </div>
       </section>
 
-      {/* ─── SPECIALISMS ─────────────────────────────────── */}
+      {/* ─── SPECIALIZATIONS ─────────────────────────────────── */}
       <section style={{ padding: '4.5rem 0' }}>
         <div className="container">
           <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
-            <h2>Six Core Specialisms</h2>
+            <h2>Six Core Specializations</h2>
             <p style={{ color: '#484848', marginTop: '0.5rem' }}>
               Verified credentials and project evidence across the entire Microsoft ecosystem
             </p>
@@ -692,7 +692,7 @@ export default function Landing3({ onNavigate }) {
                 <span style={{ fontFamily: 'Rajdhani', fontWeight: 700, fontSize: '1rem', letterSpacing: '0.05em', textTransform: 'uppercase' }}>🤖 Copilot Studio</span>
                 <span style={{ fontFamily: 'Open Sans, sans-serif', fontSize: '1.05rem', letterSpacing: '0.05em', textTransform: 'uppercase', color: '#616161' }}>Global · Emerging</span>
               </div>
-              {SAMPLE_USERS.filter(u => u.specialism === 'Copilot Studio').slice(0, 4).map((u, i) => {
+              {SAMPLE_USERS.filter(u => u.specialization === 'Copilot Studio').slice(0, 4).map((u, i) => {
                 const medals = ['🥇', '🥈', '🥉'];
                 const rankColors = ['#742774', '#6b7a8d', '#cd8b4a'];
                 const avatarBgs = [
@@ -732,7 +732,7 @@ export default function Landing3({ onNavigate }) {
               {/* Fast-growing callout */}
               <div style={{ padding: '1.1rem 1.4rem', margin: '1rem', background: '#f5f5f5', border: '1px solid rgba(0,0,0,0.09)', borderRadius: 8 }}>
                 <p style={{ fontSize: '1.05rem', color: '#484848', lineHeight: 1.65, margin: '0 0 0.6rem' }}>
-                  Copilot is the <strong style={{ color: '#242424' }}>fastest-growing specialism</strong>. Early movers claim top ranks now — before the competition catches up.
+                  Copilot is the <strong style={{ color: '#242424' }}>fastest-growing specialization</strong>. Early movers claim top ranks now — before the competition catches up.
                 </p>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                   <span style={{ color: '#107c10', fontSize: '1.1rem' }}>↑</span>

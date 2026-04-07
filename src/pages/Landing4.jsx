@@ -177,7 +177,7 @@ export default function Landing4({ onNavigate }) {
             <div className="sr4-hr" style={{ background: 'rgba(255,255,255,0.07)', backdropFilter: 'blur(12px)', border: '1px solid rgba(255,255,255,0.14)', borderRadius: 20, overflow: 'hidden', display: 'block' }}>
               <div style={{ padding: '1rem 1.25rem', borderBottom: '1px solid rgba(255,255,255,0.1)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span style={{ fontWeight: 800, fontSize: '0.85rem', color: '#fff', letterSpacing: '0.06em', textTransform: 'uppercase' }}>🏆 Live Rankings</span>
-                <span style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.45)', fontFamily: 'monospace', letterSpacing: '0.04em' }}>GLOBAL · ALL SPECIALISMS</span>
+                <span style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.45)', fontFamily: 'monospace', letterSpacing: '0.04em' }}>GLOBAL · ALL SPECIALIZATIONS</span>
               </div>
 
               {/* Podium */}
@@ -321,7 +321,7 @@ export default function Landing4({ onNavigate }) {
         </div>
       </section>
 
-      {/* ─── SIX SPECIALISMS ──────────────────────────────── */}
+      {/* ─── SIX SPECIALIZATIONS ──────────────────────────────── */}
       <section className="sr4-sec" style={{ background: T.bodyBg }}>
         <div className="sr4-wrap">
           <div style={{ textAlign: 'center', marginBottom: '3rem' }}>

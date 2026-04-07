@@ -55,7 +55,7 @@ serve(async (req) => {
       const { data: newUsers } = await sb.from("profiles")
         .select("id, name, first_name, email:id")
         .gte("created_at", since).lte("created_at", until)
-        .or("bio.is.null,specialism.is.null,location.is.null");
+        .or("bio.is.null,specialization.is.null,location.is.null");
       // For each incomplete profile, fire a nudge email
       const nudgeResults = await Promise.allSettled(
         (newUsers || []).map(async (u: any) => {
@@ -64,7 +64,7 @@ serve(async (req) => {
           const email = authUser?.user?.email;
           if (!email) return;
           // Calculate completion %
-          const pct = [u.name, u.bio, u.specialism, u.location, u.headline].filter(Boolean).length * 20;
+          const pct = [u.name, u.bio, u.specialization, u.location, u.headline].filter(Boolean).length * 20;
           await fetch(`https://shnuwkjkjthvaovoywju.supabase.co/functions/v1/send-email`, {
             method: "POST",
             headers: { apikey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNobnV3a2pranRodmFvdm95d2p1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0MjcxODQsImV4cCI6MjA4OTAwMzE4NH0.E3jR8tamdJNdiRMiO_XtbSZU1IrDpPFhVnPJmNSN4X4", Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNobnV3a2pranRodmFvdm95d2p1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0MjcxODQsImV4cCI6MjA4OTAwMzE4NH0.E3jR8tamdJNdiRMiO_XtbSZU1IrDpPFhVnPJmNSN4X4", "Content-Type": "application/json" },

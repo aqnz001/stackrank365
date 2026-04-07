@@ -82,7 +82,7 @@ export default function Profile({ onNavigate, profileUser }) {
         location: user.location || '—',
         bio: user.bio || '',
         yearsExp: user.yearsExp || 0,
-        specialism: user.specialism || 'Dynamics 365',
+        specialization: user.specialization || 'Dynamics 365',
         certifications: user.certifications || [],
         projects: user.projects || [],
         score: calcScore(),
@@ -171,9 +171,9 @@ export default function Profile({ onNavigate, profileUser }) {
     nearbyIdx < allScores.length - 2 ? allScores[nearbyIdx + 2] : null,
   ].filter(Boolean).slice(0, 4);
 
-  // Similar professionals (same specialism, different user)
+  // Similar professionals (same specialization, different user)
   const similar = allScores
-    .filter(u => u.specialism === displayUser.specialism && u.id !== displayUser.id)
+    .filter(u => u.specialization === displayUser.specialization && u.id !== displayUser.id)
     .slice(0, 4);
 
   const profileUrl = `https://www.stackrank365.com/profile/${displayUser.username || displayUser.id}`;
@@ -275,8 +275,8 @@ export default function Profile({ onNavigate, profileUser }) {
                   {displayUser.isMVP && (
                     <span className="badge" style={{ background: 'rgba(255,200,60,0.15)', color: 'var(--gold)', border: '1px solid rgba(255,200,60,0.3)' }}>⭐ Microsoft MVP</span>
                   )}
-                  {displayUser.specialism && (
-                    <span className="badge badge-purple">{displayUser.specialism}</span>
+                  {displayUser.specialization && (
+                    <span className="badge badge-purple">{displayUser.specialization}</span>
                   )}
                 </div>
 
@@ -663,7 +663,7 @@ export default function Profile({ onNavigate, profileUser }) {
               <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 16, padding: '1.4rem', marginBottom: '1.25rem' }}>
                 <h3 style={{ margin: '0 0 0.9rem', fontSize: '1rem' }}>👥 Similar Professionals</h3>
                 <p style={{ fontSize: '0.75rem', color: 'var(--muted)', marginBottom: '0.85rem' }}>
-                  Others in {displayUser.specialism}
+                  Others in {displayUser.specialization}
                 </p>
                 {similar.map((u, i) => {
                   const uTier = getRankTier(u.score || 0);

@@ -37,7 +37,7 @@ export function AppProvider({ children }) {
         username: name.toLowerCase().replace(/\s+/g, '.').replace(/[^a-z0-9._-]/g, ''),
         email,
         headline: '',
-        specialism: 'Dynamics 365',
+        specialization: 'Dynamics 365',
         ms_account_id: authUser?.identities?.find(i => i.provider === 'azure')?.identity_data?.oid || null,
         founding_member: true,
       }).select().single();
@@ -57,7 +57,7 @@ export function AppProvider({ children }) {
         headline: profile.headline || '',
         bio: profile.bio || '',
         location: profile.location || '',
-        specialism: profile.specialism || 'Dynamics 365',
+        specialization: profile.specialization || 'Dynamics 365',
         yearsExp: profile.years_exp || 0,
         isMVP: profile.is_mvp,
         profileVisibility: profile.profile_visibility || 'public',
@@ -74,7 +74,7 @@ export function AppProvider({ children }) {
         foundingMember: profile.founding_member,
         msAccountId: profile.ms_account_id,
         certifications: (certs || []).map(c => ({
-          code: c.code, name: c.name, tier: c.tier, specialism: c.specialism,
+          code: c.code, name: c.name, tier: c.tier, specialization: c.specialization,
           points: c.points, issueDate: c.issue_date,
           verified: c.verified, verifiedVia: c.verified_via, verifyUrl: c.verify_url,
           scarcityMultiplier: c.scarcity_multiplier, dbId: c.id,
@@ -94,7 +94,7 @@ export function AppProvider({ children }) {
       const fallbackName = meta.full_name || meta.name || email?.split('@')[0] || 'User';
       const fallbackUsername = (meta.preferred_username || email?.split('@')[0] || userId.slice(0,8)).toLowerCase().replace(/[^a-z0-9._-]/g, '');
       await sb.from('profiles').upsert({ id: userId, name: fallbackName, first_name: fallbackName.split(' ')[0], last_name: fallbackName.split(' ').slice(1).join(' '), username: fallbackUsername, ms_account_id: meta.sub || null, founding_member: true });
-      setUserState({ id: userId, name: fallbackName, first_name: fallbackName.split(' ')[0], last_name: fallbackName.split(' ').slice(1).join(' '), email, username: fallbackUsername, headline: '', bio: '', location: '', specialism: 'Dynamics 365', yearsExp: 0, foundingMember: true, msAccountId: meta.sub || null, certifications: [], projects: [] });
+      setUserState({ id: userId, name: fallbackName, first_name: fallbackName.split(' ')[0], last_name: fallbackName.split(' ').slice(1).join(' '), email, username: fallbackUsername, headline: '', bio: '', location: '', specialization: 'Dynamics 365', yearsExp: 0, foundingMember: true, msAccountId: meta.sub || null, certifications: [], projects: [] });
     }
   };
 
@@ -142,7 +142,7 @@ export function AppProvider({ children }) {
     } else if (u && authUser) {
       await sb.from('profiles').update({
         name: u.name, headline: u.headline, bio: u.bio,
-        location: u.location, specialism: u.specialism, years_exp: u.yearsExp,
+        location: u.location, specialization: u.specialization, years_exp: u.yearsExp,
         updated_at: new Date().toISOString(),
       }).eq('id', authUser.id);
     }
@@ -157,7 +157,7 @@ export function AppProvider({ children }) {
     const unverifiedProjects = (u.projects || []).filter(p => !p.validated && !p.verified).slice(0, 3);
     [...verifiedProjects, ...unverifiedProjects].forEach(p => { primary += (p.points || 0); });
     if (u.foundingMember) primary += 500;
-    if (u.bio && u.specialism && u.location) primary += 150;
+    if (u.bio && u.specialization && u.location) primary += 150;
     let communityRaw = 0;
     (u.communityContributions || []).forEach(c => { communityRaw += (c.points_awarded || 0); });
     const communityBonus = Math.min(communityRaw, Math.floor(primary * 0.15));
