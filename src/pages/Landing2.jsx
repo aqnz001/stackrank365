@@ -175,7 +175,7 @@ export default function Landing({ onNavigate }) {
                   'var(--surface2)',
                 ];
                 return (
-                  <div style={{ display: 'flex', gap: '0.65rem', alignItems: 'flex-end', marginBottom: '0.75rem', overflowX: 'auto', paddingBottom: '2px' }}>
+                  <div style={{ display: 'flex', gap: '0.65rem', alignItems: 'flex-end', marginBottom: '0.75rem' }}>
                     {visual.map((u, vi) => {
                       if (!u) return null;
                       const isGold = isGolds[vi];
