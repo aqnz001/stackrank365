@@ -31,6 +31,7 @@ const NAV_LINKS = [
   { id: 'scoring',      label: 'Scoring'      },
   { id: 'leaderboard',  label: 'Leaderboard'  },
   { id: 'about',        label: 'About'         },
+  { id: 'survey',       label: 'Feedback'      },
 ];
 
 export default function Nav({ currentPage, onNavigate }) {

@@ -17,6 +17,10 @@ import AdminFraud from './pages/AdminFraud';
 import AdminTools from './pages/AdminTools';
 import AdminSitemap from './pages/AdminSitemap';
 import Survey from './pages/Survey';
+import Jobs from './pages/Jobs';
+import PostJob from './pages/PostJob';
+import MyApplications from './pages/MyApplications';
+import MyJobs from './pages/MyJobs';
 
 function Footer({ onNavigate }) {
   return (
@@ -51,7 +55,7 @@ function Footer({ onNavigate }) {
           </div>
           <div>
             <div style={{ fontWeight: 700, fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '0.07em', color: 'var(--muted2)', marginBottom: '0.9rem' }}>Company</div>
-            {[['about','About']].map(([id, label]) => (
+            {[['about','About'],['survey','Feedback']].map(([id, label]) => (
               <div key={id} style={{ marginBottom: '0.5rem' }}>
                 <button onClick={() => onNavigate(id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--muted)', fontSize: '0.88rem', padding: 0, fontFamily: 'Outfit', transition: 'color 0.15s' }}
                   onMouseEnter={e => e.currentTarget.style.color='var(--text)'} onMouseLeave={e => e.currentTarget.style.color='var(--muted)'}>{label}</button>
@@ -156,6 +160,10 @@ function AppInner() {
       case 'recruiter-dashboard':  return <RecruiterDashboard onNavigate={navigate} />;
       case 'privacy':              return <PrivacyPolicy onNavigate={navigate} />;
       case 'survey':               return <Survey onNavigate={navigate} />;
+      case 'jobs':                 return <Jobs onNavigate={navigate} />;
+      case 'post-job':             return <PostJob onNavigate={navigate} />;
+      case 'my-applications':      return <MyApplications onNavigate={navigate} />;
+      case 'my-jobs':              return <MyJobs onNavigate={navigate} />;
       default:                return <Landing onNavigate={navigate} />;
     }
   };
