@@ -122,7 +122,7 @@ export default function Landing({ onNavigate }) {
                 <span className="badge badge-blue fade-up">⚡ Early Access — Founding Members Get 500 Bonus Points</span>
               </div>
 
-              <h1 className="stagger-1" style={{ marginBottom: '1.25rem', fontSize: 'clamp(2rem, 5vw, 3.5rem)' }}>
+              <h1 className="stagger-1" style={{ marginBottom: '1.25rem' }}>
                 The Trust Layer<br/>
                 for <span className="gradient-text-blue">Microsoft Careers</span>
               </h1>
