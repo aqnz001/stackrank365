@@ -142,11 +142,13 @@ function ComponentIntro({ id, heading, intro }) {
 }
 
 /* ─── HERO — 2-col: text+waitlist left, leaderboard right ────────────────── */
-function HeroHome({ onNavigate, top5 }) {
+function HeroHome({ onNavigate, heroRanks }) {
+  const top3 = heroRanks.slice(0, 3);
+  const rest = heroRanks.slice(3);
   return (
     <section style={{ background:'var(--color-bg-pattern-light-theme)', paddingTop:'3rem', paddingBottom:'4rem', position:'relative' }}>
       <div className="u-content-width">
-        <div className="hero-home-twho-grid" style={{ display:'grid', gridTemplateColumns:'1fr', gap:'2.5rem', alignItems:'center' }}>
+        <div className="hero-home-twho-grid" style={{ display:'grid', gridTemplateColumns:'1fr', gap:'2.5rem', alignItems:'stretch' }}>
           {/* LEFT — copy + waitlist CTA */}
           <div style={{ gridColumn:1, gridRow:1 }} className="hero-twho-left">
             <h1 className="page-title page-title--bilingual" style={{ marginBottom:'1.5rem' }}>
@@ -177,7 +179,7 @@ function HeroHome({ onNavigate, top5 }) {
 
           {/* RIGHT — leaderboard preview: podium top-3 + list of remaining */}
           <div style={{ gridColumn:1, gridRow:2 }} className="hero-twho-right">
-            <div style={{ background:'#fff', border:'1px solid var(--color-primary-25)', borderRadius:6, padding:'1.5rem' }}>
+            <div style={{ background:'#fff', border:'1px solid var(--color-primary-25)', borderRadius:6, padding:'1.5rem', height:'100%', display:'flex', flexDirection:'column' }}>
               <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:'1rem' }}>
                 <div style={{ fontSize:'0.85rem', textTransform:'uppercase', letterSpacing:'0.08em', color:'var(--color-primary-100)', fontWeight:700 }}>Live leaderboard</div>
                 <button onClick={() => onNavigate('leaderboard')} className="btn btn-ghost btn-sm" style={{ color:'var(--color-primary-100)' }}>View all →</button>
@@ -185,8 +187,7 @@ function HeroHome({ onNavigate, top5 }) {
 
               {/* Podium: 2nd left, 1st centre (tallest), 3rd right */}
               {(() => {
-                const sorted = [...top5];
-                const visual = [sorted[1], sorted[0], sorted[2]];
+                const visual = [top3[1], top3[0], top3[2]];
                 const heights = [110, 150, 120];
                 const medals  = ['🥈', '🥇', '🥉'];
                 const isGolds = [false, true, false];
@@ -234,19 +235,21 @@ function HeroHome({ onNavigate, top5 }) {
                 );
               })()}
 
-              {/* Rows 4+ */}
-              {top5.slice(3).map((u, i) => (
-                <div key={u.id} onClick={() => onNavigate('profile', { userData:u })}
-                  style={{ display:'flex', alignItems:'center', gap:'0.85rem', padding:'0.6rem 0', borderTop:'1px solid var(--color-pale-charcoal)', cursor:'pointer' }}>
-                  <span style={{ width:24, fontWeight:700, color:'var(--color-secondary-100)', fontSize:'0.85rem' }}>{i+4}</span>
-                  <div style={{ width:30, height:30, borderRadius:'50%', background:'var(--color-secondary-100)', color:'#fff', display:'flex', alignItems:'center', justifyContent:'center', fontWeight:700, fontSize:'0.78rem' }}>{(u.name||'?')[0]}</div>
-                  <div style={{ flex:1, minWidth:0 }}>
-                    <div style={{ fontWeight:600, fontSize:'0.9rem', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{u.name}</div>
-                    <div style={{ fontSize:'0.78rem', color:'var(--color-charcoal)', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{u.headline}</div>
+              {/* Rows 4+ — fills remaining height */}
+              <div style={{ flex:1, minHeight:0, overflowY:'auto' }}>
+                {rest.map((u, i) => (
+                  <div key={u.id} onClick={() => onNavigate('profile', { userData:u })}
+                    style={{ display:'flex', alignItems:'center', gap:'0.75rem', padding:'0.5rem 0', borderTop:'1px solid var(--color-pale-charcoal)', cursor:'pointer' }}>
+                    <span style={{ width:22, fontWeight:700, color:'var(--color-secondary-100)', fontSize:'0.8rem' }}>{i+4}</span>
+                    <div style={{ width:28, height:28, borderRadius:'50%', background:'var(--color-secondary-100)', color:'#fff', display:'flex', alignItems:'center', justifyContent:'center', fontWeight:700, fontSize:'0.72rem' }}>{(u.name||'?')[0]}</div>
+                    <div style={{ flex:1, minWidth:0 }}>
+                      <div style={{ fontWeight:600, fontSize:'0.85rem', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{u.name}</div>
+                      <div style={{ fontSize:'0.72rem', color:'var(--color-charcoal)', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{u.headline}</div>
+                    </div>
+                    <span style={{ fontWeight:700, color:'var(--color-primary-100)', fontSize:'0.88rem' }}>{u.score.toLocaleString()}</span>
                   </div>
-                  <span style={{ fontWeight:700, color:'var(--color-primary-100)', fontSize:'0.92rem' }}>{u.score.toLocaleString()}</span>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -264,7 +267,7 @@ function HeroHome({ onNavigate, top5 }) {
 
 export default function Landing({ onNavigate }) {
   const [alertDismissed, setAlertDismissed] = useState(false);
-  const top5 = [...SAMPLE_USERS].slice(0, 5).sort((a, b) => b.score - a.score);
+  const heroRanks = [...SAMPLE_USERS].sort((a, b) => b.score - a.score).slice(0, 12);
 
   return (
     <div style={{ background:'var(--color-white)' }}>
@@ -272,7 +275,7 @@ export default function Landing({ onNavigate }) {
 
       {!alertDismissed && <SiteAlert onDismiss={() => setAlertDismissed(true)} />}
 
-      <HeroHome onNavigate={onNavigate} top5={top5} />
+      <HeroHome onNavigate={onNavigate} heroRanks={heroRanks} />
 
       {/* ─── THE PROBLEM ────────────────────────────────────────────────── */}
       <section className="element u-content-width" style={{ paddingTop:'4rem' }}>
