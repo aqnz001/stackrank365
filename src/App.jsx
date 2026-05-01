@@ -23,65 +23,52 @@ import MyApplications from './pages/MyApplications';
 import MyJobs from './pages/MyJobs';
 
 function Footer({ onNavigate }) {
-  const linkStyle = { background: 'none', border: 'none', cursor: 'pointer', color: '#fff', fontSize: '0.95rem', padding: '0.35rem 0', textAlign: 'left', textDecoration: 'underline', textDecorationColor: 'rgba(255,255,255,0.4)', fontFamily: 'inherit' };
-  const headingStyle = { fontSize: '1.05rem', fontWeight: 700, color: '#fff', margin: '0 0 1rem' };
   return (
-    <footer style={{ background: '#13284b', marginTop: 'auto', position: 'relative', overflow: 'hidden' }}>
-      <div style={{ position: 'absolute', top: 0, right: 0, width: 320, height: 220, opacity: 0.1, background: 'repeating-linear-gradient(45deg, transparent, transparent 22px, #30a1ac 22px, #30a1ac 23px)', pointerEvents: 'none' }} />
-
-      <div style={{ padding: '4rem 0 2rem', position: 'relative', zIndex: 1 }}>
-        <div className="container">
-          <div className="footer-grid-twho" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr', gap: '3rem', marginBottom: '3rem' }}>
-            <div>
-              <button onClick={() => onNavigate('landing')} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
-                <LogoMark size={40} />
-                <span style={{ fontFamily: 'Rajdhani', fontWeight: 700, fontSize: '1.4rem', color: '#fff' }}>
-                  StackRank<span style={{ color: '#30a1ac' }}>365</span>
-                </span>
+    <footer style={{ background: 'var(--bg2)', borderTop: '1px solid var(--border)', padding: '3rem 0 1.75rem', marginTop: 'auto' }}>
+      <div className="container">
+        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gap: '2.5rem', marginBottom: '2.5rem' }}>
+          <div>
+            <button onClick={() => onNavigate('landing')}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.85rem' }}>
+              <LogoMark size={34} />
+              <span style={{ fontFamily: 'Rajdhani', fontWeight: 700, fontSize: '1.15rem', color: 'var(--text)' }}>
+                StackRank<span style={{ color: 'var(--blue)' }}>365</span>
+              </span>
+            </button>
+            <p style={{ color: 'var(--muted)', fontSize: '0.85rem', lineHeight: 1.7, maxWidth: 260 }}>
+              The verified talent ranking community for Microsoft Dynamics 365, Power Platform, Copilot Studio, and Azure OpenAI professionals.
+            </p>
+            <div style={{ marginTop: '1.25rem' }}>
+              <button className="btn btn-gold btn-sm" onClick={() => onNavigate('landing')}>
+                ð Join the Waitlist
               </button>
-              <p style={{ color: 'rgba(255,255,255,0.85)', fontSize: '0.95rem', lineHeight: 1.65, maxWidth: 320, margin: 0 }}>
-                The verified talent ranking community for Microsoft Dynamics 365, Power Platform, Copilot Studio, and Azure OpenAI professionals.
-              </p>
-            </div>
-            <div>
-              <h3 style={headingStyle}>Platform</h3>
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
-                {[['how-it-works','How it works'],['scoring','Scoring'],['leaderboard','Leaderboard'],['pricing','Pricing']].map(([id, label]) => (
-                  <button key={id} onClick={() => onNavigate(id)} style={linkStyle}>{label}</button>
-                ))}
-              </div>
-            </div>
-            <div>
-              <h3 style={headingStyle}>Company</h3>
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
-                {[['about','About'],['survey','Feedback'],['privacy','Privacy']].map(([id, label]) => (
-                  <button key={id} onClick={() => onNavigate(id)} style={linkStyle}>{label}</button>
-                ))}
-              </div>
-            </div>
-            <div>
-              <h3 style={headingStyle}>For recruiters</h3>
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
-                {[['for-recruiters','Recruiter info'],['recruiter-dashboard','Recruiter dashboard'],['jobs','Jobs board']].map(([id, label]) => (
-                  <button key={id} onClick={() => onNavigate(id)} style={linkStyle}>{label}</button>
-                ))}
-              </div>
             </div>
           </div>
-        </div>
-      </div>
-
-      <div style={{ borderTop: '1px solid rgba(255,255,255,0.15)', padding: '1.5rem 0', position: 'relative', zIndex: 1 }}>
-        <div className="container" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
-          <div style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.7)' }}>© 2026 StackRank365. Built for the Microsoft community.</div>
-          <div style={{ display: 'flex', gap: '1.5rem' }}>
-            <button onClick={() => onNavigate('privacy')} style={{ ...linkStyle, fontSize: '0.85rem', color: 'rgba(255,255,255,0.7)', padding: 0 }}>Privacy</button>
-            <button onClick={() => onNavigate('about')} style={{ ...linkStyle, fontSize: '0.85rem', color: 'rgba(255,255,255,0.7)', padding: 0 }}>Contact</button>
+          <div>
+            <div style={{ fontWeight: 700, fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '0.07em', color: 'var(--muted2)', marginBottom: '0.9rem' }}>Platform</div>
+            {[['how-it-works','How It Works'],['scoring','Scoring'],['leaderboard','Leaderboard']].map(([id, label]) => (
+              <div key={id} style={{ marginBottom: '0.5rem' }}>
+                <button onClick={() => onNavigate(id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--muted)', fontSize: '0.88rem', padding: 0, fontFamily: 'Outfit', transition: 'color 0.15s' }}
+                  onMouseEnter={e => e.currentTarget.style.color='var(--text)'} onMouseLeave={e => e.currentTarget.style.color='var(--muted)'}>{label}</button>
+              </div>
+            ))}
+          </div>
+          <div>
+            <div style={{ fontWeight: 700, fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '0.07em', color: 'var(--muted2)', marginBottom: '0.9rem' }}>Company</div>
+            {[['about','About'],['survey','Feedback']].map(([id, label]) => (
+              <div key={id} style={{ marginBottom: '0.5rem' }}>
+                <button onClick={() => onNavigate(id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--muted)', fontSize: '0.88rem', padding: 0, fontFamily: 'Outfit', transition: 'color 0.15s' }}
+                  onMouseEnter={e => e.currentTarget.style.color='var(--text)'} onMouseLeave={e => e.currentTarget.style.color='var(--muted)'}>{label}</button>
+              </div>
+            ))}
           </div>
         </div>
+        <div style={{ borderTop: '1px solid var(--border)', paddingTop: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem' }}>
+          <div style={{ fontSize: '0.78rem', color: 'var(--muted)' }}>Â© 2025 StackRank365. All rights reserved.</div>
+          <div style={{ fontSize: '0.78rem', color: 'var(--muted)' }}>Built for the Microsoft community ð</div>
+        </div>
       </div>
-
-      <style>{`@media(max-width:768px){ .footer-grid-twho { grid-template-columns: 1fr !important; gap: 2rem !important; } }`}</style>
+      <style>{`@media(max-width:768px){ footer .container > div:first-child { grid-template-columns: 1fr !important; } }`}</style>
     </footer>
   );
 }
@@ -92,8 +79,10 @@ function AppInner() {
   const [profileUsername, setProfileUsername] = useState(null);
   const [pageData, setPageData] = useState(null);
 
+  // âââ Handle URL hash routing for early-adopter links + Supabase callbacks ââ
   useEffect(() => {
     const handleHash = () => {
+      // Query string routing: ?page=xxx
       const _params = new URLSearchParams(window.location.search);
       const qPage = _params.get('page');
       const qUser = _params.get('u');
@@ -102,20 +91,25 @@ function AppInner() {
       const search = window.location.search;
       const fullHash = window.location.hash;
 
+      // Supabase OAuth/magic link callback â token arrives in the hash fragment
       if (fullHash.includes('access_token=') || fullHash.includes('refresh_token=')) {
+        // Do NOT clear URL — Supabase SDK needs the hash to establish session
         setPage('dashboard');
         return;
       }
+      // Supabase password recovery
       if (search.includes('type=recovery') || fullHash.includes('type=recovery')) {
         setPage('reset-password');
         return;
       }
+      // Validation link: /#validate?token=ABC123
       if (hash.startsWith('validate')) {
         const params = new URLSearchParams(fullHash.replace(/^#validate\??/, ''));
         setPageData({ token: params.get('token') });
         setPage('validate');
         return;
       }
+      // Hash-based routing for early-adopter links
       if (['signup','signin','dashboard','early-access','reset-password'].includes(hash)) {
         setPage(hash === 'early-access' ? 'signup' : hash);
         window.history.replaceState({}, '', '/');
@@ -126,6 +120,7 @@ function AppInner() {
     return () => window.removeEventListener('hashchange', handleHash);
   }, []);
 
+  // Redirect to dashboard if already signed in and on auth pages
   useEffect(() => {
     if (user && (page === 'signup' || page === 'signin')) {
       setPage('dashboard');
@@ -149,7 +144,7 @@ function AppInner() {
       case 'for-recruiters':  return <ForRecruiters onNavigate={navigate} />;
       case 'dashboard':          return (loading ? (
         <div style={{minHeight:'80vh',display:'flex',alignItems:'center',justifyContent:'center',flexDirection:'column',gap:'1.25rem',background:'var(--bg)'}}>
-          <div style={{width:44,height:44,border:'3px solid rgba(0,0,0,0.08)',borderTopColor:'var(--blue)',borderRadius:'50%',animation:'_spin 0.8s linear infinite'}}/>
+          <div style={{width:44,height:44,border:'3px solid rgba(255,255,255,0.08)',borderTopColor:'var(--blue)',borderRadius:'50%',animation:'_spin 0.8s linear infinite'}}/>
           <p style={{color:'var(--muted2)',fontSize:'0.88rem',margin:0}}>Signing you in…</p>
           <style>{'@keyframes _spin{to{transform:rotate(360deg)}}'}</style>
         </div>
