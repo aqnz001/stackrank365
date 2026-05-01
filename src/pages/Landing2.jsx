@@ -420,22 +420,22 @@ export default function Landing({ onNavigate }) {
       {/* ─── FOUR STEPS ──────────────────────────────────────────────────── */}
       <section className="element u-content-width" style={{ paddingTop:'4rem' }}>
         <ComponentIntro id="four-steps" heading="Four steps to your verified rank" intro="Simple by design. The whole process takes minutes." />
-        <ul className="tiles" style={{ gridTemplateColumns:'1fr', gridAutoRows:'auto', gap:'0.75rem' }}>
+        <div style={{ display:'flex', flexDirection:'column', gap:'0.75rem' }}>
           {[
             { n:'01', title:'Create your profile',         desc:'Join and claim your public URL: stackrank365.com/profile/you' },
             { n:'02', title:'Add your certifications',     desc:'Each cert is weighted by tier. Expert = 3,000 pts. Associate = 1,500. No tricks.' },
             { n:'03', title:'Log your projects',           desc:'Add real implementations with privacy controls. Confidential clients stay confidential.' },
             { n:'04', title:'Invite peer validators',      desc:'Ask colleagues to confirm your project experience. Each validation adds 300 pts and credibility.' },
           ].map(s => (
-            <li key={s.n} className="tile" style={{ flexDirection:'row', alignItems:'center', gap:'1.25rem', minHeight:'auto', padding:'1rem 1.25rem' }}>
+            <div key={s.n} style={{ display:'flex', alignItems:'center', gap:'1.25rem', background:'#fff', border:'1px solid var(--color-primary-25)', borderRadius:4, padding:'1rem 1.25rem' }}>
               <div style={{ flexShrink:0, width:44, height:44, borderRadius:4, background:'var(--color-primary-5)', border:'1px solid var(--color-primary-25)', display:'flex', alignItems:'center', justifyContent:'center', fontWeight:700, color:'var(--color-primary-100)', fontSize:'0.95rem' }}>{s.n}</div>
               <div style={{ flex:1, minWidth:0 }}>
-                <h3 className="tile__heading" style={{ marginBottom:'0.15rem', fontSize:'1.05rem' }}>{s.title}</h3>
-                <p className="tile__description" style={{ marginBottom:0, fontSize:'0.92rem' }}>{s.desc}</p>
+                <h3 style={{ margin:0, marginBottom:'0.2rem', fontSize:'1.05rem', fontWeight:700, color:'var(--color-primary-100)', lineHeight:1.25 }}>{s.title}</h3>
+                <p style={{ margin:0, fontSize:'0.92rem', color:'var(--color-charcoal)', lineHeight:1.5 }}>{s.desc}</p>
               </div>
-            </li>
+            </div>
           ))}
-        </ul>
+        </div>
         <div style={{ marginTop:'2rem' }}>
           <button className="btn btn-outline" onClick={() => onNavigate('how-it-works')}>Read the full guide →</button>
         </div>
