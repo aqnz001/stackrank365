@@ -1,41 +1,51 @@
 @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap');
 
 /* ─────────────────────────────────────────────
-   STACKRANK365 — VIBRANT DARK DESIGN SYSTEM
+   STACKRANK365 — TWHO-INSPIRED LIGHT DESIGN
+   Phase 1: color tokens only (typography + components later)
    ───────────────────────────────────────────── */
 :root {
-  --bg:        #0d1117;
-  --bg2:       #111827;
-  --surface:   #161d2b;
-  --surface2:  #1c2539;
-  --surface3:  #1e2d40;
-  --border:        rgba(255,255,255,0.07);
-  --border-bright: rgba(255,255,255,0.14);
-  --border-blue:   rgba(0,194,255,0.3);
-  --border-gold:   rgba(255,200,60,0.3);
-  --blue:    #00c2ff;
-  --blue2:   #0078d4;
-  --cyan:    #00e5ff;
-  --gold:    #ffc83c;
-  --green:   #00e5a0;
-  --purple:  #a78bfa;
-  --pink:    #f472b6;
-  --orange:  #fb923c;
-  --red:     #f87171;
-  --blue-dim:   rgba(0,194,255,0.1);
-  --gold-dim:   rgba(255,200,60,0.1);
-  --green-dim:  rgba(0,229,160,0.1);
-  --purple-dim: rgba(167,139,250,0.1);
-  --text:   #e2eaf5;
-  --muted:  #6b7a99;
-  --muted2: #c5cedf;
-  --grad-blue:   linear-gradient(135deg, #00c2ff, #0078d4);
-  --grad-gold:   linear-gradient(135deg, #ffc83c, #ff8c00);
-  --grad-green:  linear-gradient(135deg, #00e5a0, #00b4d8);
-  --grad-purple: linear-gradient(135deg, #a78bfa, #f472b6);
-  --grad-hero:   linear-gradient(135deg, #0d1117 0%, #111827 40%, #1a1f35 100%);
-  --shadow-card: 0 4px 24px rgba(0,0,0,0.4);
-  --shadow-glow: 0 0 0 1px rgba(0,194,255,0.2), 0 8px 32px rgba(0,194,255,0.12);
+  --bg:        #ffffff;
+  --bg2:       #f4f1ec;        /* warm off-white surface */
+  --surface:   #ffffff;
+  --surface2:  #faf8f4;
+  --surface3:  #f4f1ec;
+  --border:        #d3d1c7;
+  --border-bright: #b8b6ac;
+  --border-blue:   rgba(10,61,58,0.3);
+  --border-gold:   rgba(196,90,66,0.3);
+
+  /* primary brand: deep teal (TWHO signature) */
+  --blue:    #0a3d3a;
+  --blue2:   #0f5450;
+  --cyan:    #0a3d3a;
+
+  /* accents — held back for phase 1; wired but used sparingly */
+  --gold:    #c45a42;          /* warm clay accent (introduce later) */
+  --green:   #2d6a4f;          /* status green */
+  --purple:  #0a3d3a;          /* fallback to teal — no purple yet */
+  --pink:    #c45a42;
+  --orange:  #c45a42;
+  --red:     #b3261e;          /* error / alert */
+
+  --blue-dim:   rgba(10,61,58,0.06);
+  --gold-dim:   rgba(196,90,66,0.08);
+  --green-dim:  rgba(45,106,79,0.08);
+  --purple-dim: rgba(10,61,58,0.06);
+
+  --text:   #1a1a18;            /* near-black */
+  --muted:  #5a5853;
+  --muted2: #73726c;
+
+  /* gradients — flat solids in phase 1 to keep the civic feel */
+  --grad-blue:   #0a3d3a;
+  --grad-gold:   #c45a42;
+  --grad-green:  #2d6a4f;
+  --grad-purple: #0a3d3a;
+  --grad-hero:   #f4f1ec;
+
+  --shadow-card: 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-glow: 0 0 0 1px rgba(10,61,58,0.15);
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -56,7 +66,7 @@ h1, h2, h3, h4, h5 {
   font-weight: 700;
   line-height: 1.15;
   letter-spacing: 0.01em;
-  color: #fff;
+  color: var(--text);
 }
 h1 { font-size: clamp(2.4rem, 5vw, 4.5rem); }
 h2 { font-size: clamp(1.8rem, 3.5vw, 3rem); }
