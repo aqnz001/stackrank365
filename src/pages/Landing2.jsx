@@ -141,7 +141,7 @@ function ComponentIntro({ id, heading, intro }) {
   return (
     <div className="component-intro" id={id} tabIndex={-1}>
       <h2 style={{ marginBottom:'0.5rem' }}>{heading}</h2>
-      {intro && <div className="rich-text" style={{ fontSize:'1.0625rem', color:'var(--color-charcoal)', maxWidth:'52rem' }}>{intro}</div>}
+      {intro && <div className="rich-text" style={{ fontSize:'1.0625rem', color:'var(--color-charcoal)' }}>{intro}</div>}
     </div>
   );
 }
@@ -289,7 +289,7 @@ export default function Landing({ onNavigate }) {
           heading="Microsoft credentials are impossible to verify"
           intro="LinkedIn endorsements are unverified. CVs are self-declared. Recruiters waste weeks interviewing candidates who oversell their depth. Skilled consultants get overlooked because they can't prove what they've built."
         />
-        <ul className="tiles">
+        <ul className="tiles" style={{ gridTemplateColumns:'repeat(3, 1fr)' }}>
           {[
             { stat:'73%',     desc:'of hiring managers say Microsoft skills are the hardest to verify before interview' },
             { stat:'3–6 wks', desc:'average wasted per bad hire in the Microsoft ecosystem consulting space' },
@@ -603,7 +603,7 @@ export default function Landing({ onNavigate }) {
 
       {/* ─── DEMO CTA ────────────────────────────────────────────────────── */}
       <section className="element u-content-width" style={{ paddingTop:'4rem' }}>
-        <ul className="tiles">
+        <ul className="tiles" style={{ gridTemplateColumns:'repeat(3, 1fr)' }}>
           {[
             { label:'Live leaderboard', desc:'See 15 sample professionals ranked',  btn:'View rankings',   page:'leaderboard' },
             { label:'Sample profile',   desc:'Explore a detailed pro profile',       btn:'Browse profile',  page:'profile', profileUser:SAMPLE_USERS[0] },
@@ -638,7 +638,7 @@ export default function Landing({ onNavigate }) {
       {/* ─── DATA &amp; STATISTICS ────────────────────────────────────────── */}
       <section className="element u-content-width" style={{ paddingTop:'4rem', paddingBottom:'5rem' }}>
         <ComponentIntro id="data-and-statistics" heading="Data and statistics" intro="StackRank365 by the numbers." />
-        <ul className="tiles">
+        <ul className="tiles" style={{ gridTemplateColumns:'repeat(4, 1fr)' }}>
           {[
             ['35+',  'Microsoft cert types tracked'],
             ['6',    'specialization tracks'],
