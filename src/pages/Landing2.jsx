@@ -141,15 +141,15 @@ function ComponentIntro({ id, heading, intro }) {
   );
 }
 
-/* ─── HERO (.hero-home) — 2-col: text+waitlist left, leaderboard right ───── */
+/* ─── HERO — 2-col: text+waitlist left, leaderboard right ────────────────── */
 function HeroHome({ onNavigate, top5 }) {
   return (
-    <div className="hero-home" style={{ background:'var(--color-bg-pattern-light-theme)', paddingTop:'3rem', paddingBottom:'4rem', position:'relative' }}>
-      <div className="u-content-width" style={{ position:'relative', zIndex:1 }}>
+    <section style={{ background:'var(--color-bg-pattern-light-theme)', paddingTop:'3rem', paddingBottom:'4rem', position:'relative' }}>
+      <div className="u-content-width">
         <div className="hero-home-twho-grid" style={{ display:'grid', gridTemplateColumns:'1fr', gap:'2.5rem', alignItems:'center' }}>
           {/* LEFT — copy + waitlist CTA */}
-          <div className="hero-home__text-content">
-            <h1 className="page-title page-title--bilingual">
+          <div style={{ gridColumn:1, gridRow:1 }} className="hero-twho-left">
+            <h1 className="page-title page-title--bilingual" style={{ marginBottom:'1.5rem' }}>
               <span className="page-title__text page-title__text--primary" style={{ color:'var(--color-secondary-100)' }}>
                 Microsoft Careers
               </span>
@@ -158,7 +158,7 @@ function HeroHome({ onNavigate, top5 }) {
                 The verified ranking community for Dynamics 365, Power Platform, Copilot Studio &amp; Azure OpenAI
               </span>
             </h1>
-            <div className="page-title__intro-text" style={{ maxWidth:'30rem', color:'var(--color-charcoal)' }}>
+            <div className="page-title__intro-text" style={{ maxWidth:'30rem', color:'var(--color-charcoal)', fontSize:'1.125rem', lineHeight:1.6 }}>
               StackRank365 is the trust layer for Microsoft careers — verified certifications, peer validation, and a transparent score that proves applied expertise.
             </div>
             <WaitlistForm variant="hero" />
@@ -176,7 +176,7 @@ function HeroHome({ onNavigate, top5 }) {
           </div>
 
           {/* RIGHT — leaderboard preview */}
-          <div className="hero-home__image-wrapper" style={{ margin:0 }}>
+          <div style={{ gridColumn:1, gridRow:2 }} className="hero-twho-right">
             <div style={{ background:'#fff', border:'1px solid var(--color-primary-25)', borderRadius:6, padding:'1.5rem' }}>
               <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:'1rem' }}>
                 <div style={{ fontSize:'0.85rem', textTransform:'uppercase', letterSpacing:'0.08em', color:'var(--color-primary-100)', fontWeight:700 }}>Live leaderboard — top 5</div>
@@ -198,8 +198,14 @@ function HeroHome({ onNavigate, top5 }) {
           </div>
         </div>
       </div>
-      <style>{`@media(min-width: 900px){ .hero-home-twho-grid { grid-template-columns: 1.05fr 1fr !important; gap: 4rem !important; } }`}</style>
-    </div>
+      <style>{`
+        @media(min-width: 900px){
+          .hero-home-twho-grid { grid-template-columns: 1.05fr 1fr !important; gap: 4rem !important; }
+          .hero-twho-left  { grid-column: 1 !important; grid-row: 1 !important; }
+          .hero-twho-right { grid-column: 2 !important; grid-row: 1 !important; }
+        }
+      `}</style>
+    </section>
   );
 }
 
