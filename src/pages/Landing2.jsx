@@ -373,7 +373,7 @@ export default function Landing({ onNavigate }) {
       {/* ─── BUILT FOR MICROSOFT PROFESSIONALS ───────────────────────────── */}
       <section className="element u-content-width" style={{ paddingTop:'4rem' }}>
         <ComponentIntro id="built-for" heading="Built for Microsoft professionals" />
-        <ul className="tiles">
+        <ul className="tiles" style={{ gridTemplateColumns:'repeat(3, 1fr)', gridAutoRows:'auto' }}>
           {[
             { title:'Consultants &amp; Contractors', icon:'🧑‍💻', points:[
               'Prove depth beyond a cert list',
@@ -394,12 +394,14 @@ export default function Landing({ onNavigate }) {
               'Build a defensible rank before everyone else does',
             ]},
           ].map(p => (
-            <li key={p.title} className="tile">
-              <div style={{ fontSize:'2rem', marginBottom:'0.75rem' }}>{p.icon}</div>
-              <h3 className="tile__heading" dangerouslySetInnerHTML={{ __html:p.title }} />
-              <ul style={{ listStyle:'none', padding:0, margin:0, display:'flex', flexDirection:'column', gap:'0.5rem' }}>
+            <li key={p.title} className="tile" style={{ minHeight:'auto' }}>
+              <div style={{ display:'flex', alignItems:'center', gap:'0.75rem', marginBottom:'0.5rem' }}>
+                <span style={{ fontSize:'1.75rem' }}>{p.icon}</span>
+                <h3 className="tile__heading" style={{ margin:0 }} dangerouslySetInnerHTML={{ __html:p.title }} />
+              </div>
+              <ul style={{ listStyle:'none', padding:0, margin:0, display:'flex', flexDirection:'column', gap:'0.4rem' }}>
                 {p.points.map(pt => (
-                  <li key={pt} style={{ display:'flex', gap:'0.5rem', fontSize:'0.95rem', color:'var(--color-charcoal)', lineHeight:1.55 }}>
+                  <li key={pt} style={{ display:'flex', gap:'0.5rem', fontSize:'0.95rem', color:'var(--color-charcoal)', lineHeight:1.5 }}>
                     <span style={{ color:'var(--color-accent-110)', fontWeight:700, flexShrink:0 }}>→</span>
                     {pt}
                   </li>
@@ -413,18 +415,18 @@ export default function Landing({ onNavigate }) {
       {/* ─── FOUR STEPS ──────────────────────────────────────────────────── */}
       <section className="element u-content-width" style={{ paddingTop:'4rem' }}>
         <ComponentIntro id="four-steps" heading="Four steps to your verified rank" intro="Simple by design. The whole process takes minutes." />
-        <ul className="tiles" style={{ gridTemplateColumns:'1fr', gap:'1rem' }}>
+        <ul className="tiles" style={{ gridTemplateColumns:'1fr', gridAutoRows:'auto', gap:'0.75rem' }}>
           {[
             { n:'01', title:'Create your profile',         desc:'Join and claim your public URL: stackrank365.com/profile/you' },
             { n:'02', title:'Add your certifications',     desc:'Each cert is weighted by tier. Expert = 3,000 pts. Associate = 1,500. No tricks.' },
             { n:'03', title:'Log your projects',           desc:'Add real implementations with privacy controls. Confidential clients stay confidential.' },
             { n:'04', title:'Invite peer validators',      desc:'Ask colleagues to confirm your project experience. Each validation adds 300 pts and credibility.' },
           ].map(s => (
-            <li key={s.n} className="tile" style={{ flexDirection:'row', alignItems:'flex-start', gap:'1.5rem' }}>
-              <div style={{ flexShrink:0, width:56, height:56, borderRadius:4, background:'var(--color-primary-5)', border:'1px solid var(--color-primary-25)', display:'flex', alignItems:'center', justifyContent:'center', fontWeight:700, color:'var(--color-primary-100)' }}>{s.n}</div>
-              <div>
-                <h3 className="tile__heading" style={{ marginBottom:'0.25rem' }}>{s.title}</h3>
-                <p className="tile__description" style={{ marginBottom:0 }}>{s.desc}</p>
+            <li key={s.n} className="tile" style={{ flexDirection:'row', alignItems:'center', gap:'1.25rem', minHeight:'auto', padding:'1rem 1.25rem' }}>
+              <div style={{ flexShrink:0, width:44, height:44, borderRadius:4, background:'var(--color-primary-5)', border:'1px solid var(--color-primary-25)', display:'flex', alignItems:'center', justifyContent:'center', fontWeight:700, color:'var(--color-primary-100)', fontSize:'0.95rem' }}>{s.n}</div>
+              <div style={{ flex:1, minWidth:0 }}>
+                <h3 className="tile__heading" style={{ marginBottom:'0.15rem', fontSize:'1.05rem' }}>{s.title}</h3>
+                <p className="tile__description" style={{ marginBottom:0, fontSize:'0.92rem' }}>{s.desc}</p>
               </div>
             </li>
           ))}
