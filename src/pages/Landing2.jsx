@@ -248,10 +248,10 @@ export default function Landing({ onNavigate }) {
                       width: 30, height: 30, borderRadius: '50%', flexShrink: 0,
                       background: 'var(--surface3)',
                       display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      fontSize: '0.82rem', fontWeight: 700, color: '#fff',
+                      fontSize: '0.82rem', fontWeight: 700, color: 'var(--text)',
                     }}>{(u.name || '?')[0]}</div>
                     <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ fontSize: '0.85rem', fontWeight: 600, color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{u.name}</div>
+                      <div style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{u.name}</div>
                       <div style={{ fontSize: '0.7rem', color: 'var(--muted2)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{u.headline}</div>
                     </div>
                     <RankBadge score={u.score} />
@@ -392,7 +392,7 @@ export default function Landing({ onNavigate }) {
                   {tier.name}
                 </div>
                 <div style={{ fontSize: '0.75rem', color: 'var(--muted2)', marginBottom: '0.85rem' }}>{tier.description}</div>
-                <div style={{ fontFamily: 'Open Sans', fontSize: '0.72rem', color: '#fff', padding: '0.3rem 0.6rem', background: tier.color, borderRadius: 6, display: 'inline-block' }}>
+                <div style={{ fontFamily: 'Open Sans', fontSize: '0.72rem', color: 'var(--text)', padding: '0.3rem 0.6rem', background: tier.color, borderRadius: 6, display: 'inline-block' }}>
                   {tier.minScore.toLocaleString()}{tier.maxScore === Infinity ? '+' : `–${tier.maxScore.toLocaleString()}`} pts
                 </div>
               </div>
@@ -688,7 +688,7 @@ export default function Landing({ onNavigate }) {
                     <div style={{ width: '1.75rem', textAlign: 'center', fontFamily: 'Open Sans, sans-serif', fontSize: '0.72rem', color: i < 3 ? rankColors[i] : 'var(--muted)', flexShrink: 0 }}>
                       {i < 3 ? medals[i] : i + 1}
                     </div>
-                    <div style={{ width: 36, height: 36, borderRadius: '50%', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Rajdhani', fontWeight: 700, fontSize: '0.72rem', color: '#fff', background: row.bg }}>
+                    <div style={{ width: 36, height: 36, borderRadius: '50%', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Rajdhani', fontWeight: 700, fontSize: '0.72rem', color: 'var(--text)', background: row.bg }}>
                       {row.initials}
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
@@ -748,7 +748,7 @@ export default function Landing({ onNavigate }) {
                     <div style={{ width: '1.75rem', textAlign: 'center', fontFamily: 'Open Sans, sans-serif', fontSize: '0.72rem', color: i < 3 ? rankColors[i] : 'var(--muted)', flexShrink: 0 }}>
                       {i < 3 ? medals[i] : i + 1}
                     </div>
-                    <div style={{ width: 36, height: 36, borderRadius: '50%', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Rajdhani', fontWeight: 700, fontSize: '0.72rem', color: '#fff', background: avatarBgs[i] }}>
+                    <div style={{ width: 36, height: 36, borderRadius: '50%', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'Rajdhani', fontWeight: 700, fontSize: '0.72rem', color: 'var(--text)', background: avatarBgs[i] }}>
                       {(u.name || '?').split(' ').map(n => n[0]).join('')}
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
