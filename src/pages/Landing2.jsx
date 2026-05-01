@@ -272,7 +272,7 @@ function HeroHome({ onNavigate, heroRanks }) {
 
 export default function Landing({ onNavigate }) {
   const [alertDismissed, setAlertDismissed] = useState(false);
-  const heroRanks = [...SAMPLE_USERS].sort((a, b) => b.score - a.score).slice(0, 12);
+  const heroRanks = [...SAMPLE_USERS].sort((a, b) => b.score - a.score).slice(0, 9);
 
   return (
     <div style={{ background:'var(--color-white)' }}>
