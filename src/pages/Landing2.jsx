@@ -175,23 +175,76 @@ function HeroHome({ onNavigate, top5 }) {
             </div>
           </div>
 
-          {/* RIGHT — leaderboard preview */}
+          {/* RIGHT — leaderboard preview: podium top-3 + list of remaining */}
           <div style={{ gridColumn:1, gridRow:2 }} className="hero-twho-right">
             <div style={{ background:'#fff', border:'1px solid var(--color-primary-25)', borderRadius:6, padding:'1.5rem' }}>
               <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:'1rem' }}>
-                <div style={{ fontSize:'0.85rem', textTransform:'uppercase', letterSpacing:'0.08em', color:'var(--color-primary-100)', fontWeight:700 }}>Live leaderboard — top 5</div>
+                <div style={{ fontSize:'0.85rem', textTransform:'uppercase', letterSpacing:'0.08em', color:'var(--color-primary-100)', fontWeight:700 }}>Live leaderboard</div>
                 <button onClick={() => onNavigate('leaderboard')} className="btn btn-ghost btn-sm" style={{ color:'var(--color-primary-100)' }}>View all →</button>
               </div>
-              {top5.map((u, i) => (
-                <div key={u.id} onClick={() => onNavigate('profile', { userData:u })}
-                  style={{ display:'flex', alignItems:'center', gap:'0.85rem', padding:'0.7rem 0', borderTop: i ? '1px solid var(--color-pale-charcoal)' : 'none', cursor:'pointer' }}>
-                  <span style={{ width:24, fontWeight:700, color:'var(--color-secondary-100)' }}>{i+1}</span>
-                  <div style={{ width:36, height:36, borderRadius:'50%', background:'var(--color-secondary-100)', color:'#fff', display:'flex', alignItems:'center', justifyContent:'center', fontWeight:700 }}>{(u.name||'?')[0]}</div>
-                  <div style={{ flex:1, minWidth:0 }}>
-                    <div style={{ fontWeight:600, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{u.name}</div>
-                    <div style={{ fontSize:'0.85rem', color:'var(--color-charcoal)', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{u.headline}</div>
+
+              {/* Podium: 2nd left, 1st centre (tallest), 3rd right */}
+              {(() => {
+                const sorted = [...top5];
+                const visual = [sorted[1], sorted[0], sorted[2]];
+                const heights = [110, 150, 120];
+                const medals  = ['🥈', '🥇', '🥉'];
+                const isGolds = [false, true, false];
+                return (
+                  <div style={{ display:'flex', gap:'0.65rem', alignItems:'flex-end', marginBottom:'1rem' }}>
+                    {visual.map((u, vi) => {
+                      if (!u) return null;
+                      const isGold = isGolds[vi];
+                      return (
+                        <div key={u.id} onClick={() => onNavigate('profile', { userData:u })}
+                          style={{ flex:1, textAlign:'center', cursor:'pointer' }}>
+                          <div style={{
+                            height: heights[vi],
+                            background: isGold ? 'linear-gradient(180deg, #fff7d6, #ffe69c)' : 'var(--color-primary-5)',
+                            border: `1px solid ${isGold ? '#ffc83c' : 'var(--color-primary-25)'}`,
+                            borderRadius: '8px 8px 4px 4px',
+                            display: 'flex', flexDirection:'column',
+                            alignItems:'center', justifyContent:'center',
+                            gap:'0.35rem', padding:'0.5rem',
+                            transition:'transform 0.15s',
+                          }}
+                            onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-3px)'}
+                            onMouseLeave={e => e.currentTarget.style.transform = ''}
+                          >
+                            <div style={{
+                              width: isGold ? 44 : 36, height: isGold ? 44 : 36,
+                              borderRadius:'50%',
+                              background: isGold ? '#13294b' : 'var(--color-secondary-100)',
+                              color:'#fff', display:'flex', alignItems:'center', justifyContent:'center',
+                              fontWeight:700, fontSize: isGold ? '1rem' : '0.85rem',
+                              border: isGold ? '2px solid #ffc83c' : 'none',
+                            }}>{(u.name || '?')[0]}</div>
+                            <div style={{ fontSize: isGold ? '0.85rem' : '0.78rem', fontWeight:700, color:'var(--color-secondary-100)', lineHeight:1.1 }}>
+                              {u.name.split(' ')[0]}
+                            </div>
+                            <div style={{ fontSize:'0.7rem', color:'var(--color-primary-100)', fontWeight:600 }}>
+                              {u.score.toLocaleString()}
+                            </div>
+                            <div style={{ fontSize:'1rem', lineHeight:1 }}>{medals[vi]}</div>
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
-                  <span style={{ fontWeight:700, color:'var(--color-primary-100)' }}>{u.score.toLocaleString()}</span>
+                );
+              })()}
+
+              {/* Rows 4+ */}
+              {top5.slice(3).map((u, i) => (
+                <div key={u.id} onClick={() => onNavigate('profile', { userData:u })}
+                  style={{ display:'flex', alignItems:'center', gap:'0.85rem', padding:'0.6rem 0', borderTop:'1px solid var(--color-pale-charcoal)', cursor:'pointer' }}>
+                  <span style={{ width:24, fontWeight:700, color:'var(--color-secondary-100)', fontSize:'0.85rem' }}>{i+4}</span>
+                  <div style={{ width:30, height:30, borderRadius:'50%', background:'var(--color-secondary-100)', color:'#fff', display:'flex', alignItems:'center', justifyContent:'center', fontWeight:700, fontSize:'0.78rem' }}>{(u.name||'?')[0]}</div>
+                  <div style={{ flex:1, minWidth:0 }}>
+                    <div style={{ fontWeight:600, fontSize:'0.9rem', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{u.name}</div>
+                    <div style={{ fontSize:'0.78rem', color:'var(--color-charcoal)', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{u.headline}</div>
+                  </div>
+                  <span style={{ fontWeight:700, color:'var(--color-primary-100)', fontSize:'0.92rem' }}>{u.score.toLocaleString()}</span>
                 </div>
               ))}
             </div>
