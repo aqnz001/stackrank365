@@ -289,18 +289,18 @@ export default function Landing({ onNavigate }) {
           heading="Microsoft credentials are impossible to verify"
           intro="LinkedIn endorsements are unverified. CVs are self-declared. Recruiters waste weeks interviewing candidates who oversell their depth. Skilled consultants get overlooked because they can't prove what they've built."
         />
-        <ul className="tiles" style={{ gridTemplateColumns:'repeat(3, 1fr)' }}>
+        <div style={{ display:'grid', gridTemplateColumns:'repeat(3, 1fr)', gap:'2rem' }}>
           {[
             { stat:'73%',     desc:'of hiring managers say Microsoft skills are the hardest to verify before interview' },
             { stat:'3–6 wks', desc:'average wasted per bad hire in the Microsoft ecosystem consulting space' },
             { stat:'61%',     desc:'of certified professionals say their certs are ignored because there\'s no proof of application' },
           ].map(s => (
-            <li key={s.stat} className="tile">
-              <h3 className="tile__heading" style={{ fontSize:'2.5rem', lineHeight:1, color:'var(--color-secondary-100)' }}>{s.stat}</h3>
-              <p className="tile__description">{s.desc}</p>
-            </li>
+            <div key={s.stat} style={{ background:'#fff', border:'1px solid var(--color-primary-25)', borderRadius:4, padding:'1.5rem', alignSelf:'start' }}>
+              <h3 style={{ margin:'0 0 0.75rem', fontSize:'2.5rem', lineHeight:1, fontWeight:700, color:'var(--color-secondary-100)' }}>{s.stat}</h3>
+              <p style={{ margin:0, fontSize:'1rem', lineHeight:1.5, color:'var(--color-charcoal)' }}>{s.desc}</p>
+            </div>
           ))}
-        </ul>
+        </div>
       </section>
 
       {/* ─── THE SOLUTION ────────────────────────────────────────────────── */}
@@ -638,19 +638,19 @@ export default function Landing({ onNavigate }) {
       {/* ─── DATA &amp; STATISTICS ────────────────────────────────────────── */}
       <section className="element u-content-width" style={{ paddingTop:'4rem', paddingBottom:'5rem' }}>
         <ComponentIntro id="data-and-statistics" heading="Data and statistics" intro="StackRank365 by the numbers." />
-        <ul className="tiles" style={{ gridTemplateColumns:'repeat(4, 1fr)' }}>
+        <div style={{ display:'grid', gridTemplateColumns:'repeat(4, 1fr)', gap:'2rem' }}>
           {[
             ['35+',  'Microsoft cert types tracked'],
             ['6',    'specialization tracks'],
             ['+500', 'bonus points for founding members'],
             ['Free', 'forever for individuals'],
           ].map(([val, label]) => (
-            <li key={label} className="tile">
-              <h3 className="tile__heading" style={{ fontSize:'2.5rem', lineHeight:1, color:'var(--color-secondary-100)' }}>{val}</h3>
-              <p className="tile__description">{label}</p>
-            </li>
+            <div key={label} style={{ background:'#fff', border:'1px solid var(--color-primary-25)', borderRadius:4, padding:'1.5rem', alignSelf:'start' }}>
+              <h3 style={{ margin:'0 0 0.75rem', fontSize:'2.5rem', lineHeight:1, fontWeight:700, color:'var(--color-secondary-100)' }}>{val}</h3>
+              <p style={{ margin:0, fontSize:'1rem', lineHeight:1.5, color:'var(--color-charcoal)' }}>{label}</p>
+            </div>
           ))}
-        </ul>
+        </div>
       </section>
     </div>
   );
