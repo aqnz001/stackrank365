@@ -213,7 +213,7 @@ export default function Landing({ onNavigate }) {
                               {u.name.split(' ')[0]}
                             </div>
                             {/* Score */}
-                            <div style={{ fontFamily: 'Open Sans', fontSize: '0.65rem', color: 'var(--blue)', letterSpacing: '0.02em' }}>
+                            <div style={{ fontFamily: 'Poppins', fontSize: '0.65rem', color: 'var(--blue)', letterSpacing: '0.02em' }}>
                               {u.score.toLocaleString()}
                             </div>
                             {/* Medal */}
@@ -241,7 +241,7 @@ export default function Landing({ onNavigate }) {
                     onMouseEnter={e => e.currentTarget.style.background = 'var(--surface2)'}
                     onMouseLeave={e => e.currentTarget.style.background = ''}
                   >
-                    <span style={{ width: 22, textAlign: 'right', fontSize: '0.75rem', color: 'var(--muted)', fontFamily: 'Open Sans', flexShrink: 0 }}>
+                    <span style={{ width: 22, textAlign: 'right', fontSize: '0.75rem', color: 'var(--muted)', fontFamily: 'Poppins', flexShrink: 0 }}>
                       {i + 4}
                     </span>
                     <div style={{
@@ -255,7 +255,7 @@ export default function Landing({ onNavigate }) {
                       <div style={{ fontSize: '0.7rem', color: 'var(--muted2)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{u.headline}</div>
                     </div>
                     <RankBadge score={u.score} />
-                    <span style={{ fontFamily: 'Open Sans', fontWeight: 700, fontSize: '0.82rem', color: 'var(--blue)', flexShrink: 0 }}>
+                    <span style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '0.82rem', color: 'var(--blue)', flexShrink: 0 }}>
                       {u.score.toLocaleString()}
                     </span>
                   </div>
@@ -358,7 +358,7 @@ export default function Landing({ onNavigate }) {
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.85rem' }}>
                   <span style={{ fontSize: '1.75rem' }}>{f.icon}</span>
-                  <span style={{ fontFamily: 'Open Sans', fontSize: '0.72rem', color: f.color, fontWeight: 700 }}>{f.num}</span>
+                  <span style={{ fontFamily: 'Poppins', fontSize: '0.72rem', color: f.color, fontWeight: 700 }}>{f.num}</span>
                 </div>
                 <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>{f.title}</h3>
                 <p style={{ color: 'var(--muted2)', fontSize: '0.88rem', lineHeight: 1.7, margin: 0 }}>{f.desc}</p>
@@ -392,7 +392,7 @@ export default function Landing({ onNavigate }) {
                   {tier.name}
                 </div>
                 <div style={{ fontSize: '0.75rem', color: 'var(--muted2)', marginBottom: '0.85rem' }}>{tier.description}</div>
-                <div style={{ fontFamily: 'Open Sans', fontSize: '0.72rem', color: 'var(--text)', padding: '0.3rem 0.6rem', background: tier.color, borderRadius: 6, display: 'inline-block' }}>
+                <div style={{ fontFamily: 'Poppins', fontSize: '0.72rem', color: 'var(--text)', padding: '0.3rem 0.6rem', background: tier.color, borderRadius: 6, display: 'inline-block' }}>
                   {tier.minScore.toLocaleString()}{tier.maxScore === Infinity ? '+' : `–${tier.maxScore.toLocaleString()}`} pts
                 </div>
               </div>
@@ -527,7 +527,7 @@ export default function Landing({ onNavigate }) {
                   width: 52, height: 52, borderRadius: 12, flexShrink: 0,
                   background: 'var(--blue-dim)', border: '1px solid var(--border-blue)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontFamily: 'Open Sans', fontWeight: 700, fontSize: '0.82rem', color: 'var(--blue)',
+                  fontFamily: 'Poppins', fontWeight: 700, fontSize: '0.82rem', color: 'var(--blue)',
                 }}>{s.n}</div>
                 <div style={{ paddingTop: '0.25rem' }}>
                   <h3 style={{ fontSize: '1.05rem', marginBottom: '0.35rem' }}>{s.icon} {s.title}</h3>

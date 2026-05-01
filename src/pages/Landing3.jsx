@@ -176,7 +176,7 @@ export default function Landing3({ onNavigate }) {
                               {u.name.split(' ')[0]}
                             </div>
                             {/* Score */}
-                            <div style={{ fontFamily: 'Open Sans', fontSize: '1.05rem', color: '#0067b8', letterSpacing: '0.02em' }}>
+                            <div style={{ fontFamily: 'Poppins', fontSize: '1.05rem', color: '#0067b8', letterSpacing: '0.02em' }}>
                               {u.score.toLocaleString()}
                             </div>
                             {/* Medal */}
@@ -204,7 +204,7 @@ export default function Landing3({ onNavigate }) {
                     onMouseEnter={e => e.currentTarget.style.background = '#f5f5f5'}
                     onMouseLeave={e => e.currentTarget.style.background = ''}
                   >
-                    <span style={{ width: 22, textAlign: 'right', fontSize: '1rem', color: '#616161', fontFamily: 'Open Sans', flexShrink: 0 }}>
+                    <span style={{ width: 22, textAlign: 'right', fontSize: '1rem', color: '#616161', fontFamily: 'Poppins', flexShrink: 0 }}>
                       {i + 4}
                     </span>
                     <div style={{
@@ -218,7 +218,7 @@ export default function Landing3({ onNavigate }) {
                       <div style={{ fontSize: '1.05rem', color: '#616161', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{u.headline}</div>
                     </div>
                     <RankBadge score={u.score} />
-                    <span style={{ fontFamily: 'Open Sans', fontWeight: 700, fontSize: '1rem', color: '#0067b8', flexShrink: 0 }}>
+                    <span style={{ fontFamily: 'Poppins', fontWeight: 700, fontSize: '1rem', color: '#0067b8', flexShrink: 0 }}>
                       {u.score.toLocaleString()}
                     </span>
                   </div>
@@ -321,7 +321,7 @@ export default function Landing3({ onNavigate }) {
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.85rem' }}>
                   <span style={{ fontSize: '1.75rem' }}>{f.icon}</span>
-                  <span style={{ fontFamily: 'Open Sans', fontSize: '1rem', color: f.color, fontWeight: 700 }}>{f.num}</span>
+                  <span style={{ fontFamily: 'Poppins', fontSize: '1rem', color: f.color, fontWeight: 700 }}>{f.num}</span>
                 </div>
                 <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>{f.title}</h3>
                 <p style={{ color: '#484848', fontSize: '1.05rem', lineHeight: 1.7, margin: 0 }}>{f.desc}</p>
@@ -355,7 +355,7 @@ export default function Landing3({ onNavigate }) {
                   {tier.name}
                 </div>
                 <div style={{ fontSize: '0.96rem', color: '#484848', marginBottom: '0.85rem' }}>{tier.description}</div>
-                <div style={{ fontFamily: 'Open Sans', fontSize: '1rem', color: '#484848', padding: '0.3rem 0.7rem', background: '#f5f5f5', borderRadius: 6, display: 'inline-block' }}>
+                <div style={{ fontFamily: 'Poppins', fontSize: '1rem', color: '#484848', padding: '0.3rem 0.7rem', background: '#f5f5f5', borderRadius: 6, display: 'inline-block' }}>
                   {tier.minScore.toLocaleString()}{tier.maxScore === Infinity ? '+' : `–${tier.maxScore.toLocaleString()}`} pts
                 </div>
               </div>
@@ -490,7 +490,7 @@ export default function Landing3({ onNavigate }) {
                   width: 52, height: 52, borderRadius: 12, flexShrink: 0,
                   background: 'rgba(0,103,184,0.06)', border: '1px solid rgba(0,103,184,0.2)',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontFamily: 'Open Sans', fontWeight: 700, fontSize: '1rem', color: '#0067b8',
+                  fontFamily: 'Poppins', fontWeight: 700, fontSize: '1rem', color: '#0067b8',
                 }}>{s.n}</div>
                 <div style={{ paddingTop: '0.25rem' }}>
                   <h3 style={{ fontSize: '1.05rem', marginBottom: '0.35rem' }}>{s.icon} {s.title}</h3>

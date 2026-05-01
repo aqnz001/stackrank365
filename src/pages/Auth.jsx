@@ -222,7 +222,7 @@ export default function Auth({ mode = 'signup', onNavigate }) {
                   gap: '0.65rem', padding: '0.75rem', borderRadius: 10, marginBottom: '1.25rem',
                   background: '#2a3142', border: '1px solid var(--border-bright)',
                   color: '#fff', fontSize: '0.95rem', fontWeight: 600, cursor: 'pointer',
-                  transition: 'background 0.2s', fontFamily: 'Outfit, sans-serif',
+                  transition: 'background 0.2s', fontFamily: 'Poppins, sans-serif',
                 }}
                 onMouseEnter={e => e.currentTarget.style.background = '#333d52'}
                 onMouseLeave={e => e.currentTarget.style.background = '#2a3142'}
@@ -348,7 +348,7 @@ export default function Auth({ mode = 'signup', onNavigate }) {
                     <input className="input" type="password" placeholder="••••••••" value={form.password} onChange={e => set('password', e.target.value)} />
                     <div style={{ textAlign: 'right', marginTop: '0.4rem' }}>
                       <button type="button"
-                        style={{ padding: 0, fontSize: '0.85rem', color: 'var(--blue)', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'Outfit, sans-serif', fontWeight: 600 }}
+                        style={{ padding: 0, fontSize: '0.85rem', color: 'var(--blue)', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'Poppins, sans-serif', fontWeight: 600 }}
                         onClick={() => setIsReset(true)}>
                         Forgot password?
                       </button>
