@@ -141,52 +141,64 @@ function ComponentIntro({ id, heading, intro }) {
   );
 }
 
-/* ─── HERO (.hero-home) ───────────────────────────────────────────────────── */
+/* ─── HERO (.hero-home) — 2-col: text+waitlist left, leaderboard right ───── */
 function HeroHome({ onNavigate, top5 }) {
   return (
-    <div className="hero-home" style={{ background:'var(--color-bg-pattern-light-theme)', paddingTop:'2rem', paddingBottom:'4rem', position:'relative' }}>
-      <div className="hero-home__grid u-grid-standard u-content-width" style={{ position:'relative', zIndex:1 }}>
-        <div className="hero-home__text-content" style={{ gridColumn:'1 / -1' }}>
-          <h1 className="page-title page-title--bilingual">
-            <span className="page-title__text page-title__text--primary" style={{ color:'var(--color-secondary-100)' }}>
-              Microsoft Careers
-            </span>
-            <span className="sr-only">-</span>
-            <span className="page-title__text page-title__text--secondary" style={{ color:'var(--color-secondary-100)' }}>
-              The verified ranking community for Dynamics 365, Power Platform, Copilot Studio &amp; Azure OpenAI
-            </span>
-          </h1>
-          <div className="page-title__intro-text" style={{ maxWidth:'52rem', color:'var(--color-charcoal)' }}>
-            StackRank365 is the trust layer for Microsoft careers — verified certifications, peer validation, and a transparent score that proves applied expertise.
-          </div>
-          <WaitlistForm variant="hero" />
-          <p style={{ marginTop:'0.85rem', fontSize:'0.95rem', color:'var(--color-charcoal)' }}>
-            Free to join · +500 founding bonus · No credit card · 35+ cert types tracked · 6 specializations
-          </p>
-        </div>
-      </div>
-
-      {/* leaderboard preview as the "image" */}
-      <div className="hero-home__image-wrapper u-content-width" style={{ marginTop:'2.5rem', position:'relative' }}>
-        <div style={{ background:'#fff', border:'1px solid var(--color-primary-25)', borderRadius:6, padding:'1.5rem', maxWidth:880, marginLeft:'auto', marginRight:'auto' }}>
-          <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:'1rem' }}>
-            <div style={{ fontSize:'0.85rem', textTransform:'uppercase', letterSpacing:'0.08em', color:'var(--color-primary-100)', fontWeight:700 }}>Live leaderboard — top 5 globally</div>
-            <button onClick={() => onNavigate('leaderboard')} className="btn btn-ghost btn-sm" style={{ color:'var(--color-primary-100)' }}>View full leaderboard →</button>
-          </div>
-          {top5.map((u, i) => (
-            <div key={u.id} onClick={() => onNavigate('profile', { userData:u })}
-              style={{ display:'flex', alignItems:'center', gap:'0.85rem', padding:'0.65rem 0', borderTop: i ? '1px solid var(--color-pale-charcoal)' : 'none', cursor:'pointer' }}>
-              <span style={{ width:24, fontWeight:700, color:'var(--color-secondary-100)' }}>{i+1}</span>
-              <div style={{ width:36, height:36, borderRadius:'50%', background:'var(--color-secondary-100)', color:'#fff', display:'flex', alignItems:'center', justifyContent:'center', fontWeight:700 }}>{(u.name||'?')[0]}</div>
-              <div style={{ flex:1, minWidth:0 }}>
-                <div style={{ fontWeight:600, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{u.name}</div>
-                <div style={{ fontSize:'0.85rem', color:'var(--color-charcoal)', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{u.headline}</div>
-              </div>
-              <span style={{ fontWeight:700, color:'var(--color-primary-100)' }}>{u.score.toLocaleString()}</span>
+    <div className="hero-home" style={{ background:'var(--color-bg-pattern-light-theme)', paddingTop:'3rem', paddingBottom:'4rem', position:'relative' }}>
+      <div className="u-content-width" style={{ position:'relative', zIndex:1 }}>
+        <div className="hero-home-twho-grid" style={{ display:'grid', gridTemplateColumns:'1fr', gap:'2.5rem', alignItems:'center' }}>
+          {/* LEFT — copy + waitlist CTA */}
+          <div className="hero-home__text-content">
+            <h1 className="page-title page-title--bilingual">
+              <span className="page-title__text page-title__text--primary" style={{ color:'var(--color-secondary-100)' }}>
+                Microsoft Careers
+              </span>
+              <span className="sr-only">-</span>
+              <span className="page-title__text page-title__text--secondary" style={{ color:'var(--color-secondary-100)' }}>
+                The verified ranking community for Dynamics 365, Power Platform, Copilot Studio &amp; Azure OpenAI
+              </span>
+            </h1>
+            <div className="page-title__intro-text" style={{ maxWidth:'30rem', color:'var(--color-charcoal)' }}>
+              StackRank365 is the trust layer for Microsoft careers — verified certifications, peer validation, and a transparent score that proves applied expertise.
             </div>
-          ))}
+            <WaitlistForm variant="hero" />
+            <p style={{ marginTop:'0.85rem', fontSize:'0.95rem', color:'var(--color-charcoal)' }}>
+              Free to join · +500 founding bonus · No credit card
+            </p>
+            <div style={{ display:'flex', gap:'2rem', marginTop:'1.5rem', flexWrap:'wrap' }}>
+              {[['35+','cert types tracked'], ['6','specializations'], ['Free','to join']].map(([n, l]) => (
+                <div key={l}>
+                  <div style={{ fontSize:'1.5rem', fontWeight:700, color:'var(--color-secondary-100)' }}>{n}</div>
+                  <div style={{ fontSize:'0.85rem', color:'var(--color-charcoal)' }}>{l}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* RIGHT — leaderboard preview */}
+          <div className="hero-home__image-wrapper" style={{ margin:0 }}>
+            <div style={{ background:'#fff', border:'1px solid var(--color-primary-25)', borderRadius:6, padding:'1.5rem' }}>
+              <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:'1rem' }}>
+                <div style={{ fontSize:'0.85rem', textTransform:'uppercase', letterSpacing:'0.08em', color:'var(--color-primary-100)', fontWeight:700 }}>Live leaderboard — top 5</div>
+                <button onClick={() => onNavigate('leaderboard')} className="btn btn-ghost btn-sm" style={{ color:'var(--color-primary-100)' }}>View all →</button>
+              </div>
+              {top5.map((u, i) => (
+                <div key={u.id} onClick={() => onNavigate('profile', { userData:u })}
+                  style={{ display:'flex', alignItems:'center', gap:'0.85rem', padding:'0.7rem 0', borderTop: i ? '1px solid var(--color-pale-charcoal)' : 'none', cursor:'pointer' }}>
+                  <span style={{ width:24, fontWeight:700, color:'var(--color-secondary-100)' }}>{i+1}</span>
+                  <div style={{ width:36, height:36, borderRadius:'50%', background:'var(--color-secondary-100)', color:'#fff', display:'flex', alignItems:'center', justifyContent:'center', fontWeight:700 }}>{(u.name||'?')[0]}</div>
+                  <div style={{ flex:1, minWidth:0 }}>
+                    <div style={{ fontWeight:600, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{u.name}</div>
+                    <div style={{ fontSize:'0.85rem', color:'var(--color-charcoal)', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{u.headline}</div>
+                  </div>
+                  <span style={{ fontWeight:700, color:'var(--color-primary-100)' }}>{u.score.toLocaleString()}</span>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
+      <style>{`@media(min-width: 900px){ .hero-home-twho-grid { grid-template-columns: 1.05fr 1fr !important; gap: 4rem !important; } }`}</style>
     </div>
   );
 }
