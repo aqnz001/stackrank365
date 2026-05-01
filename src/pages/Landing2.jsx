@@ -106,13 +106,19 @@ export default function Landing({ onNavigate }) {
       {/* ─── HERO ────────────────────────────────────────── */}
       <section style={{
         position: 'relative', overflow: 'hidden',
-        background: 'var(--bg2)',
+        background: '#d7f8ff',
         padding: '3.5rem 0 3rem',
       }}>
-        {/* orbs */}
-        <div className="orb" style={{ width: 600, height: 600, background: 'rgba(10,61,58,0.05)', top: -150, right: -150 }} />
-        <div className="orb" style={{ width: 400, height: 400, background: 'rgba(196,90,66,0.04)', bottom: -80, left: -80 }} />
-        <div className="orb" style={{ width: 280, height: 280, background: 'rgba(10,61,58,0.03)', top: '35%', left: '38%' }} />
+        {/* TWHO-style hexagonal pattern overlay */}
+        <svg aria-hidden="true" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', opacity: 0.35, pointerEvents: 'none' }}>
+          <defs>
+            <pattern id="sr365-hex" patternUnits="userSpaceOnUse" width="56" height="48" patternTransform="rotate(0)">
+              <polygon points="28,2 52,14 52,34 28,46 4,34 4,14" fill="none" stroke="#0c818f" strokeWidth="1"/>
+              <polygon points="28,14 40,20 40,28 28,34 16,28 16,20" fill="none" stroke="#30a1ac" strokeWidth="0.6"/>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#sr365-hex)"/>
+        </svg>
 
         <div className="container" style={{ position: 'relative', zIndex: 1 }}>
           <div className="hero-grid">
@@ -270,10 +276,14 @@ export default function Landing({ onNavigate }) {
           </div>
         </div>
 
+        {/* TWHO-style zigzag divider at bottom of hero */}
+        <svg aria-hidden="true" viewBox="0 0 100 4" preserveAspectRatio="none" style={{ display: 'block', width: '100%', height: 28, position: 'relative', marginBottom: -1 }}>
+          <polygon points="0,4 4,0 8,4 12,0 16,4 20,0 24,4 28,0 32,4 36,0 40,4 44,0 48,4 52,0 56,4 60,0 64,4 68,0 72,4 76,0 80,4 84,0 88,4 92,0 96,4 100,0 100,4" fill="#13294b"/>
+        </svg>
       </section>
 
       {/* ─── THE PROBLEM ─────────────────────────────────── */}
-      <section style={{ padding: '5rem 0', background: 'var(--bg2)', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)' }}>
+      <section style={{ padding: '5rem 0', background: '#ffffff', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)' }}>
         <div className="container-sm" style={{ textAlign: 'center' }}>
           <div className="badge badge-muted" style={{ marginBottom: '1rem' }}>The Problem</div>
           <h2 style={{ marginBottom: '1.25rem' }}>
@@ -369,7 +379,7 @@ export default function Landing({ onNavigate }) {
       </section>
 
       {/* ─── RANK TIERS ──────────────────────────────────── */}
-      <section style={{ padding: '4.5rem 0', background: 'var(--bg2)', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)' }}>
+      <section style={{ padding: '4.5rem 0', background: '#fdfff6', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)' }}>
         <div className="container">
           <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
             <div className="badge badge-gold" style={{ marginBottom: '1rem' }}>Rank Tiers</div>
@@ -449,7 +459,7 @@ export default function Landing({ onNavigate }) {
       </section>
 
       {/* ─── WHO IS THIS FOR ─────────────────────────────── */}
-      <section style={{ padding: '5rem 0', background: 'var(--bg2)', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)' }}>
+      <section style={{ padding: '5rem 0', background: '#ffffff', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)' }}>
         <div className="container">
           <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
             <h2>Built for Microsoft Professionals</h2>
@@ -545,7 +555,7 @@ export default function Landing({ onNavigate }) {
       </section>
 
       {/* ─── SCORING FORMULA ─────────────────────────────── */}
-      <section style={{ padding: '5.5rem 0', background: 'var(--bg2)', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)' }}>
+      <section style={{ padding: '5.5rem 0', background: '#fdfff6', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)' }}>
         <div className="container">
           <div className="badge badge-blue" style={{ marginBottom: '1rem' }}>Scoring System</div>
           <h2 style={{ marginBottom: '0.6rem' }}>No Black Boxes.<br />Every Point Explained.</h2>
@@ -789,7 +799,7 @@ export default function Landing({ onNavigate }) {
       </section>
 
       {/* ─── DEMO CTA ────────────────────────────────────── */}
-      <section style={{ padding: '3rem 0', background: 'var(--bg2)', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)' }}>
+      <section style={{ padding: '3rem 0', background: '#ffffff', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)' }}>
         <div className="container">
           <div style={{ display: 'flex', gap: '1rem', overflowX: 'auto', paddingBottom: '0.5rem', justifyContent: 'center' }}>
             {[

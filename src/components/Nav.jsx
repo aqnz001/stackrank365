@@ -56,6 +56,9 @@ export default function Nav({ currentPage, onNavigate }) {
     : '?';
 
   return (
+    <>
+    {/* TWHO-style teal utility strip above main nav */}
+    <div style={{ background: '#0c818f', height: 6, width: '100%' }} />
     <nav className="nav">
       <div className="nav-inner">
 
@@ -232,5 +235,6 @@ export default function Nav({ currentPage, onNavigate }) {
         }
       `}</style>
     </nav>
+    </>
   );
 }
