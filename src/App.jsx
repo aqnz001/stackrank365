@@ -22,53 +22,53 @@ import PostJob from './pages/PostJob';
 import MyApplications from './pages/MyApplications';
 import MyJobs from './pages/MyJobs';
 
+/* TWHO-style footer using .footer__main scaffold (rules in src/styles/twho.css). */
 function Footer({ onNavigate }) {
   return (
-    <footer style={{ background: 'var(--bg2)', borderTop: '1px solid var(--border)', padding: '3rem 0 1.75rem', marginTop: 'auto' }}>
-      <div className="container">
-        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gap: '2.5rem', marginBottom: '2.5rem' }}>
-          <div>
-            <button onClick={() => onNavigate('landing')}
-              style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '0.85rem' }}>
-              <LogoMark size={34} />
-              <span style={{ fontFamily: 'Rajdhani', fontWeight: 700, fontSize: '1.15rem', color: 'var(--text)' }}>
-                StackRank<span style={{ color: 'var(--blue)' }}>365</span>
-              </span>
+    <footer style={{ marginTop: 'auto' }}>
+      <div className="footer__main">
+        <div className="footer__inner-grid u-grid-standard u-content-width" style={{ paddingBottom: '2rem' }}>
+          <div className="footer__links-group footer__links-group--1">
+            <h3 className="footer__links-group-heading">Platform</h3>
+            <ul className="footer__links-list">
+              {[['how-it-works','How it works'],['scoring','Scoring'],['leaderboard','Leaderboard'],['pricing','Pricing']].map(([id, label]) => (
+                <li key={id}><a href="#" className="footer__link" onClick={(e) => { e.preventDefault(); onNavigate(id); }}>{label}</a></li>
+              ))}
+            </ul>
+          </div>
+          <div className="footer__links-group footer__links-group--2">
+            <h3 className="footer__links-group-heading">Company</h3>
+            <ul className="footer__links-list">
+              {[['about','About'],['survey','Feedback'],['privacy','Privacy']].map(([id, label]) => (
+                <li key={id}><a href="#" className="footer__link" onClick={(e) => { e.preventDefault(); onNavigate(id); }}>{label}</a></li>
+              ))}
+            </ul>
+          </div>
+          <div className="footer__links-group footer__links-group--3">
+            <h3 className="footer__links-group-heading">For recruiters</h3>
+            <ul className="footer__links-list">
+              {[['for-recruiters','Recruiter info'],['recruiter-dashboard','Dashboard'],['jobs','Jobs board']].map(([id, label]) => (
+                <li key={id}><a href="#" className="footer__link" onClick={(e) => { e.preventDefault(); onNavigate(id); }}>{label}</a></li>
+              ))}
+            </ul>
+          </div>
+          <div className="footer__logos">
+            <button onClick={() => onNavigate('landing')} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+              <LogoMark size={40} />
+              <span style={{ fontFamily: 'Rajdhani', fontWeight: 700, fontSize: '1.4rem', color: '#fff' }}>StackRank<span style={{ color: '#30a1ac' }}>365</span></span>
             </button>
-            <p style={{ color: 'var(--muted)', fontSize: '0.85rem', lineHeight: 1.7, maxWidth: 260 }}>
-              The verified talent ranking community for Microsoft Dynamics 365, Power Platform, Copilot Studio, and Azure OpenAI professionals.
-            </p>
-            <div style={{ marginTop: '1.25rem' }}>
-              <button className="btn btn-gold btn-sm" onClick={() => onNavigate('landing')}>
-                ð Join the Waitlist
-              </button>
-            </div>
           </div>
-          <div>
-            <div style={{ fontWeight: 700, fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '0.07em', color: 'var(--muted2)', marginBottom: '0.9rem' }}>Platform</div>
-            {[['how-it-works','How It Works'],['scoring','Scoring'],['leaderboard','Leaderboard']].map(([id, label]) => (
-              <div key={id} style={{ marginBottom: '0.5rem' }}>
-                <button onClick={() => onNavigate(id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--muted)', fontSize: '0.88rem', padding: 0, fontFamily: 'Poppins', transition: 'color 0.15s' }}
-                  onMouseEnter={e => e.currentTarget.style.color='var(--text)'} onMouseLeave={e => e.currentTarget.style.color='var(--muted)'}>{label}</button>
-              </div>
-            ))}
-          </div>
-          <div>
-            <div style={{ fontWeight: 700, fontSize: '0.78rem', textTransform: 'uppercase', letterSpacing: '0.07em', color: 'var(--muted2)', marginBottom: '0.9rem' }}>Company</div>
-            {[['about','About'],['survey','Feedback']].map(([id, label]) => (
-              <div key={id} style={{ marginBottom: '0.5rem' }}>
-                <button onClick={() => onNavigate(id)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--muted)', fontSize: '0.88rem', padding: 0, fontFamily: 'Poppins', transition: 'color 0.15s' }}
-                  onMouseEnter={e => e.currentTarget.style.color='var(--text)'} onMouseLeave={e => e.currentTarget.style.color='var(--muted)'}>{label}</button>
-              </div>
-            ))}
-          </div>
-        </div>
-        <div style={{ borderTop: '1px solid var(--border)', paddingTop: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem' }}>
-          <div style={{ fontSize: '0.78rem', color: 'var(--muted)' }}>Â© 2025 StackRank365. All rights reserved.</div>
-          <div style={{ fontSize: '0.78rem', color: 'var(--muted)' }}>Built for the Microsoft community ð</div>
         </div>
       </div>
-      <style>{`@media(max-width:768px){ footer .container > div:first-child { grid-template-columns: 1fr !important; } }`}</style>
+      <div className="footer__secondary">
+        <div className="u-grid-standard u-content-width">
+          <ul className="footer__bottom-links-list" style={{ alignItems: 'center' }}>
+            <li style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.9rem' }}>© 2026 StackRank365. Built for the Microsoft community.</li>
+            <li><a href="#" className="footer__link" onClick={(e) => { e.preventDefault(); onNavigate('privacy'); }} style={{ fontSize: '0.9rem' }}>Privacy</a></li>
+            <li><a href="#" className="footer__link" onClick={(e) => { e.preventDefault(); onNavigate('about'); }} style={{ fontSize: '0.9rem' }}>Contact</a></li>
+          </ul>
+        </div>
+      </div>
     </footer>
   );
 }
@@ -79,10 +79,8 @@ function AppInner() {
   const [profileUsername, setProfileUsername] = useState(null);
   const [pageData, setPageData] = useState(null);
 
-  // âââ Handle URL hash routing for early-adopter links + Supabase callbacks ââ
   useEffect(() => {
     const handleHash = () => {
-      // Query string routing: ?page=xxx
       const _params = new URLSearchParams(window.location.search);
       const qPage = _params.get('page');
       const qUser = _params.get('u');
@@ -91,25 +89,20 @@ function AppInner() {
       const search = window.location.search;
       const fullHash = window.location.hash;
 
-      // Supabase OAuth/magic link callback â token arrives in the hash fragment
       if (fullHash.includes('access_token=') || fullHash.includes('refresh_token=')) {
-        // Do NOT clear URL — Supabase SDK needs the hash to establish session
         setPage('dashboard');
         return;
       }
-      // Supabase password recovery
       if (search.includes('type=recovery') || fullHash.includes('type=recovery')) {
         setPage('reset-password');
         return;
       }
-      // Validation link: /#validate?token=ABC123
       if (hash.startsWith('validate')) {
         const params = new URLSearchParams(fullHash.replace(/^#validate\??/, ''));
         setPageData({ token: params.get('token') });
         setPage('validate');
         return;
       }
-      // Hash-based routing for early-adopter links
       if (['signup','signin','dashboard','early-access','reset-password'].includes(hash)) {
         setPage(hash === 'early-access' ? 'signup' : hash);
         window.history.replaceState({}, '', '/');
@@ -120,7 +113,6 @@ function AppInner() {
     return () => window.removeEventListener('hashchange', handleHash);
   }, []);
 
-  // Redirect to dashboard if already signed in and on auth pages
   useEffect(() => {
     if (user && (page === 'signup' || page === 'signin')) {
       setPage('dashboard');
@@ -144,7 +136,7 @@ function AppInner() {
       case 'for-recruiters':  return <ForRecruiters onNavigate={navigate} />;
       case 'dashboard':          return (loading ? (
         <div style={{minHeight:'80vh',display:'flex',alignItems:'center',justifyContent:'center',flexDirection:'column',gap:'1.25rem',background:'var(--bg)'}}>
-          <div style={{width:44,height:44,border:'3px solid rgba(255,255,255,0.08)',borderTopColor:'var(--blue)',borderRadius:'50%',animation:'_spin 0.8s linear infinite'}}/>
+          <div style={{width:44,height:44,border:'3px solid rgba(0,0,0,0.08)',borderTopColor:'var(--blue)',borderRadius:'50%',animation:'_spin 0.8s linear infinite'}}/>
           <p style={{color:'var(--muted2)',fontSize:'0.88rem',margin:0}}>Signing you in…</p>
           <style>{'@keyframes _spin{to{transform:rotate(360deg)}}'}</style>
         </div>
