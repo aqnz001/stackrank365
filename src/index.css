@@ -1,49 +1,91 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Rajdhani:wght@400;500;600;700&display=swap');
 
 /* ─────────────────────────────────────────────
-   STACKRANK365 — TE WHATU ORA INSPIRED
-   Real palette extracted from tewhatuora.govt.nz
+   STACKRANK365 — TE WHATU ORA EXACT PALETTE
+   Tokens extracted directly from tewhatuora.govt.nz CSS
    ───────────────────────────────────────────── */
 :root {
-  --bg:        #ffffff;
-  --bg2:       #f5f5f3;
-  --surface:   #ffffff;
-  --surface2:  #f9f9f7;
-  --surface3:  #eeeeec;
-  --border:        #d6d6d3;
-  --border-bright: #b8b8b3;
-  --border-blue:   rgba(0,85,140,0.3);
-  --border-gold:   rgba(13,130,143,0.3);
+  /* TWHO color system */
+  --color-white:         #ffffff;
+  --color-cream:         #fdfff6;
+  --color-sky:           #f1ffff;
+  --color-pale-charcoal: #E9E9E9;
+  --color-charcoal:      #5A5A5A;
+  --color-dark-grey:     #393939;
 
-  /* primary: TWHO deep navy */
-  --blue:    #13284b;
-  --blue2:   #00558c;
-  --cyan:    #0d828f;
+  /* primary blue scale */
+  --color-primary-5:    #f2f7f9;
+  --color-primary-25:   #bfd4e2;
+  --color-primary-50:   #80aac5;
+  --color-primary-75:   #4080a9;
+  --color-primary-100:  #00558c;
+  --color-primary-110:  #043c60;
 
-  --gold:    #30a1ac;
-  --green:   #0d828f;
-  --purple:  #13284b;
-  --pink:    #00558c;
-  --orange:  #30a1ac;
-  --red:     #b3261e;
+  /* secondary navy scale */
+  --color-secondary-5:    #f3f4f6;
+  --color-secondary-25:   #c4c9d2;
+  --color-secondary-50:   #8994a5;
+  --color-secondary-75:   #4e5e78;
+  --color-secondary-100:  #13294b;
+  --color-secondary-110:  #041836;
 
-  --blue-dim:   rgba(19,40,75,0.06);
-  --gold-dim:   rgba(13,130,143,0.08);
-  --green-dim:  rgba(13,130,143,0.08);
-  --purple-dim: rgba(19,40,75,0.06);
+  /* accent teal scale */
+  --color-accent-5:    #ecfafb;
+  --color-accent-25:   #caf2f4;
+  --color-accent-50:   #96e5e9;
+  --color-accent-75:   #61d9de;
+  --color-accent-100:  #2dccd3;
+  --color-accent-105:  #30a1ac;
+  --color-accent-110:  #0c818f;
 
-  --text:   #1a1a1a;
-  --muted:  #4a4a4a;
-  --muted2: #6c6c6c;
+  /* feedback */
+  --color-bg-green:    #a8cc92;
+  --color-bg-yellow:   #f5eab6;
+  --color-bg-red:      #f1c1ca;
+  --color-pale-error:  #FBF5F5;
+  --color-pale-success:#F3F9F4;
+  --color-solid-error: #D93A3A;
+  --color-solid-success:#089749;
 
-  --grad-blue:   #13284b;
-  --grad-gold:   #0d828f;
-  --grad-green:  #0d828f;
-  --grad-purple: #13284b;
-  --grad-hero:   #f5f5f3;
+  /* mapped to existing SR365 token names so the rest of the codebase still works */
+  --bg:        var(--color-white);
+  --bg2:       var(--color-cream);
+  --surface:   var(--color-white);
+  --surface2:  var(--color-primary-5);
+  --surface3:  var(--color-pale-charcoal);
+  --border:        var(--color-pale-charcoal);
+  --border-bright: var(--color-primary-25);
+  --border-blue:   var(--color-primary-25);
+  --border-gold:   rgba(48,161,172,0.3);
 
-  --shadow-card: 0 1px 2px rgba(0,0,0,0.04);
-  --shadow-glow: 0 0 0 1px rgba(19,40,75,0.15);
+  --blue:    var(--color-primary-100);     /* link/primary blue #00558c */
+  --blue2:   var(--color-primary-110);     /* hover dark #043c60 */
+  --cyan:    var(--color-accent-110);      /* teal #0c818f */
+
+  --gold:    var(--color-accent-105);      /* #30a1ac */
+  --green:   var(--color-solid-success);
+  --purple:  var(--color-secondary-100);   /* navy #13294b */
+  --pink:    var(--color-primary-100);
+  --orange:  var(--color-accent-105);
+  --red:     var(--color-solid-error);
+
+  --blue-dim:   var(--color-primary-5);
+  --gold-dim:   var(--color-accent-5);
+  --green-dim:  var(--color-pale-success);
+  --purple-dim: var(--color-secondary-5);
+
+  --text:   var(--color-dark-grey);        /* #393939 body text */
+  --muted:  var(--color-charcoal);         /* #5A5A5A */
+  --muted2: var(--color-charcoal);
+
+  --grad-blue:   var(--color-primary-100);
+  --grad-gold:   var(--color-accent-110);
+  --grad-green:  var(--color-solid-success);
+  --grad-purple: var(--color-secondary-100);
+  --grad-hero:   var(--color-cream);
+
+  --shadow-card: none;
+  --shadow-glow: 0 0 0 1px var(--color-primary-25);
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -86,23 +128,54 @@ h6 { font-size: 1rem; font-weight: 700; }
 .container { max-width: 1280px; margin: 0 auto; padding: 0 1.5rem; }
 .container-sm { max-width: 880px; margin: 0 auto; padding: 0 1.5rem; }
 
-.card { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 2rem; box-shadow: none; }
-.card-glow { background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: 2rem; box-shadow: none; }
-.card-white { background: #fff; border: 1px solid var(--border); border-radius: 4px; padding: 2rem; box-shadow: none; color: var(--text); }
+/* TWHO card pattern (replicates .tile) */
+.card,
+.card-glow,
+.card-white {
+  background: var(--color-white);
+  border: 1px solid var(--color-primary-25);
+  border-radius: 4px;
+  padding: 1.25rem;
+  box-shadow: none;
+  color: var(--text);
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+.card:hover,
+.card-glow:hover,
+.card-white:hover {
+  border-color: var(--color-accent-105);
+}
+.card:hover h1, .card:hover h2, .card:hover h3, .card:hover h4,
+.card-glow:hover h1, .card-glow:hover h2, .card-glow:hover h3, .card-glow:hover h4,
+.card-white:hover h1, .card-white:hover h2, .card-white:hover h3, .card-white:hover h4 {
+  color: var(--color-accent-110);
+}
 
-.btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.85rem 1.75rem; border-radius: 4px; font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 1rem; cursor: pointer; border: none; text-decoration: none; transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease; white-space: nowrap; }
-.btn-primary { background: var(--blue); color: #fff; box-shadow: none; }
-.btn-primary:hover { background: var(--blue2); transform: none; }
-.btn-gold { background: var(--cyan); color: #fff; box-shadow: none; }
-.btn-gold:hover { background: #0a6f7a; transform: none; }
-.btn-outline { background: transparent; color: var(--blue); border: 2px solid var(--blue); padding: calc(0.85rem - 2px) calc(1.75rem - 2px); }
-.btn-outline:hover { background: var(--blue); color: #fff; }
-.btn-ghost { background: transparent; color: var(--blue); border: none; text-decoration: underline; padding: 0.5rem 0.75rem; }
-.btn-ghost:hover { color: var(--blue2); background: transparent; }
+/* TWHO button pattern */
+.btn {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.85rem 1.75rem; border-radius: 4px;
+  font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 1rem;
+  cursor: pointer; border: none; text-decoration: none;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+  white-space: nowrap;
+}
+.btn-primary { background: var(--color-secondary-100); color: var(--color-white); }
+.btn-primary:hover { background: var(--color-secondary-110); transform: none; }
+.btn-gold { background: var(--color-accent-110); color: var(--color-white); }
+.btn-gold:hover { background: var(--color-accent-105); }
+.btn-outline { background: transparent; color: var(--color-primary-100); border: 2px solid var(--color-primary-100); padding: calc(0.85rem - 2px) calc(1.75rem - 2px); }
+.btn-outline:hover { background: var(--color-primary-100); color: var(--color-white); }
+.btn-ghost { background: transparent; color: var(--color-primary-100); border: none; text-decoration: underline; padding: 0.5rem 0.75rem; }
+.btn-ghost:hover { color: var(--color-primary-110); background: transparent; }
 .btn-sm { padding: 0.5rem 1.1rem; font-size: 0.92rem; border-radius: 4px; }
 .btn-lg { padding: 1rem 2rem; font-size: 1.05rem; border-radius: 4px; }
-.btn-danger { background: rgba(179,38,30,0.08); color: var(--red); border: 1px solid rgba(179,38,30,0.3); }
-.btn-danger:hover { background: rgba(179,38,30,0.15); }
+.btn-danger { background: var(--color-pale-error); color: var(--color-solid-error); border: 1px solid var(--color-solid-error); }
+.btn-danger:hover { background: var(--color-bg-red); }
+
+/* TWHO link style — body links underlined, primary blue, teal on hover */
+a { color: var(--color-primary-100); text-decoration: underline; text-underline-offset: 2px; }
+a:hover { color: var(--color-accent-110); }
 
 .badge { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.2rem 0.65rem; border-radius: 999px; font-size: 0.825rem; font-weight: 600; font-family: 'Poppins', sans-serif; letter-spacing: 0.03em; }
 .badge-blue   { background: var(--blue-dim);   color: var(--blue);   border: 1px solid rgba(0,194,255,0.2); }
@@ -208,9 +281,9 @@ a { color: inherit; text-decoration: none; }
 .nav-logo-icon { width: 40px; height: 40px; border-radius: 10px; background: var(--blue); display: flex; align-items: center; justify-content: center; }
 .nav-logo-text { font-family: 'Rajdhani', sans-serif; font-size: 1.4rem; font-weight: 700; color: var(--text); letter-spacing: 0.02em; }
 .nav-links { display: flex; align-items: center; gap: 0.25rem; }
-.nav-link { padding: 0.5rem 0.9rem; border-radius: 8px; font-weight: 600; font-size: 0.99rem; color: var(--muted2); transition: all 0.2s; cursor: pointer; border: none; background: none; font-family: 'Poppins', sans-serif; }
-.nav-link:hover { color: var(--text); background: var(--surface2); }
-.nav-link.active { color: var(--blue); background: var(--blue-dim); }
+.nav-link { padding: 0.5rem 0.9rem; border-radius: 0; font-weight: 500; font-size: 1rem; color: var(--color-secondary-100); transition: color 0.15s, border-color 0.15s; cursor: pointer; border: none; border-bottom: 3px solid transparent; background: none; font-family: 'Poppins', sans-serif; text-decoration: none; }
+.nav-link:hover { color: var(--color-accent-110); background: none; border-bottom-color: var(--color-accent-105); }
+.nav-link.active { color: var(--color-secondary-100); background: none; border-bottom-color: var(--color-accent-110); font-weight: 600; }
 .nav-actions { display: flex; align-items: center; gap: 0.75rem; }
 @media (max-width: 768px) { .nav-links { display: none; } }
 
