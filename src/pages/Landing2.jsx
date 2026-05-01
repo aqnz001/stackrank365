@@ -86,16 +86,21 @@ function WaitlistForm({ variant = 'hero' }) {
 /* ─── reusable: TWHO tile ─────────────────────────────────────────────────── */
 function Tile({ heading, description, onClick, children }) {
   return (
-    <li className="tile">
-      {children}
-      <h3 className="tile__heading">{heading}</h3>
-      <p className="tile__description">{description}</p>
+    <li className="tile" style={{ minHeight:'auto', position:'relative' }}>
+      {/* corner arrow icon — absolutely positioned, fills entire tile via .tile__link::before */}
       {onClick && (
-        <a href="#" onClick={(e) => { e.preventDefault(); onClick(); }} className="tile__link">
+        <svg aria-hidden="true" width="26" height="22"
+          style={{ position:'absolute', top:'1.1rem', right:'1.1rem', color:'var(--color-accent-110)', strokeWidth:2 }}>
+          <use xlinkHref="#arrow"/>
+        </svg>
+      )}
+      {children}
+      <h3 className="tile__heading" style={{ paddingRight:'2.5rem' }}>{heading}</h3>
+      <p className="tile__description" style={{ marginBottom:0 }}>{description}</p>
+      {onClick && (
+        <a href="#" onClick={(e) => { e.preventDefault(); onClick(); }} className="tile__link"
+          style={{ position:'absolute', inset:0, fontSize:0 }}>
           <span className="sr-only">{heading}</span>
-          <svg className="tile__icon tile__icon--go" width="18" height="16" aria-hidden="true">
-            <use xlinkHref="#arrow"/>
-          </svg>
         </a>
       )}
     </li>
