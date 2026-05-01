@@ -305,7 +305,7 @@ export default function Landing({ onNavigate }) {
           heading="A verified rank that speaks louder than a CV"
           intro="StackRank365 combines Microsoft certification verification, peer-validated project evidence, and community recognition into a single trusted score."
         />
-        <ul className="tiles">
+        <ul className="tiles" style={{ gridTemplateColumns:'repeat(3, 1fr)' }}>
           <Tile heading="Tier-weighted certifications" description="Each cert earns points by difficulty: Expert (3,000) > Associate (1,500) > Fundamentals (500) > Applied Skills (400). An Expert cert proves 6× more than a Fundamentals badge." onClick={() => onNavigate('scoring')} />
           <Tile heading="Peer-validated projects" description="Colleagues confirm your real implementations. Clients can be anonymised or marked confidential — so enterprise consultants aren't penalised for NDA obligations." onClick={() => onNavigate('how-it-works')} />
           <Tile heading="Copilot scarcity bonus" description="Copilot Studio certifications carry a 1.25× leaderboard multiplier. Early adopters earn a meaningful, lasting edge as the talent pool is still tiny." onClick={() => onNavigate('scoring')} />
