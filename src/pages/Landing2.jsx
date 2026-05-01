@@ -106,13 +106,13 @@ export default function Landing({ onNavigate }) {
       {/* ─── HERO ────────────────────────────────────────── */}
       <section style={{
         position: 'relative', overflow: 'hidden',
-        background: 'linear-gradient(150deg, #0d1117 0%, #111827 45%, #131e38 100%)',
+        background: 'var(--bg2)',
         padding: '3.5rem 0 3rem',
       }}>
         {/* orbs */}
-        <div className="orb" style={{ width: 600, height: 600, background: 'rgba(0,194,255,0.07)', top: -150, right: -150 }} />
-        <div className="orb" style={{ width: 400, height: 400, background: 'rgba(167,139,250,0.06)', bottom: -80, left: -80 }} />
-        <div className="orb" style={{ width: 280, height: 280, background: 'rgba(255,200,60,0.04)', top: '35%', left: '38%' }} />
+        <div className="orb" style={{ width: 600, height: 600, background: 'rgba(10,61,58,0.05)', top: -150, right: -150 }} />
+        <div className="orb" style={{ width: 400, height: 400, background: 'rgba(196,90,66,0.04)', bottom: -80, left: -80 }} />
+        <div className="orb" style={{ width: 280, height: 280, background: 'rgba(10,61,58,0.03)', top: '35%', left: '38%' }} />
 
         <div className="container" style={{ position: 'relative', zIndex: 1 }}>
           <div className="hero-grid">

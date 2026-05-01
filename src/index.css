@@ -192,11 +192,11 @@ a { color: inherit; text-decoration: none; }
 .spinner { width: 40px; height: 40px; border: 3px solid var(--surface2); border-top-color: var(--blue); border-radius: 50%; animation: spin 0.7s linear infinite; }
 
 /* Nav specific */
-.nav { position: sticky; top: 0; z-index: 100; background: rgba(13,17,23,0.92); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); }
+.nav { position: sticky; top: 0; z-index: 100; background: rgba(255,255,255,0.95); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border); }
 .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 72px; max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
 .nav-logo { display: flex; align-items: center; gap: 0.75rem; }
-.nav-logo-icon { width: 40px; height: 40px; border-radius: 10px; background: var(--grad-blue); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 16px rgba(0,194,255,0.3); }
-.nav-logo-text { font-family: 'Rajdhani', sans-serif; font-size: 1.4rem; font-weight: 700; color: #fff; letter-spacing: 0.02em; }
+.nav-logo-icon { width: 40px; height: 40px; border-radius: 10px; background: var(--blue); display: flex; align-items: center; justify-content: center; }
+.nav-logo-text { font-family: 'Rajdhani', sans-serif; font-size: 1.4rem; font-weight: 700; color: var(--text); letter-spacing: 0.02em; }
 .nav-links { display: flex; align-items: center; gap: 0.25rem; }
 .nav-link { padding: 0.5rem 0.9rem; border-radius: 8px; font-weight: 600; font-size: 0.99rem; color: var(--muted2); transition: all 0.2s; cursor: pointer; border: none; background: none; font-family: 'Open Sans', sans-serif; }
 .nav-link:hover { color: var(--text); background: var(--surface2); }
@@ -1244,7 +1244,7 @@ html, body { overflow-x: hidden; }
 
 /* ── Hero sections ───────────────────────────────────────────────────────── */
 .page-hero {
-  background: linear-gradient(135deg, #0d1117 0%, #1a1035 50%, #0e1f44 100%);
+  background: var(--bg2);
   padding: 4.5rem 0 3.5rem;
   border-bottom: 1px solid var(--border);
   position: relative;
@@ -1496,7 +1496,7 @@ html, body { overflow-x: hidden; }
 
 /* ── Profile page ────────────────────────────────────────────────────────── */
 .profile-hero {
-  background: linear-gradient(135deg, #0d1117 0%, #1a1035 50%, #0e1f44 100%);
+  background: var(--bg2);
   padding: 3rem 0;
   border-bottom: 1px solid var(--border);
 }
@@ -1654,7 +1654,7 @@ html, body { overflow-x: hidden; }
 
 .page { background: var(--bg); min-height: 100vh; }
 
-.page-hero { background: linear-gradient(135deg, #0d1117 0%, #1a1035 50%, #0e1f44 100%); padding: 4.5rem 0 3.5rem; border-bottom: 1px solid var(--border); position: relative; overflow: hidden; text-align: center; }
+.page-hero { background: var(--bg2); padding: 4.5rem 0 3.5rem; border-bottom: 1px solid var(--border); position: relative; overflow: hidden; text-align: center; }
 .page-hero--bottom-flush { padding-bottom: 0; }
 .page-hero__orb { position: absolute; border-radius: 50%; pointer-events: none; }
 .page-hero__orb--purple { top: -80px; left: 5%; width: 280px; height: 280px; background: radial-gradient(circle, rgba(109,40,217,0.2) 0%, transparent 70%); }
@@ -1726,7 +1726,7 @@ html, body { overflow-x: hidden; }
 .filter-select { padding: 0.65rem 1rem; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-size: 0.968rem; font-family: 'Open Sans', sans-serif; cursor: pointer; outline: none; }
 .filter-select:focus { border-color: var(--border-blue); }
 
-.profile-hero { background: linear-gradient(135deg, #0d1117 0%, #1a1035 50%, #0e1f44 100%); padding: 3rem 0; border-bottom: 1px solid var(--border); position: relative; overflow: hidden; }
+.profile-hero { background: var(--bg2); padding: 3rem 0; border-bottom: 1px solid var(--border); position: relative; overflow: hidden; }
 .profile-layout { display: grid; grid-template-columns: auto 1fr auto; gap: 2rem; align-items: center; }
 .profile-name { font-family: 'Open Sans', sans-serif; font-weight: 800; font-size: clamp(1.6rem,4vw,2.4rem); color: var(--text); margin: 0 0 0.35rem; }
 .profile-role { color: var(--muted2); font-size: 1rem; margin-bottom: 0.6rem; }
