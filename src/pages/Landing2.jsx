@@ -350,25 +350,25 @@ export default function Landing({ onNavigate }) {
           heading="Six core specializations"
           intro="Verified credentials and project evidence across the entire Microsoft ecosystem."
         />
-        <div style={{ display:'flex', flexWrap:'wrap', gap:'0.85rem' }}>
+        <div style={{ display:'grid', gridTemplateColumns:'repeat(6, 1fr)', gap:'1rem' }}>
           {[
             { name:'Dynamics 365',   icon:'📦', count:'12 certs' },
             { name:'Power Platform', icon:'⚡', count:'10 certs' },
-            { name:'Copilot Studio', icon:'🤖', count:'6 certs + 1.25× bonus', hot:true },
+            { name:'Copilot Studio', icon:'🤖', count:'6 certs + bonus', hot:true },
             { name:'Azure OpenAI',   icon:'🧠', count:'9 certs' },
             { name:'Dataverse',      icon:'🗄️', count:'Composite score' },
             { name:'Power Apps',     icon:'📱', count:'5 certs' },
           ].map(s => (
             <button key={s.name} onClick={() => onNavigate('scoring')}
-              style={{ display:'flex', alignItems:'center', gap:'0.75rem', padding:'0.85rem 1.25rem', background:'#fff', border:'1px solid var(--color-primary-25)', borderRadius:999, cursor:'pointer', fontFamily:'inherit', transition:'border-color 0.15s' }}
+              style={{ position:'relative', display:'flex', alignItems:'center', gap:'1rem', padding:'1.1rem 1.5rem', background:'#fff', border:'1px solid var(--color-primary-25)', borderRadius:999, cursor:'pointer', fontFamily:'inherit', transition:'border-color 0.15s', width:'100%', minWidth:0 }}
               onMouseEnter={e => e.currentTarget.style.borderColor='var(--color-accent-105)'}
               onMouseLeave={e => e.currentTarget.style.borderColor='var(--color-primary-25)'}>
-              <span style={{ fontSize:'1.25rem' }}>{s.icon}</span>
-              <div style={{ textAlign:'left' }}>
-                <div style={{ fontWeight:700, fontSize:'0.95rem', color:'var(--color-secondary-100)' }}>{s.name}</div>
-                <div style={{ fontSize:'0.78rem', color:'var(--color-charcoal)' }}>{s.count}</div>
+              <span style={{ fontSize:'1.6rem', flexShrink:0 }}>{s.icon}</span>
+              <div style={{ textAlign:'left', minWidth:0, flex:1 }}>
+                <div style={{ fontWeight:700, fontSize:'1.05rem', color:'var(--color-secondary-100)', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>{s.name}</div>
+                <div style={{ fontSize:'0.88rem', color:'var(--color-charcoal)', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>{s.count}</div>
               </div>
-              {s.hot && <span style={{ fontSize:'0.65rem', fontWeight:700, padding:'0.15rem 0.5rem', background:'var(--color-accent-110)', color:'#fff', borderRadius:4 }}>HOT</span>}
+              {s.hot && <span style={{ position:'absolute', top:-8, right:12, fontSize:'0.7rem', fontWeight:700, padding:'0.18rem 0.55rem', background:'var(--color-accent-110)', color:'#fff', borderRadius:999, letterSpacing:'0.05em' }}>HOT</span>}
             </button>
           ))}
         </div>
