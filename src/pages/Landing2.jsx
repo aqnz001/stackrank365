@@ -151,17 +151,13 @@ function HeroHome({ onNavigate, heroRanks }) {
         <div className="hero-home-twho-grid" style={{ display:'grid', gridTemplateColumns:'1fr', gap:'2.5rem', alignItems:'stretch' }}>
           {/* LEFT — copy + waitlist CTA */}
           <div style={{ gridColumn:1, gridRow:1 }} className="hero-twho-left">
-            <h1 className="page-title page-title--bilingual" style={{ marginBottom:'1.5rem' }}>
-              <span className="page-title__text page-title__text--primary" style={{ color:'var(--color-secondary-100)' }}>
-                Microsoft Careers
-              </span>
-              <span className="sr-only">-</span>
-              <span className="page-title__text page-title__text--secondary" style={{ color:'var(--color-secondary-100)' }}>
-                The verified ranking community for Dynamics 365, Power Platform, Copilot Studio &amp; Azure OpenAI
+            <h1 className="page-title" style={{ marginBottom:'1.5rem' }}>
+              <span className="page-title__text" style={{ color:'var(--color-secondary-100)' }}>
+                The Trust Layer for <span style={{ color:'var(--color-accent-110)' }}>Microsoft Careers</span>
               </span>
             </h1>
-            <div className="page-title__intro-text" style={{ maxWidth:'30rem', color:'var(--color-charcoal)', fontSize:'1.125rem', lineHeight:1.6 }}>
-              StackRank365 is the trust layer for Microsoft careers — verified certifications, peer validation, and a transparent score that proves applied expertise.
+            <div className="page-title__intro-text" style={{ maxWidth:'34rem', color:'var(--color-charcoal)', fontSize:'1.125rem', lineHeight:1.6 }}>
+              StackRank365 is the verified talent ranking community for Dynamics 365, Power Platform, Copilot Studio, and Azure OpenAI professionals. Verified proof of applied Microsoft expertise.
             </div>
             <WaitlistForm variant="hero" />
             <p style={{ marginTop:'0.85rem', fontSize:'0.95rem', color:'var(--color-charcoal)' }}>
