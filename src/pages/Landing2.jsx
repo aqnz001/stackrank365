@@ -69,11 +69,11 @@ function WaitlistForm({ variant = 'hero' }) {
   return (
     <form onSubmit={handle} style={{ display:'flex', gap:'0.5rem', flexWrap:'wrap', marginTop:'1.5rem', maxWidth:520 }}>
       <input type="email" placeholder="your@email.com" value={email} onChange={e => setEmail(e.target.value)}
-        style={{ flex:'1 1 240px', minWidth:0, padding:'0.95rem 1.1rem', fontSize:'1.0625rem', border:'1px solid var(--color-pale-charcoal)', borderRadius:4, fontFamily:'inherit', minHeight:'var(--min-input-height)' }}/>
-      <button type="submit" disabled={loading} className="btn btn-primary" style={{ fontSize:'1.0625rem' }}>
+        style={{ flex:'1 1 240px', minWidth:0, padding:'0.95rem 1.1rem', fontSize:'1.0625rem', border:'1px solid rgba(255,255,255,0.3)', borderRadius:4, fontFamily:'inherit', minHeight:'var(--min-input-height)', background:'#fff', color:'var(--color-secondary-100)' }}/>
+      <button type="submit" disabled={loading} style={{ fontSize:'1.0625rem', padding:'0.95rem 1.5rem', borderRadius:4, fontWeight:600, fontFamily:'inherit', cursor:'pointer', border:'none', background:'var(--color-accent-110)', color:'#fff' }}>
         {loading ? 'Joining…' : 'Join waitlist'}
       </button>
-      {error && <div style={{ width:'100%', fontSize:'1rem', color:'var(--color-solid-error)', marginTop:'0.25rem' }}>{error}</div>}
+      {error && <div style={{ width:'100%', fontSize:'1rem', color:'#ffb4b0', marginTop:'0.25rem' }}>{error}</div>}
     </form>
   );
 }
@@ -146,28 +146,31 @@ function HeroHome({ onNavigate, heroRanks }) {
   const top3 = heroRanks.slice(0, 3);
   const rest = heroRanks.slice(3);
   return (
-    <section style={{ background:'var(--color-bg-pattern-light-theme)', paddingTop:'3rem', paddingBottom:'4rem', position:'relative' }}>
-      <div className="u-content-width">
+    <section style={{ background:'var(--color-secondary-100)', paddingTop:'3.5rem', paddingBottom:'4rem', position:'relative', color:'#fff' }}>
+      {/* subtle teal corner accent */}
+      <div style={{ position:'absolute', top:0, right:0, width:'40%', height:'100%', background:'radial-gradient(ellipse at top right, rgba(48,161,172,0.25), transparent 70%)', pointerEvents:'none' }} />
+
+      <div className="u-content-width" style={{ position:'relative' }}>
         <div className="hero-home-twho-grid" style={{ display:'grid', gridTemplateColumns:'1fr', gap:'2.5rem', alignItems:'stretch' }}>
           {/* LEFT — copy + waitlist CTA */}
           <div style={{ gridColumn:1, gridRow:1 }} className="hero-twho-left">
             <h1 className="page-title" style={{ marginBottom:'1.5rem' }}>
-              <span className="page-title__text" style={{ color:'var(--color-secondary-100)', fontSize:'3rem' }}>
-                The Trust Layer for <span style={{ color:'var(--color-accent-110)' }}>Microsoft Careers</span>
+              <span className="page-title__text" style={{ color:'#fff', fontSize:'3rem' }}>
+                The Trust Layer for <span style={{ color:'var(--color-accent-100)' }}>Microsoft Careers</span>
               </span>
             </h1>
-            <div className="page-title__intro-text" style={{ maxWidth:'34rem', color:'var(--color-charcoal)', fontSize:'1.25rem', lineHeight:1.6 }}>
+            <div className="page-title__intro-text" style={{ maxWidth:'34rem', color:'rgba(255,255,255,0.88)', fontSize:'1.25rem', lineHeight:1.6 }}>
               StackRank365 is the verified talent ranking community for Dynamics 365, Power Platform, Copilot Studio, and Azure OpenAI professionals. Verified proof of applied Microsoft expertise.
             </div>
             <WaitlistForm variant="hero" />
-            <p style={{ marginTop:'0.85rem', fontSize:'1.0625rem', color:'var(--color-charcoal)' }}>
+            <p style={{ marginTop:'0.85rem', fontSize:'1.0625rem', color:'rgba(255,255,255,0.7)' }}>
               Free to join · +500 founding bonus · No credit card
             </p>
-            <div style={{ display:'flex', gap:'2rem', marginTop:'1.5rem', flexWrap:'wrap' }}>
+            <div style={{ display:'flex', gap:'2.5rem', marginTop:'2rem', flexWrap:'wrap', paddingTop:'1.5rem', borderTop:'1px solid rgba(255,255,255,0.15)' }}>
               {[['35+','cert types tracked'], ['6','specializations'], ['Free','to join']].map(([n, l]) => (
                 <div key={l}>
-                  <div style={{ fontSize:'1.625rem', fontWeight:700, color:'var(--color-secondary-100)' }}>{n}</div>
-                  <div style={{ fontSize:'0.95rem', color:'var(--color-charcoal)' }}>{l}</div>
+                  <div style={{ fontSize:'1.75rem', fontWeight:700, color:'#fff' }}>{n}</div>
+                  <div style={{ fontSize:'0.95rem', color:'rgba(255,255,255,0.7)' }}>{l}</div>
                 </div>
               ))}
             </div>
