@@ -445,9 +445,13 @@ export default function Landing({ onNavigate }) {
           heading="No black boxes. Every point explained."
           intro="Your StackRank Score is calculated transparently. Here is exactly how it works."
         />
-        <div style={{ display:'grid', gridTemplateColumns:'1fr', gap:'2rem', maxWidth:1100 }} className="scoring-twho-grid">
-          {/* Equation */}
+        <div style={{ display:'grid', gridTemplateColumns:'1fr', gap:'2rem' }} className="scoring-twho-grid">
+          {/* LEFT — Why → formula → example */}
           <div>
+            <p style={{ fontSize:'1.05rem', lineHeight:1.65, color:'var(--color-charcoal)', marginTop:0, marginBottom:'1.5rem' }}>
+              <strong style={{ color:'var(--color-secondary-100)' }}>Why we show the formula.</strong> Most ranking systems are black boxes. We believe the best professionals deserve to know exactly what they're judged on — and exactly what to invest in next to grow their rank. Every signal is verifiable. Nothing is estimated.
+            </p>
+
             <pre style={{ background:'var(--color-secondary-100)', color:'#fff', padding:'1.5rem 1.75rem', borderRadius:4, fontSize:'0.95rem', lineHeight:1.7, fontFamily:'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace', overflow:'auto', margin:'0 0 1.5rem' }}>
 {`StackRank Score =
   (Certifications × level_weight)
@@ -457,19 +461,21 @@ export default function Landing({ onNavigate }) {
 ─────────────────────────────────
 = Your Global Stack Rank`}
             </pre>
-            <p style={{ fontSize:'1rem', lineHeight:1.65, color:'var(--color-charcoal)', marginBottom:'1.25rem' }}>
-              <strong style={{ color:'var(--color-secondary-100)' }}>Why we show the formula.</strong> Most ranking systems are black boxes. We believe the best professionals deserve to know exactly what they're judged on — and exactly what to invest in next to grow their rank. Every signal is verifiable. Nothing is estimated.
-            </p>
-            <div style={{ padding:'1.25rem 1.5rem', background:'var(--color-primary-5)', border:'1px solid var(--color-primary-25)', borderRadius:4 }}>
-              <div style={{ fontSize:'0.78rem', textTransform:'uppercase', letterSpacing:'0.08em', color:'var(--color-primary-100)', fontWeight:700, marginBottom:'0.5rem' }}>Example profile score</div>
-              <p style={{ fontSize:'0.95rem', color:'var(--color-charcoal)', lineHeight:1.7, margin:'0 0 0.5rem' }}>
-                3× Associate certs (4,500) + 1× Expert cert (3,000) + 2× Enterprise projects (4,000) + MVP bonus (1,500) + 3× peer referrals (1,500) + validations given (900)
-              </p>
-              <div style={{ fontWeight:700, fontSize:'1.25rem', color:'var(--color-secondary-100)' }}>= 15,400 Stack Points → Principal Architect</div>
-            </div>
+
+            <pre style={{ background:'var(--color-secondary-100)', color:'#fff', padding:'1.5rem 1.75rem', borderRadius:4, fontSize:'0.95rem', lineHeight:1.7, fontFamily:'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace', overflow:'auto', margin:0 }}>
+{`# Example profile score
+  3 × Associate certs        =  4,500
+  1 × Expert cert            =  3,000
+  2 × Enterprise projects    =  4,000
+  MVP bonus                  =  1,500
+  3 × peer referrals         =  1,500
+  validations given          =    900
+─────────────────────────────────
+= 15,400 Stack Points → Principal Architect`}
+            </pre>
           </div>
 
-          {/* Reference table */}
+          {/* RIGHT — Reference table */}
           <div className="card" style={{ padding:0, overflow:'hidden' }}>
             <div style={{ background:'var(--color-primary-5)', padding:'1rem 1.5rem', borderBottom:'1px solid var(--color-primary-25)', fontSize:'0.78rem', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', color:'var(--color-primary-100)' }}>
               Points reference table
@@ -500,7 +506,7 @@ export default function Landing({ onNavigate }) {
             </div>
           </div>
         </div>
-        <style>{`@media(min-width: 1024px){ .scoring-twho-grid { grid-template-columns: 1.1fr 1fr !important; } }`}</style>
+        <style>{`@media(min-width: 1024px){ .scoring-twho-grid { grid-template-columns: 1fr 1fr !important; gap: 2.5rem !important; } }`}</style>
       </section>
 
       {/* ─── NAVY CTA STRIP (founding member) ────────────────────────────── */}
