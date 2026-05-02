@@ -11,23 +11,18 @@ import TWHOSprite from '../components/TWHOSprite';
 const SB_URL   = 'https://shnuwkjkjthvaovoywju.supabase.co';
 const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNobnV3a2pranRodmFvdm95d2p1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0MjcxODQsImV4cCI6MjA4OTAwMzE4NH0.E3jR8tamdJNdiRMiO_XtbSZU1IrDpPFhVnPJmNSN4X4';
 
-/* ─── site-alert ──────────────────────────────────────────────────────────── */
+/* ─── site-alert (compact) ───────────────────────────────────────────────── */
 function SiteAlert({ onDismiss }) {
   return (
-    <aside className="site-alert">
-      <div className="site-alert-grid">
-        <div className="site-alert__decorator">
-          <svg className="site-alert__decorator-icon" aria-hidden="true"><use xlinkHref="#alert"/></svg>
+    <aside style={{ background:'var(--color-accent-5)', borderBottom:'1px solid var(--color-accent-25)', color:'var(--color-primary-100)' }}>
+      <div className="u-content-width" style={{ display:'flex', alignItems:'center', gap:'0.85rem', padding:'0.55rem 1rem' }}>
+        <svg width="18" height="16" aria-hidden="true" style={{ flexShrink:0, color:'var(--color-accent-110)' }}><use xlinkHref="#alert"/></svg>
+        <div style={{ flex:1, fontSize:'0.95rem', lineHeight:1.4 }}>
+          <strong>Beta release</strong> — StackRank365 is in early beta. <a href="?page=survey">Share your feedback</a>.
         </div>
-        <div className="site-alert__content">
-          <h2 className="site-alert__heading">Beta release</h2>
-          <div className="rich-text">
-            StackRank365 is in early beta — we're collecting feedback from founding members.{' '}
-            <a href="?page=survey">Share your feedback</a>.
-          </div>
-        </div>
-        <button className="site-alert__dismiss" aria-label="Dismiss this alert" onClick={onDismiss}>
-          <svg className="site-alert__dismiss-icon" aria-hidden="true"><use xlinkHref="#close"/></svg>
+        <button aria-label="Dismiss this alert" onClick={onDismiss}
+          style={{ flexShrink:0, background:'none', border:'none', cursor:'pointer', color:'var(--color-accent-110)', padding:'0.25rem', display:'flex' }}>
+          <svg width="14" height="14" aria-hidden="true"><use xlinkHref="#close"/></svg>
         </button>
       </div>
     </aside>
