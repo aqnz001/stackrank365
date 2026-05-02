@@ -205,18 +205,21 @@ function HeroHome({ onNavigate, heroRanks }) {
                         <div key={u.id} onClick={() => onNavigate('profile', { userData:u })}
                           style={{ flex:1, textAlign:'center', cursor:'pointer' }}>
                           <div style={{
+                            position:'relative',
                             height: heights[vi],
                             background: isGold ? 'linear-gradient(180deg, #fff7d6, #ffe69c)' : 'var(--color-primary-5)',
                             border: `1px solid ${isGold ? '#ffc83c' : 'var(--color-primary-25)'}`,
                             borderRadius: '8px 8px 4px 4px',
                             display: 'flex', flexDirection:'column',
                             alignItems:'center', justifyContent:'center',
-                            gap:'0.35rem', padding:'0.5rem',
+                            gap:'0.3rem', padding:'0.5rem',
                             transition:'transform 0.15s',
                           }}
                             onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-3px)'}
                             onMouseLeave={e => e.currentTarget.style.transform = ''}
                           >
+                            {/* medal badge top-right */}
+                            <div style={{ position:'absolute', top:6, right:8, fontSize:'1.05rem', lineHeight:1 }}>{medals[vi]}</div>
                             <div style={{
                               width: isGold ? 44 : 36, height: isGold ? 44 : 36,
                               borderRadius:'50%',
@@ -225,13 +228,12 @@ function HeroHome({ onNavigate, heroRanks }) {
                               fontWeight:700, fontSize: isGold ? '1rem' : '0.85rem',
                               border: isGold ? '2px solid #ffc83c' : 'none',
                             }}>{(u.name || '?')[0]}</div>
-                            <div style={{ fontSize: isGold ? '0.85rem' : '0.78rem', fontWeight:700, color:'var(--color-secondary-100)', lineHeight:1.1 }}>
+                            <div style={{ fontSize:'0.88rem', fontWeight:600, color:'var(--color-secondary-100)', lineHeight:1.1 }}>
                               {u.name.split(' ')[0]}
                             </div>
-                            <div style={{ fontSize:'0.7rem', color:'var(--color-primary-100)', fontWeight:600 }}>
+                            <div style={{ fontSize:'0.9rem', color:'var(--color-primary-100)', fontWeight:700 }}>
                               {u.score.toLocaleString()}
                             </div>
-                            <div style={{ fontSize:'1rem', lineHeight:1 }}>{medals[vi]}</div>
                           </div>
                         </div>
                       );
