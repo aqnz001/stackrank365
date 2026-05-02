@@ -178,7 +178,7 @@ function HeroHome({ onNavigate, heroRanks }) {
 
           {/* RIGHT — leaderboard preview: podium top-3 + list of remaining */}
           <div style={{ gridColumn:1, gridRow:2 }} className="hero-twho-right">
-            <div style={{ background:'#fff', border:'1px solid var(--color-primary-25)', borderRadius:6, padding:'1.5rem', height:'100%', display:'flex', flexDirection:'column' }}>
+            <div style={{ background:'#fff', border:'1px solid var(--color-primary-25)', borderRadius:6, padding:'1.5rem', height:'100%', display:'flex', flexDirection:'column', color:'var(--color-secondary-100)' }}>
               <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:'1rem' }}>
                 <div style={{ fontSize:'0.85rem', textTransform:'uppercase', letterSpacing:'0.08em', color:'var(--color-primary-100)', fontWeight:700 }}>Live leaderboard</div>
                 <button onClick={() => onNavigate('leaderboard')} className="btn btn-ghost btn-sm" style={{ color:'var(--color-primary-100)' }}>View all →</button>
