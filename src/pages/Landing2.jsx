@@ -11,20 +11,20 @@ import TWHOSprite from '../components/TWHOSprite';
 const SB_URL   = 'https://shnuwkjkjthvaovoywju.supabase.co';
 const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNobnV3a2pranRodmFvdm95d2p1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0MjcxODQsImV4cCI6MjA4OTAwMzE4NH0.E3jR8tamdJNdiRMiO_XtbSZU1IrDpPFhVnPJmNSN4X4';
 
-/* ─── site-alert (compact) ───────────────────────────────────────────────── */
+/* ─── site-alert (compact, centered) ─────────────────────────────────────── */
 function SiteAlert({ onDismiss }) {
   return (
-    <aside style={{ background:'var(--color-accent-5)', borderBottom:'1px solid var(--color-accent-25)', color:'var(--color-primary-100)' }}>
-      <div className="u-content-width" style={{ display:'flex', alignItems:'center', gap:'0.85rem', padding:'0.55rem 1rem' }}>
+    <aside style={{ background:'var(--color-accent-5)', borderBottom:'1px solid var(--color-accent-25)', color:'var(--color-primary-100)', position:'relative' }}>
+      <div className="u-content-width" style={{ display:'flex', alignItems:'center', justifyContent:'center', gap:'0.85rem', padding:'0.55rem 3rem', textAlign:'center' }}>
         <svg width="18" height="16" aria-hidden="true" style={{ flexShrink:0, color:'var(--color-accent-110)' }}><use xlinkHref="#alert"/></svg>
-        <div style={{ flex:1, fontSize:'0.95rem', lineHeight:1.4 }}>
+        <div style={{ fontSize:'0.95rem', lineHeight:1.4 }}>
           <strong>Beta release</strong> — StackRank365 is in early beta. <a href="?page=survey">Share your feedback</a>.
         </div>
-        <button aria-label="Dismiss this alert" onClick={onDismiss}
-          style={{ flexShrink:0, background:'none', border:'none', cursor:'pointer', color:'var(--color-accent-110)', padding:'0.25rem', display:'flex' }}>
-          <svg width="14" height="14" aria-hidden="true"><use xlinkHref="#close"/></svg>
-        </button>
       </div>
+      <button aria-label="Dismiss this alert" onClick={onDismiss}
+        style={{ position:'absolute', top:'50%', right:'1rem', transform:'translateY(-50%)', background:'none', border:'none', cursor:'pointer', color:'var(--color-accent-110)', padding:'0.25rem', display:'flex' }}>
+        <svg width="14" height="14" aria-hidden="true"><use xlinkHref="#close"/></svg>
+      </button>
     </aside>
   );
 }
@@ -625,17 +625,20 @@ export default function Landing({ onNavigate }) {
       </section>
 
       {/* ─── FINAL WAITLIST ──────────────────────────────────────────────── */}
-      <section className="element u-content-width" style={{ paddingTop:'4rem', paddingBottom:'5rem', textAlign:'center' }}>
-        <div style={{ maxWidth:680, margin:'0 auto' }}>
-          <div style={{ fontSize:'3rem', marginBottom:'1rem' }}>👑</div>
-          <h2 style={{ marginBottom:'1rem' }}>Claim your rank before everyone else does</h2>
-          <p style={{ fontSize:'1.0625rem', color:'var(--color-charcoal)', lineHeight:1.65, marginBottom:'2rem' }}>
-            StackRank365 is in early access. Founding members earn <strong style={{ color:'var(--color-accent-110)' }}>+500 bonus Stack Points</strong> — enough to enter the leaderboard the moment we launch. The earlier you join, the higher your starting position.
-          </p>
-          <div style={{ display:'flex', justifyContent:'center' }}>
+      <section className="element u-content-width" style={{ paddingTop:'4rem', paddingBottom:'5rem' }}>
+        <div className="final-waitlist-grid" style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'3rem', alignItems:'center', background:'var(--color-bg-pattern-light-theme)', border:'1px solid var(--color-primary-25)', borderRadius:6, padding:'3rem' }}>
+          <div>
+            <div style={{ fontSize:'2.5rem', marginBottom:'0.5rem' }}>👑</div>
+            <h2 style={{ marginTop:0, marginBottom:'1rem' }}>Claim your rank before everyone else does</h2>
+            <p style={{ fontSize:'1.0625rem', color:'var(--color-charcoal)', lineHeight:1.65, margin:0 }}>
+              StackRank365 is in early access. Founding members earn <strong style={{ color:'var(--color-accent-110)' }}>+500 bonus Stack Points</strong> — enough to enter the leaderboard the moment we launch. The earlier you join, the higher your starting position.
+            </p>
+          </div>
+          <div>
             <WaitlistForm variant="footer" />
           </div>
         </div>
+        <style>{`@media(max-width: 900px){ .final-waitlist-grid { grid-template-columns: 1fr !important; padding: 2rem !important; } }`}</style>
       </section>
 
       {/* ─── DATA &amp; STATISTICS ────────────────────────────────────────── */}
