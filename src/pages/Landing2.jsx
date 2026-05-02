@@ -626,11 +626,10 @@ export default function Landing({ onNavigate }) {
 
       {/* ─── FINAL WAITLIST ──────────────────────────────────────────────── */}
       <section className="element u-content-width" style={{ paddingTop:'4rem', paddingBottom:'5rem' }}>
-        <div className="final-waitlist-grid" style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:'3rem', alignItems:'center', background:'var(--color-bg-pattern-light-theme)', border:'1px solid var(--color-primary-25)', borderRadius:6, padding:'3rem' }}>
+        <div className="final-waitlist-grid" style={{ display:'grid', gridTemplateColumns:'1.4fr 1fr', gap:'2.5rem', alignItems:'center', background:'var(--color-bg-pattern-light-theme)', border:'1px solid var(--color-primary-25)', borderRadius:6, padding:'1.75rem 2.5rem' }}>
           <div>
-            <div style={{ fontSize:'2.5rem', marginBottom:'0.5rem' }}>👑</div>
-            <h2 style={{ marginTop:0, marginBottom:'1rem' }}>Claim your rank before everyone else does</h2>
-            <p style={{ fontSize:'1.0625rem', color:'var(--color-charcoal)', lineHeight:1.65, margin:0 }}>
+            <h2 style={{ marginTop:0, marginBottom:'0.75rem' }}>Claim your rank before everyone else does</h2>
+            <p style={{ fontSize:'1.0625rem', color:'var(--color-charcoal)', lineHeight:1.55, margin:0 }}>
               StackRank365 is in early access. Founding members earn <strong style={{ color:'var(--color-accent-110)' }}>+500 bonus Stack Points</strong> — enough to enter the leaderboard the moment we launch. The earlier you join, the higher your starting position.
             </p>
           </div>
@@ -638,7 +637,7 @@ export default function Landing({ onNavigate }) {
             <WaitlistForm variant="footer" />
           </div>
         </div>
-        <style>{`@media(max-width: 900px){ .final-waitlist-grid { grid-template-columns: 1fr !important; padding: 2rem !important; } }`}</style>
+        <style>{`@media(max-width: 900px){ .final-waitlist-grid { grid-template-columns: 1fr !important; padding: 1.75rem !important; } }`}</style>
       </section>
 
       {/* ─── DATA &amp; STATISTICS ────────────────────────────────────────── */}
