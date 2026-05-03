@@ -1,11 +1,12 @@
 import { useApp } from "../context/AppContext";
+import PageHero from '../components/PageHero';
+import TWHOSprite from '../components/TWHOSprite';
 
 const TIERS = [
   {
     name: "Free",
     price: "$0",
     period: "forever",
-    color: "#6b7280",
     highlight: false,
     description: "Build your verified professional identity.",
     features: [
@@ -23,92 +24,84 @@ const TIERS = [
     name: "Pro",
     price: "$9",
     period: "per month",
-    color: "#2563eb",
     highlight: true,
     badge: "Most popular",
-    description: "Stand out to recruiters and clients.",
+    description: "Stand out and showcase your verified rank.",
     features: [
       "Everything in Free",
       "Unlimited projects",
-      "Open to Work visibility badge on leaderboard",
       "StackRank badge for LinkedIn + profile",
       "Profile analytics (views, ranking movement)",
       "Export profile as PDF",
-      "Priority in recruiter search results",
+      "Priority leaderboard placement",
       "Ad-free experience",
     ],
     cta: "Start Pro — 14 days free",
     ctaAction: "pro",
   },
-  {
-    name: "Recruiter",
-    price: "$49",
-    period: "per month",
-    color: "#7c3aed",
-    highlight: false,
-    description: "Find and contact verified Microsoft talent.",
-    features: [
-      "Full leaderboard access with filters",
-      "Search by tier, specialization, region, availability",
-      "View Open to Work candidates first",
-      "Contact verified professionals directly",
-      "Export candidate shortlists",
-      "Team seats (up to 3 users)",
-      "API access for ATS integration",
-    ],
-    cta: "Start Recruiter trial",
-    ctaAction: "recruiter",
-  },
 ];
 
 function PricingCard({ tier, navigate }) {
+  const isHi = tier.highlight;
   return (
     <div style={{
-      background: "#fff",
-      border: tier.highlight ? `2px solid ${tier.color}` : "0.5px solid #d3d1c7",
-      borderRadius: "16px",
-      padding: "2rem",
-      position: "relative",
+      background: isHi ? 'var(--color-secondary-100)' : '#fff',
+      border: isHi ? '1px solid var(--color-accent-105)' : '1px solid var(--color-primary-25)',
+      borderRadius: 12,
+      padding: '2rem',
+      position: 'relative',
       flex: 1,
-      minWidth: "260px",
-      maxWidth: "340px",
+      minWidth: 280,
+      maxWidth: 380,
+      color: isHi ? '#fff' : 'var(--color-secondary-100)',
+      boxShadow: isHi ? '0 12px 32px rgba(19,41,75,0.18)' : 'none',
+      transform: isHi ? 'translateY(-6px)' : 'none',
     }}>
       {tier.badge && (
-        <div style={{ position: "absolute", top: "-12px", left: "50%", transform: "translateX(-50%)", background: tier.color, color: "#fff", fontSize: "11px", fontWeight: 600, padding: "4px 14px", borderRadius: "20px", whiteSpace: "nowrap" }}>
+        <div style={{ position:'absolute', top:-12, left:'50%', transform:'translateX(-50%)', background:'#ffc83c', color:'#13294b', fontSize:'0.72rem', fontWeight:700, padding:'0.25rem 0.85rem', borderRadius:999, letterSpacing:'0.06em', textTransform:'uppercase' }}>
           {tier.badge}
         </div>
       )}
-      <div style={{ marginBottom: "1.5rem" }}>
-        <p style={{ fontSize: "13px", fontWeight: 600, color: tier.color, margin: "0 0 0.5rem", textTransform: "uppercase", letterSpacing: "0.05em" }}>{tier.name}</p>
-        <div style={{ display: "flex", alignItems: "baseline", gap: "4px", marginBottom: "0.5rem" }}>
-          <span style={{ fontSize: "36px", fontWeight: 700, color: "#1a1a18" }}>{tier.price}</span>
-          <span style={{ fontSize: "13px", color: "#73726c" }}>{tier.period}</span>
+
+      <div style={{ marginBottom:'1.5rem' }}>
+        <p style={{ fontSize:'0.78rem', fontWeight:700, color: isHi ? 'var(--color-accent-100)' : 'var(--color-accent-110)', margin:'0 0 0.6rem', textTransform:'uppercase', letterSpacing:'0.12em' }}>
+          {tier.name}
+        </p>
+        <div style={{ display:'flex', alignItems:'baseline', gap:'0.35rem', marginBottom:'0.5rem' }}>
+          <span style={{ fontSize:'2.4rem', fontWeight:700 }}>{tier.price}</span>
+          <span style={{ fontSize:'0.88rem', color: isHi ? 'rgba(255,255,255,0.7)' : 'var(--color-charcoal)' }}>{tier.period}</span>
         </div>
-        <p style={{ fontSize: "13px", color: "#73726c", margin: 0 }}>{tier.description}</p>
+        <p style={{ fontSize:'0.95rem', color: isHi ? 'rgba(255,255,255,0.82)' : 'var(--color-charcoal)', margin:0, lineHeight:1.5 }}>{tier.description}</p>
       </div>
 
       <button
         onClick={() => {
-        if (tier.ctaAction === 'signup') { navigate('signup'); return; }
-        if (tier.ctaAction === 'pro') {
-          window.open('https://buy.stripe.com/sr365-pro-placeholder', '_blank');
-          return;
-        }
-        if (tier.ctaAction === 'recruiter') {
-          window.open('https://buy.stripe.com/sr365-recruiter-placeholder', '_blank');
-          return;
-        }
-        navigate(tier.ctaAction);
-      }}
-        style={{ width: "100%", padding: "12px", background: tier.highlight ? tier.color : "transparent", color: tier.highlight ? "#fff" : tier.color, border: `1.5px solid ${tier.color}`, borderRadius: "8px", fontSize: "14px", fontWeight: 600, cursor: "pointer", marginBottom: "1.5rem" }}
+          if (tier.ctaAction === 'signup') { navigate('signup'); return; }
+          if (tier.ctaAction === 'pro') {
+            window.open('https://buy.stripe.com/sr365-pro-placeholder', '_blank');
+            return;
+          }
+          navigate(tier.ctaAction);
+        }}
+        style={{
+          width:'100%', padding:'0.85rem',
+          background: isHi ? '#fff' : 'transparent',
+          color: isHi ? 'var(--color-secondary-100)' : 'var(--color-primary-100)',
+          border: isHi ? 'none' : '1.5px solid var(--color-primary-100)',
+          borderRadius: 4,
+          fontSize:'0.95rem', fontWeight:700, cursor:'pointer',
+          marginBottom:'1.5rem', fontFamily:'inherit', transition:'opacity 0.15s',
+        }}
+        onMouseEnter={e => { e.currentTarget.style.opacity = '0.88'; }}
+        onMouseLeave={e => { e.currentTarget.style.opacity = '1'; }}
       >
         {tier.cta}
       </button>
 
-      <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
+      <ul style={{ listStyle:'none', padding:0, margin:0 }}>
         {tier.features.map((f, i) => (
-          <li key={i} style={{ display: "flex", gap: "8px", alignItems: "flex-start", marginBottom: "0.6rem", fontSize: "13px", color: "#4b5563" }}>
-            <span style={{ color: tier.color, fontWeight: 700, flexShrink: 0, marginTop: "1px" }}>✓</span>
+          <li key={i} style={{ display:'flex', gap:'0.6rem', alignItems:'flex-start', marginBottom:'0.65rem', fontSize:'0.92rem', color: isHi ? 'rgba(255,255,255,0.88)' : 'var(--color-charcoal)', lineHeight:1.5 }}>
+            <span style={{ color:'var(--color-accent-110)', fontWeight:700, flexShrink:0 }}>✓</span>
             {f}
           </li>
         ))}
@@ -122,45 +115,48 @@ export default function Pricing({ onNavigate }) {
   const nav = onNavigate || navigate;
 
   return (
-    <div style={{ minHeight: "100vh", background: "#f9fafb" }}>
-      {/* Header */}
-      <div style={{ background: "#1e3a5f", padding: "4rem 1.5rem 3rem", textAlign: "center" }}>
-        <h1 style={{ fontSize: "36px", fontWeight: 700, color: "#fff", margin: "0 0 1rem" }}>
-          Simple, transparent pricing
-        </h1>
-        <p style={{ fontSize: "16px", color: "#93c5fd", maxWidth: "520px", margin: "0 auto" }}>
-          Free to join and build your verified professional identity. Upgrade when you're ready to stand out.
-        </p>
-      </div>
+    <div>
+      <TWHOSprite />
+      <PageHero
+        eyebrow="Pricing"
+        title="Simple, transparent pricing"
+        subtitle="Free to join and build your verified professional identity. Upgrade when you're ready to stand out."
+      />
 
-      {/* T21: Stripe payment badge */}
-      <div style={{ textAlign:'center', paddingTop:'0.5rem', paddingBottom:'0', fontSize:'12px', color:'#9ca3af' }}>
-        🔒 Payments secured by <strong>Stripe</strong> · Cancel anytime · No contracts
-      </div>
-
-      {/* Cards */}
-      <div style={{ maxWidth: "1000px", margin: "0 auto", padding: "3rem 1.5rem" }}>
-        <div style={{ display: "flex", gap: "1.5rem", flexWrap: "wrap", justifyContent: "center", alignItems: "flex-start" }}>
-          {TIERS.map(tier => <PricingCard key={tier.name} tier={tier} navigate={nav} />)}
+      <section style={{ background:'#fff', padding:'4rem 0' }}>
+        <div className="u-content-width">
+          <div style={{ textAlign:'center', fontSize:'0.85rem', color:'var(--color-charcoal)', marginBottom:'2.5rem' }}>
+            🔒 Payments secured by <strong style={{ color:'var(--color-secondary-100)' }}>Stripe</strong> · Cancel anytime · No contracts
+          </div>
+          <div style={{ display:'flex', gap:'1.75rem', flexWrap:'wrap', justifyContent:'center', alignItems:'flex-start' }}>
+            {TIERS.map(tier => <PricingCard key={tier.name} tier={tier} navigate={nav} />)}
+          </div>
         </div>
+      </section>
 
-        {/* FAQ */}
-        <div style={{ marginTop: "4rem", maxWidth: "640px", margin: "4rem auto 0" }}>
-          <h2 style={{ fontSize: "22px", fontWeight: 600, color: "#1a1a18", marginBottom: "1.5rem", textAlign: "center" }}>Common questions</h2>
-          {[
-            ["Is my data ever sold?", "Never. StackRank365 products are ad-free and we do not share personal data with third parties for advertising purposes."],
-            ["Can I cancel anytime?", "Yes — cancel with one click from your account settings. No lock-in, no cancellation fees."],
-            ["What payment methods do you accept?", "All major credit and debit cards via Stripe. No PayPal at this time."],
-            ["Is the Free tier really free forever?", "Yes. Your core profile, certifications, and leaderboard ranking are always free."],
-            ["Do recruiters see my contact details?", "Only if you have Open to Work enabled and have chosen to share contact details in your profile settings."],
-          ].map(([q, a], i) => (
-            <div key={i} style={{ borderBottom: "0.5px solid #e5e7eb", paddingBottom: "1rem", marginBottom: "1rem" }}>
-              <p style={{ fontWeight: 600, fontSize: "14px", color: "#1a1a18", margin: "0 0 0.4rem" }}>{q}</p>
-              <p style={{ fontSize: "13px", color: "#4b5563", margin: 0, lineHeight: 1.6 }}>{a}</p>
+      <section style={{ background:'var(--color-primary-5)', padding:'4rem 0' }}>
+        <div className="u-content-width">
+          <div style={{ textAlign:'center', marginBottom:'2.5rem' }}>
+            <div style={{ display:'inline-block', color:'var(--color-accent-110)', fontWeight:700, fontSize:'0.8rem', letterSpacing:'0.18em', textTransform:'uppercase', marginBottom:'0.75rem' }}>
+              FAQ
             </div>
-          ))}
+            <h2 style={{ marginTop:0 }}>Common questions</h2>
+          </div>
+          <div style={{ maxWidth:'42rem', margin:'0 auto', display:'flex', flexDirection:'column', gap:'1rem' }}>
+            {[
+              ["Is my data ever sold?", "Never. StackRank365 products are ad-free and we do not share personal data with third parties for advertising purposes."],
+              ["Can I cancel anytime?", "Yes — cancel with one click from your account settings. No lock-in, no cancellation fees."],
+              ["What payment methods do you accept?", "All major credit and debit cards via Stripe. No PayPal at this time."],
+              ["Is the Free tier really free forever?", "Yes. Your core profile, certifications, and leaderboard ranking are always free."],
+            ].map(([q, a], i) => (
+              <div key={i} style={{ background:'#fff', border:'1px solid var(--color-primary-25)', borderRadius:8, padding:'1.1rem 1.4rem' }}>
+                <p style={{ fontWeight:700, fontSize:'1rem', color:'var(--color-secondary-100)', margin:'0 0 0.4rem' }}>{q}</p>
+                <p style={{ fontSize:'0.95rem', color:'var(--color-charcoal)', margin:0, lineHeight:1.6 }}>{a}</p>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      </section>
     </div>
   );
 }

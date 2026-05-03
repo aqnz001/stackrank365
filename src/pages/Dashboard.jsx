@@ -987,9 +987,8 @@ export default function Dashboard({ onNavigate }) {
               <p style={{ fontSize: '0.83rem', color: 'var(--muted2)', marginBottom: '1rem' }}>Control who can find and view your profile on StackRank365.</p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
                 {[
-                  { value: 'public',     label: '🌍 Public',           desc: 'Anyone can find and view your full profile' },
-                  { value: 'recruiters', label: '🔍 Recruiters only',  desc: 'Only verified recruiters can view your full profile' },
-                  { value: 'private',    label: '🔒 Private',          desc: 'Your profile is hidden from search and leaderboard' },
+                  { value: 'public',     label: '🌍 Public',  desc: 'Anyone can find and view your full profile' },
+                  { value: 'private',    label: '🔒 Private', desc: 'Your profile is hidden from search and leaderboard' },
                 ].map(opt => (
                   <label key={opt.value} style={{ display: 'flex', gap: '0.75rem', alignItems: 'flex-start', padding: '0.75rem', borderRadius: 8, cursor: 'pointer', border: `1px solid ${(user.profile_visibility||'public')===opt.value?'var(--blue)':'var(--border)'}`, background: (user.profile_visibility||'public')===opt.value?'rgba(59,130,246,0.06)':'transparent' }}>
                     <input type="radio" name="visibility" value={opt.value} checked={(user.profile_visibility||'public')===opt.value}

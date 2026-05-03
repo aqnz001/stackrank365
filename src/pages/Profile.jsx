@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { SAMPLE_USERS, getRankTier, getNextRankTier } from '../data/data';
 import { useApp } from '../context/AppContext';
+import { displayName, avatarInitials } from '../lib/displayName';
 
 const TIER_BADGE = {
   Fundamentals:    'badge-muted',
@@ -579,11 +580,11 @@ export default function Profile({ onNavigate, profileUser }) {
                         onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--border-blue)'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
                         onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.transform = ''; }}
                       >
-                        <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'var(--surface3)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.9rem', fontWeight: 700, color: '#fff', flexShrink: 0 }}>
-                          {(u.name || '?')[0]}
+                        <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'var(--surface3)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.78rem', fontWeight: 700, color: '#fff', flexShrink: 0 }}>
+                          {avatarInitials(u.name)}
                         </div>
                         <div style={{ flex: 1, minWidth: 0 }}>
-                          <div style={{ fontWeight: 600, fontSize: '0.82rem', color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{u.name}</div>
+                          <div style={{ fontWeight: 600, fontSize: '0.82rem', color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{displayName(u.name)}</div>
                           <div style={{ fontSize: '0.7rem', color: 'var(--muted2)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{u.headline}</div>
                         </div>
                         <div style={{ textAlign: 'right', flexShrink: 0 }}>
@@ -677,11 +678,11 @@ export default function Profile({ onNavigate, profileUser }) {
                       }}
                       onClick={() => onNavigate('profile', { userData: u })}
                     >
-                      <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'var(--surface2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.85rem', fontWeight: 700, color: '#fff', flexShrink: 0 }}>
-                        {(u.name || '?')[0]}
+                      <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'var(--surface2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.72rem', fontWeight: 700, color: '#fff', flexShrink: 0 }}>
+                        {avatarInitials(u.name)}
                       </div>
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontSize: '0.82rem', fontWeight: 600, color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{u.name}</div>
+                        <div style={{ fontSize: '0.82rem', fontWeight: 600, color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{displayName(u.name)}</div>
                         <div style={{ fontSize: '0.7rem', color: 'var(--muted2)' }}>{u.location}</div>
                       </div>
                       <div style={{ textAlign: 'right', flexShrink: 0 }}>

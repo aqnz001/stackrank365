@@ -7,6 +7,7 @@
 import { useState } from 'react';
 import { RANK_TIERS, SAMPLE_USERS } from '../data/data';
 import TWHOSprite from '../components/TWHOSprite';
+import { displayName, avatarInitials } from '../lib/displayName';
 
 const SB_URL   = 'https://shnuwkjkjthvaovoywju.supabase.co';
 const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNobnV3a2pranRodmFvdm95d2p1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM0MjcxODQsImV4cCI6MjA4OTAwMzE4NH0.E3jR8tamdJNdiRMiO_XtbSZU1IrDpPFhVnPJmNSN4X4';
@@ -105,22 +106,21 @@ function Tile({ heading, description, onClick, children }) {
 /* ─── full-width navy CTA ─────────────────────────────────────────────────── */
 function CTABlock({ title, description, ctaLabel, onClick }) {
   return (
-    <section className="cta element" style={{ position:'relative', padding:'4rem 0', color:'var(--color-white)' }}>
-      <div className="cta__background-pattern" style={{ position:'absolute', inset:0, background:'var(--color-secondary-100)', color:'var(--color-bg-pattern-dark-theme)', zIndex:-1 }}>
-        <svg width="100%" height="100%" style={{ opacity:0.4, color:'var(--color-bg-pattern-dark-theme)' }}>
-          <pattern id="cta-hex" patternUnits="userSpaceOnUse" width="60" height="52" x="0" y="0">
-            <use xlinkHref="#divider-pattern" width="60" height="52"/>
-          </pattern>
-          <rect width="100%" height="100%" fill="url(#cta-hex)" stroke="currentColor"/>
-        </svg>
-      </div>
-      <div className="u-content-width">
+    <section style={{ position:'relative', padding:'4rem 0', color:'#fff', background:'var(--color-secondary-100)', overflow:'hidden' }}>
+      {/* hex pattern overlay — fills the section, not absolutely positioned to a constrained child */}
+      <svg aria-hidden="true" width="100%" height="100%" style={{ position:'absolute', inset:0, opacity:0.18, color:'var(--color-bg-pattern-dark-theme)', pointerEvents:'none' }}>
+        <pattern id="cta-hex" patternUnits="userSpaceOnUse" width="60" height="52" x="0" y="0">
+          <use xlinkHref="#divider-pattern" width="60" height="52"/>
+        </pattern>
+        <rect width="100%" height="100%" fill="url(#cta-hex)"/>
+      </svg>
+      <div className="u-content-width" style={{ position:'relative' }}>
         <div style={{ maxWidth:760 }}>
-          <h2 style={{ color:'var(--color-white)', marginBottom:'1rem' }}>{title}</h2>
-          <div className="cta__description" style={{ fontSize:'1.0625rem', lineHeight:1.65, color:'rgba(255,255,255,0.92)', marginBottom:'1.5rem' }}>{description}</div>
-          <div className="cta__link-wrapper">
+          <h2 style={{ color:'#fff', marginBottom:'1rem' }}>{title}</h2>
+          <div style={{ fontSize:'1.0625rem', lineHeight:1.65, color:'rgba(255,255,255,0.92)', marginBottom:'1.5rem' }}>{description}</div>
+          <div>
             <a href="#" onClick={(e) => { e.preventDefault(); onClick(); }}
-              style={{ display:'inline-flex', alignItems:'center', gap:'0.5rem', padding:'0.85rem 1.5rem', background:'var(--color-white)', color:'var(--color-secondary-100)', borderRadius:4, fontWeight:600, textDecoration:'none' }}>
+              style={{ display:'inline-flex', alignItems:'center', gap:'0.5rem', padding:'0.85rem 1.5rem', background:'#fff', color:'var(--color-secondary-100)', borderRadius:4, fontWeight:600, textDecoration:'none' }}>
               {ctaLabel}
               <svg width="18" height="16" aria-hidden="true"><use xlinkHref="#arrow"/></svg>
             </a>
@@ -131,12 +131,22 @@ function CTABlock({ title, description, ctaLabel, onClick }) {
   );
 }
 
-/* ─── component-intro ─────────────────────────────────────────────────────── */
-function ComponentIntro({ id, heading, intro }) {
+/* ─── component-intro (centered + eyebrow tag) ───────────────────────────── */
+function ComponentIntro({ id, heading, intro, eyebrow, align = 'center' }) {
+  const isCenter = align === 'center';
   return (
-    <div className="component-intro" id={id} tabIndex={-1}>
+    <div className="component-intro" id={id} tabIndex={-1} style={{ textAlign: isCenter ? 'center' : 'left', marginBottom:'2.5rem' }}>
+      {eyebrow && (
+        <div style={{ display:'inline-block', color:'var(--color-accent-110)', fontWeight:700, fontSize:'0.8rem', letterSpacing:'0.18em', textTransform:'uppercase', marginBottom:'0.75rem' }}>
+          {eyebrow}
+        </div>
+      )}
       <h2 style={{ marginBottom:'0.5rem' }}>{heading}</h2>
-      {intro && <div className="rich-text" style={{ fontSize:'1.0625rem', color:'var(--color-charcoal)' }}>{intro}</div>}
+      {intro && (
+        <div className="rich-text" style={{ fontSize:'1.0625rem', color:'var(--color-charcoal)', maxWidth: isCenter ? '42rem' : 'none', margin: isCenter ? '0 auto' : 0 }}>
+          {intro}
+        </div>
+      )}
     </div>
   );
 }
@@ -167,10 +177,10 @@ function HeroHome({ onNavigate, heroRanks }) {
               Free to join · +500 founding bonus · No credit card
             </p>
             <div style={{ display:'flex', gap:'2.5rem', marginTop:'2rem', flexWrap:'wrap', paddingTop:'1.5rem', borderTop:'1px solid rgba(255,255,255,0.15)' }}>
-              {[['35+','cert types tracked'], ['6','specializations'], ['Free','to join']].map(([n, l]) => (
+              {[['Free','to join'], ['+500','founding bonus'], ['35+','cert types'], ['6','specializations']].map(([n, l]) => (
                 <div key={l}>
-                  <div style={{ fontSize:'1.75rem', fontWeight:700, color:'#fff' }}>{n}</div>
-                  <div style={{ fontSize:'0.95rem', color:'rgba(255,255,255,0.7)' }}>{l}</div>
+                  <div style={{ fontSize:'1.6rem', fontWeight:700, color:'var(--color-accent-100)', lineHeight:1.1 }}>{n}</div>
+                  <div style={{ fontSize:'0.88rem', color:'rgba(255,255,255,0.7)', marginTop:'0.15rem' }}>{l}</div>
                 </div>
               ))}
             </div>
@@ -180,8 +190,8 @@ function HeroHome({ onNavigate, heroRanks }) {
           <div style={{ gridColumn:1, gridRow:2 }} className="hero-twho-right">
             <div style={{ background:'#fff', border:'1px solid var(--color-primary-25)', borderRadius:6, padding:'1.5rem', height:'100%', display:'flex', flexDirection:'column', color:'var(--color-secondary-100)' }}>
               <div style={{ display:'flex', alignItems:'center', justifyContent:'space-between', marginBottom:'1rem' }}>
-                <div style={{ fontSize:'0.85rem', textTransform:'uppercase', letterSpacing:'0.08em', color:'var(--color-primary-100)', fontWeight:700 }}>Live leaderboard</div>
-                <button onClick={() => onNavigate('leaderboard')} className="btn btn-ghost btn-sm" style={{ color:'var(--color-primary-100)' }}>View all →</button>
+                <div style={{ fontSize:'0.95rem', textTransform:'uppercase', letterSpacing:'0.08em', color:'var(--color-primary-100)', fontWeight:700 }}>Live leaderboard</div>
+                <button onClick={() => onNavigate('leaderboard')} className="btn btn-ghost btn-sm" style={{ color:'var(--color-primary-100)', fontSize:'0.95rem' }}>View all →</button>
               </div>
 
               {/* Podium: 2nd left, 1st centre (tallest), 3rd right */}
@@ -213,19 +223,19 @@ function HeroHome({ onNavigate, heroRanks }) {
                             onMouseLeave={e => e.currentTarget.style.transform = ''}
                           >
                             {/* medal badge top-right */}
-                            <div style={{ position:'absolute', top:6, right:8, fontSize:'1.05rem', lineHeight:1 }}>{medals[vi]}</div>
+                            <div style={{ position:'absolute', top:6, right:8, fontSize:'1.2rem', lineHeight:1 }}>{medals[vi]}</div>
                             <div style={{
-                              width: isGold ? 44 : 36, height: isGold ? 44 : 36,
+                              width: isGold ? 50 : 42, height: isGold ? 50 : 42,
                               borderRadius:'50%',
                               background: isGold ? '#13294b' : 'var(--color-secondary-100)',
                               color:'#fff', display:'flex', alignItems:'center', justifyContent:'center',
-                              fontWeight:700, fontSize: isGold ? '1rem' : '0.85rem',
+                              fontWeight:700, fontSize: isGold ? '1.2rem' : '1rem',
                               border: isGold ? '2px solid #ffc83c' : 'none',
-                            }}>{(u.name || '?')[0]}</div>
-                            <div style={{ fontSize:'0.88rem', fontWeight:600, color:'var(--color-secondary-100)', lineHeight:1.1 }}>
-                              {u.name.split(' ')[0]}
+                            }}>{avatarInitials(u.name)}</div>
+                            <div style={{ fontSize:'1.05rem', fontWeight:600, color:'var(--color-secondary-100)', lineHeight:1.1 }}>
+                              {displayName(u.name)}
                             </div>
-                            <div style={{ fontSize:'0.9rem', color:'var(--color-primary-100)', fontWeight:700 }}>
+                            <div style={{ fontSize:'1.1rem', color:'var(--color-primary-100)', fontWeight:700 }}>
                               {u.score.toLocaleString()}
                             </div>
                           </div>
@@ -240,14 +250,14 @@ function HeroHome({ onNavigate, heroRanks }) {
               <div style={{ flex:1, minHeight:0, overflowY:'auto' }}>
                 {rest.map((u, i) => (
                   <div key={u.id} onClick={() => onNavigate('profile', { userData:u })}
-                    style={{ display:'flex', alignItems:'center', gap:'0.75rem', padding:'0.5rem 0', borderTop:'1px solid var(--color-pale-charcoal)', cursor:'pointer' }}>
-                    <span style={{ width:22, fontWeight:700, color:'var(--color-secondary-100)', fontSize:'0.8rem' }}>{i+4}</span>
-                    <div style={{ width:28, height:28, borderRadius:'50%', background:'var(--color-secondary-100)', color:'#fff', display:'flex', alignItems:'center', justifyContent:'center', fontWeight:700, fontSize:'0.72rem' }}>{(u.name||'?')[0]}</div>
+                    style={{ display:'flex', alignItems:'center', gap:'0.75rem', padding:'0.7rem 0', borderTop:'1px solid var(--color-pale-charcoal)', cursor:'pointer' }}>
+                    <span style={{ width:24, fontWeight:700, color:'var(--color-secondary-100)', fontSize:'1rem' }}>{i+4}</span>
+                    <div style={{ width:34, height:34, borderRadius:'50%', background:'var(--color-secondary-100)', color:'#fff', display:'flex', alignItems:'center', justifyContent:'center', fontWeight:700, fontSize:'0.85rem', flexShrink:0 }}>{avatarInitials(u.name)}</div>
                     <div style={{ flex:1, minWidth:0 }}>
-                      <div style={{ fontWeight:600, fontSize:'0.85rem', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{u.name}</div>
-                      <div style={{ fontSize:'0.72rem', color:'var(--color-charcoal)', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{u.headline}</div>
+                      <div style={{ fontWeight:600, fontSize:'1rem', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{displayName(u.name)}</div>
+                      <div style={{ fontSize:'0.85rem', color:'var(--color-charcoal)', overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap' }}>{u.headline}</div>
                     </div>
-                    <span style={{ fontWeight:700, color:'var(--color-primary-100)', fontSize:'0.88rem' }}>{u.score.toLocaleString()}</span>
+                    <span style={{ fontWeight:700, color:'var(--color-primary-100)', fontSize:'1.05rem' }}>{u.score.toLocaleString()}</span>
                   </div>
                 ))}
               </div>
@@ -257,7 +267,7 @@ function HeroHome({ onNavigate, heroRanks }) {
       </div>
       <style>{`
         @media(min-width: 900px){
-          .hero-home-twho-grid { grid-template-columns: 1.05fr 1fr !important; gap: 4rem !important; }
+          .hero-home-twho-grid { grid-template-columns: 1.5fr 1fr !important; gap: 3.5rem !important; }
           .hero-twho-left  { grid-column: 1 !important; grid-row: 1 !important; }
           .hero-twho-right { grid-column: 2 !important; grid-row: 1 !important; }
         }
@@ -279,16 +289,18 @@ export default function Landing({ onNavigate }) {
       <HeroHome onNavigate={onNavigate} heroRanks={heroRanks} />
 
       {/* ─── THE PROBLEM ────────────────────────────────────────────────── */}
-      <section className="element u-content-width" style={{ paddingTop:'4rem' }}>
+      <section style={{ background:'#fff', padding:'4rem 0' }}>
+        <div className="u-content-width">
         <ComponentIntro
           id="the-problem"
+          eyebrow="The problem"
           heading="Microsoft credentials are impossible to verify"
-          intro="LinkedIn endorsements are unverified. CVs are self-declared. Recruiters waste weeks interviewing candidates who oversell their depth. Skilled consultants get overlooked because they can't prove what they've built."
+          intro="LinkedIn endorsements are unverified. CVs are self-declared. Skilled Microsoft professionals get overlooked because there's no trustworthy way to prove what they've built."
         />
         <div style={{ display:'grid', gridTemplateColumns:'repeat(3, 1fr)', gap:'2rem' }}>
           {[
-            { stat:'73%',     desc:'of hiring managers say Microsoft skills are the hardest to verify before interview' },
-            { stat:'3–6 wks', desc:'average wasted per bad hire in the Microsoft ecosystem consulting space' },
+            { stat:'73%',     desc:'of Microsoft professionals say their applied skills are the hardest credential to prove' },
+            { stat:'3–6 wks', desc:'average time wasted in the Microsoft ecosystem proving applied expertise from scratch' },
             { stat:'61%',     desc:'of certified professionals say their certs are ignored because there\'s no proof of application' },
           ].map(s => (
             <div key={s.stat} style={{ background:'#fff', border:'1px solid var(--color-primary-25)', borderRadius:4, padding:'1.5rem', alignSelf:'start' }}>
@@ -297,12 +309,15 @@ export default function Landing({ onNavigate }) {
             </div>
           ))}
         </div>
+        </div>
       </section>
 
       {/* ─── THE SOLUTION ────────────────────────────────────────────────── */}
-      <section className="element u-content-width" style={{ paddingTop:'4rem' }}>
+      <section style={{ background:'var(--color-primary-5)', padding:'4rem 0' }}>
+        <div className="u-content-width">
         <ComponentIntro
           id="the-solution"
+          eyebrow="The solution"
           heading="A verified rank that speaks louder than a CV"
           intro="StackRank365 combines Microsoft certification verification, peer-validated project evidence, and community recognition into a single trusted score."
         />
@@ -314,66 +329,107 @@ export default function Landing({ onNavigate }) {
           <Tile heading="Community prestige" description="Microsoft MVPs, Certified Trainers, FastTrack Architects, and event speakers earn recognition beyond certifications — rewarding the whole professional." onClick={() => onNavigate('scoring')} />
           <Tile heading="Privacy by design" description="Control exactly what's visible. Projects can be public, anonymised, or confidential. Your rank is always earned — never borrowed from client name-dropping." onClick={() => onNavigate('how-it-works')} />
         </ul>
+        </div>
       </section>
 
       {/* ─── RANK TIERS ──────────────────────────────────────────────────── */}
-      <section className="element u-content-width" style={{ paddingTop:'4rem' }}>
+      <section style={{ background:'#fff', padding:'4rem 0' }}>
+        <div className="u-content-width">
         <ComponentIntro
           id="rank-tiers"
+          eyebrow="Rank tiers"
           heading="From Explorer to Principal Architect"
           intro="Five tiers. Transparent thresholds. No politics."
         />
-        <ul className="tiles" style={{ gridTemplateColumns:'repeat(auto-fit, minmax(180px, 1fr))' }}>
-          {RANK_TIERS.map(tier => (
-            <li key={tier.name} className="tile" style={{ alignItems:'center', textAlign:'center' }}>
-              <div style={{ fontSize:'2rem', marginBottom:'0.5rem' }}>{tier.icon}</div>
-              <h3 className="tile__heading" style={{ color:tier.color, fontSize:'1.05rem' }}>{tier.name}</h3>
-              <p className="tile__description" style={{ marginBottom:'1rem' }}>{tier.description}</p>
-              <span style={{ fontSize:'0.78rem', padding:'0.3rem 0.6rem', background:tier.color, color:'#fff', borderRadius:4, fontWeight:600 }}>
-                {tier.minScore.toLocaleString()}{tier.maxScore === Infinity ? '+' : `–${tier.maxScore.toLocaleString()}`} pts
-              </span>
-            </li>
-          ))}
+        <ul style={{ display:'grid', gridTemplateColumns:'repeat(5, 1fr)', gap:'1rem', listStyle:'none', padding:0, margin:0 }}>
+          {RANK_TIERS.map((tier, i) => {
+            // Progressive importance — each tier visually richer than the last
+            const styles = [
+              // Explorer — neutral, lightest
+              { bg:'#fafafa',                       border:'1px solid var(--color-pale-charcoal)', nameColor:'var(--color-charcoal)',      pillBg:'#5A5A5A',                   pillColor:'#fff' },
+              // Practitioner — pale blue
+              { bg:'var(--color-primary-5)',        border:'1px solid var(--color-primary-25)',     nameColor:'var(--color-primary-100)',   pillBg:'var(--color-primary-100)',  pillColor:'#fff' },
+              // Specialist — deeper blue tint
+              { bg:'#e4eef5',                       border:'1px solid var(--color-primary-50)',     nameColor:'var(--color-primary-100)',   pillBg:'var(--color-secondary-100)',pillColor:'#fff' },
+              // Architect — teal tint, premium step
+              { bg:'#dff1f2',                       border:'1px solid var(--color-accent-105)',     nameColor:'var(--color-accent-110)',    pillBg:'var(--color-accent-110)',   pillColor:'#fff' },
+              // Principal Architect — navy bg + gold (elite)
+              { bg:'var(--color-secondary-100)',    border:'1px solid #ffc83c',                     nameColor:'#ffd56b',                    pillBg:'#ffc83c',                   pillColor:'#13294b' },
+            ];
+            const s = styles[i] || styles[0];
+            const isElite = i === styles.length - 1;
+            return (
+              <li key={tier.name} style={{ background:s.bg, border:s.border, borderRadius:6, padding:'1.4rem 1rem', display:'flex', flexDirection:'column', alignItems:'center', textAlign:'center', gap:'0.5rem', boxShadow: isElite ? '0 8px 24px rgba(19,41,75,0.18)' : 'none', transform: isElite ? 'translateY(-4px)' : 'none' }}>
+                <div style={{ fontSize:'2.1rem', lineHeight:1 }}>{tier.icon}</div>
+                <h3 style={{ margin:0, color:s.nameColor, fontSize:'1.2rem', fontWeight:700, lineHeight:1.2 }}>{tier.name}</h3>
+                <p style={{ margin:0, fontSize:'1rem', color: isElite ? 'rgba(255,255,255,0.82)' : 'var(--color-charcoal)', lineHeight:1.4 }}>{tier.description}</p>
+                <span style={{ marginTop:'0.35rem', fontSize:'0.88rem', padding:'0.35rem 0.75rem', background:s.pillBg, color:s.pillColor, borderRadius:999, fontWeight:700, whiteSpace:'nowrap' }}>
+                  {tier.minScore.toLocaleString()}{tier.maxScore === Infinity ? '+' : `–${tier.maxScore.toLocaleString()}`} pts
+                </span>
+              </li>
+            );
+          })}
         </ul>
+        </div>
       </section>
 
       {/* ─── SPECIALIZATIONS ─────────────────────────────────────────────── */}
-      <section className="element u-content-width" style={{ paddingTop:'4rem' }}>
+      <section style={{ background:'var(--color-primary-5)', padding:'4rem 0' }}>
+        <div className="u-content-width">
         <ComponentIntro
           id="specializations"
-          heading="Six core specializations"
+          eyebrow="Six specializations"
+          heading="Verified across the entire Microsoft ecosystem"
           intro="Verified credentials and project evidence across the entire Microsoft ecosystem."
         />
-        <div style={{ display:'grid', gridTemplateColumns:'repeat(6, 1fr)', gap:'1rem' }}>
+        <div style={{ display:'grid', gridTemplateColumns:'repeat(3, 1fr)', gap:'1.25rem' }}>
           {[
-            { name:'Dynamics 365',   icon:'📦', count:'12 certs' },
-            { name:'Power Platform', icon:'⚡', count:'10 certs' },
-            { name:'Copilot Studio', icon:'🤖', count:'6 certs + bonus', hot:true },
-            { name:'Azure OpenAI',   icon:'🧠', count:'9 certs' },
-            { name:'Dataverse',      icon:'🗄️', count:'Composite score' },
-            { name:'Power Apps',     icon:'📱', count:'5 certs' },
-          ].map(s => (
-            <button key={s.name} onClick={() => onNavigate('scoring')}
-              style={{ position:'relative', display:'flex', alignItems:'center', gap:'1rem', padding:'1.1rem 1.5rem', background:'#fff', border:'1px solid var(--color-primary-25)', borderRadius:999, cursor:'pointer', fontFamily:'inherit', transition:'border-color 0.15s', width:'100%', minWidth:0 }}
-              onMouseEnter={e => e.currentTarget.style.borderColor='var(--color-accent-105)'}
-              onMouseLeave={e => e.currentTarget.style.borderColor='var(--color-primary-25)'}>
-              <span style={{ fontSize:'1.6rem', flexShrink:0 }}>{s.icon}</span>
-              <div style={{ textAlign:'left', minWidth:0, flex:1 }}>
-                <div style={{ fontWeight:700, fontSize:'1.05rem', color:'var(--color-secondary-100)', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>{s.name}</div>
-                <div style={{ fontSize:'0.88rem', color:'var(--color-charcoal)', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>{s.count}</div>
-              </div>
-              {s.hot && <span style={{ position:'absolute', top:-8, right:12, fontSize:'0.7rem', fontWeight:700, padding:'0.18rem 0.55rem', background:'var(--color-accent-110)', color:'#fff', borderRadius:999, letterSpacing:'0.05em' }}>HOT</span>}
-            </button>
-          ))}
+            // Tier 1 — Most established / largest cert footprint
+            { name:'Dynamics 365',   icon:'/icons/microsoft/dynamics-365.svg',   count:'12 certs',         tier:'core' },
+            { name:'Power Platform', icon:'/icons/microsoft/power-platform.svg', count:'10 certs',         tier:'core' },
+            // Tier 2 — Hottest growth track (scarcity bonus)
+            { name:'Copilot Studio', icon:'/icons/microsoft/copilot-studio.svg', count:'6 certs + 1.25× bonus', tier:'hot', hot:true },
+            // Tier 3 — Strong but mid-volume
+            { name:'Azure OpenAI',   icon:'/icons/microsoft/azure-openai.svg',   count:'9 certs',          tier:'mid' },
+            { name:'Dataverse',      icon:'/icons/microsoft/dataverse.svg',      count:'Composite score',  tier:'mid' },
+            { name:'Power Apps',     icon:'/icons/microsoft/power-apps.svg',     count:'5 certs',          tier:'mid' },
+          ].map(s => {
+            const styles = {
+              core: { bg:'#fff',                       border:'1px solid var(--color-primary-50)', nameColor:'var(--color-secondary-100)', countColor:'var(--color-primary-100)' },
+              hot:  { bg:'var(--color-secondary-100)', border:'1px solid var(--color-accent-105)', nameColor:'#fff',                       countColor:'var(--color-accent-100)'  },
+              mid:  { bg:'var(--color-primary-5)',    border:'1px solid var(--color-primary-25)', nameColor:'var(--color-secondary-100)', countColor:'var(--color-charcoal)'    },
+            }[s.tier];
+            const isHot = s.tier === 'hot';
+            return (
+              <button key={s.name} onClick={() => onNavigate('scoring')}
+                style={{ position:'relative', display:'flex', alignItems:'center', gap:'1.1rem', padding:'1.4rem 1.6rem', background:styles.bg, border:styles.border, borderRadius:12, cursor:'pointer', fontFamily:'inherit', transition:'transform 0.15s, box-shadow 0.15s', width:'100%', minWidth:0, boxShadow: isHot ? '0 10px 28px rgba(19,41,75,0.22)' : 'none', transform: isHot ? 'translateY(-3px)' : 'none' }}
+                onMouseEnter={e => { e.currentTarget.style.transform = isHot ? 'translateY(-6px)' : 'translateY(-2px)'; }}
+                onMouseLeave={e => { e.currentTarget.style.transform = isHot ? 'translateY(-3px)' : 'none'; }}>
+                <img src={s.icon} alt="" width="44" height="44" style={{ flexShrink:0, display:'block' }} />
+                <div style={{ textAlign:'left', minWidth:0, flex:1 }}>
+                  <div style={{ fontWeight:700, fontSize:'1.2rem', color:styles.nameColor, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis' }}>{s.name}</div>
+                  <div style={{ fontSize:'0.95rem', color:styles.countColor, whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis', marginTop:'0.15rem', fontWeight: isHot ? 600 : 400 }}>{s.count}</div>
+                </div>
+                {s.hot && <span style={{ position:'absolute', top:-10, right:14, fontSize:'0.72rem', fontWeight:700, padding:'0.25rem 0.7rem', background:'#ffc83c', color:'#13294b', borderRadius:999, letterSpacing:'0.06em' }}>HOT</span>}
+              </button>
+            );
+          })}
         </div>
-        <div style={{ marginTop:'2rem' }}>
-          <button className="btn btn-outline" onClick={() => onNavigate('scoring')}>View full scoring breakdown →</button>
+        <div style={{ marginTop:'2.5rem', textAlign:'center' }}>
+          <button onClick={() => onNavigate('scoring')}
+            style={{ background:'transparent', color:'var(--color-primary-100)', border:'1.5px solid var(--color-primary-100)', padding:'0.65rem 1.6rem', borderRadius:999, fontSize:'0.95rem', fontWeight:700, cursor:'pointer', fontFamily:'inherit', transition:'background 0.15s, color 0.15s' }}
+            onMouseEnter={e => { e.currentTarget.style.background='var(--color-primary-100)'; e.currentTarget.style.color='#fff'; }}
+            onMouseLeave={e => { e.currentTarget.style.background='transparent'; e.currentTarget.style.color='var(--color-primary-100)'; }}>
+            View full scoring breakdown →
+          </button>
+        </div>
         </div>
       </section>
 
       {/* ─── BUILT FOR MICROSOFT PROFESSIONALS ───────────────────────────── */}
-      <section className="element u-content-width" style={{ paddingTop:'4rem' }}>
-        <ComponentIntro id="built-for" heading="Built for Microsoft professionals" />
+      <section style={{ background:'#fff', padding:'4rem 0' }}>
+        <div className="u-content-width">
+        <ComponentIntro id="built-for" eyebrow="Built for" heading="Made for Microsoft professionals" />
         <ul className="tiles" style={{ gridTemplateColumns:'repeat(3, 1fr)', gridAutoRows:'auto' }}>
           {[
             { title:'Consultants &amp; Contractors', icon:'🧑‍💻', points:[
@@ -411,36 +467,49 @@ export default function Landing({ onNavigate }) {
             </li>
           ))}
         </ul>
+        </div>
       </section>
 
-      {/* ─── FOUR STEPS ──────────────────────────────────────────────────── */}
-      <section className="element u-content-width" style={{ paddingTop:'4rem' }}>
-        <ComponentIntro id="four-steps" heading="Four steps to your verified rank" intro="Simple by design. The whole process takes minutes." />
-        <div style={{ display:'flex', flexDirection:'column', gap:'0.75rem' }}>
+      {/* ─── FIVE STEPS ──────────────────────────────────────────────────── */}
+      <section style={{ background:'var(--color-primary-5)', padding:'4rem 0' }}>
+        <div className="u-content-width">
+        <ComponentIntro id="five-steps" eyebrow="Simple by design" heading="Five steps to your verified rank" intro="Simple by design. The whole process takes minutes." />
+        <div className="five-steps-grid" style={{ display:'grid', gridTemplateColumns:'repeat(5, 1fr)', gap:'1.2rem' }}>
           {[
-            { n:'01', title:'Create your profile',         desc:'Join and claim your public URL: stackrank365.com/profile/you' },
-            { n:'02', title:'Add your certifications',     desc:'Each cert is weighted by tier. Expert = 3,000 pts. Associate = 1,500. No tricks.' },
-            { n:'03', title:'Log your projects',           desc:'Add real implementations with privacy controls. Confidential clients stay confidential.' },
-            { n:'04', title:'Invite peer validators',      desc:'Ask colleagues to confirm your project experience. Each validation adds 300 pts and credibility.' },
+            { n:'01', title:'Create your profile',     desc:'Join and claim your public URL: stackrank365.com/profile/you',                                              cta:'Get started' },
+            { n:'02', title:'Add your certifications', desc:'Each cert is weighted by tier. Expert = 3,000 pts. Associate = 1,500. No tricks.',                          cta:'See scoring' },
+            { n:'03', title:'Log your projects',       desc:'Add real implementations with privacy controls. Confidential clients stay confidential.',                   cta:'How it works' },
+            { n:'04', title:'Invite peer validators',  desc:'Ask colleagues to confirm your project experience. Each validation adds 300 pts and credibility.',          cta:'Learn more' },
+            { n:'05', title:'Climb the leaderboard',   desc:'Your Stack Points determine your global, country, and city rank — Explorer through Principal Architect.',   cta:'View rankings' },
           ].map(s => (
-            <div key={s.n} style={{ display:'flex', alignItems:'center', gap:'1.25rem', background:'#fff', border:'1px solid var(--color-primary-25)', borderRadius:4, padding:'1rem 1.25rem' }}>
-              <div style={{ flexShrink:0, width:44, height:44, borderRadius:4, background:'var(--color-primary-5)', border:'1px solid var(--color-primary-25)', display:'flex', alignItems:'center', justifyContent:'center', fontWeight:700, color:'var(--color-primary-100)', fontSize:'0.95rem' }}>{s.n}</div>
-              <div style={{ flex:1, minWidth:0 }}>
-                <h3 style={{ margin:0, marginBottom:'0.2rem', fontSize:'1.05rem', fontWeight:700, color:'var(--color-primary-100)', lineHeight:1.25 }}>{s.title}</h3>
-                <p style={{ margin:0, fontSize:'0.92rem', color:'var(--color-charcoal)', lineHeight:1.5 }}>{s.desc}</p>
-              </div>
+            <div key={s.n} style={{ background:'#fff', border:'2px solid var(--color-primary-25)', borderRadius:16, padding:'1.75rem', display:'flex', flexDirection:'column', gap:'1.1rem', transition:'border-color 0.15s, transform 0.15s' }}
+              onMouseEnter={e => { e.currentTarget.style.borderColor='var(--color-accent-105)'; e.currentTarget.style.transform='translateY(-3px)'; }}
+              onMouseLeave={e => { e.currentTarget.style.borderColor='var(--color-primary-25)'; e.currentTarget.style.transform='none'; }}>
+              <div style={{ width:50, height:50, borderRadius:'50%', background:'var(--color-primary-5)', display:'flex', alignItems:'center', justifyContent:'center', fontWeight:700, color:'var(--color-primary-100)', fontSize:'1.15rem' }}>{s.n}</div>
+              <h3 style={{ margin:0, fontSize:'1.15rem', fontWeight:700, color:'var(--color-secondary-100)', lineHeight:1.3 }}>{s.title}</h3>
+              <p style={{ margin:0, fontSize:'0.95rem', color:'var(--color-charcoal)', lineHeight:1.55, fontStyle:'italic', flex:1 }}>{s.desc}</p>
+              <button onClick={() => onNavigate('how-it-works')} style={{ alignSelf:'flex-start', background:'transparent', color:'var(--color-primary-100)', border:'1.5px solid var(--color-primary-100)', padding:'0.45rem 1.1rem', borderRadius:999, fontSize:'0.85rem', fontWeight:700, cursor:'pointer', fontFamily:'inherit', transition:'background 0.15s, color 0.15s' }}
+                onMouseEnter={e => { e.currentTarget.style.background='var(--color-primary-100)'; e.currentTarget.style.color='#fff'; }}
+                onMouseLeave={e => { e.currentTarget.style.background='transparent'; e.currentTarget.style.color='var(--color-primary-100)'; }}>
+                {s.cta}
+              </button>
             </div>
           ))}
         </div>
-        <div style={{ marginTop:'2rem' }}>
-          <button className="btn btn-outline" onClick={() => onNavigate('how-it-works')}>Read the full guide →</button>
+        <style>{`
+          @media(max-width: 1199px){ .five-steps-grid { grid-template-columns: repeat(3, 1fr) !important; } }
+          @media(max-width: 800px){ .five-steps-grid { grid-template-columns: repeat(2, 1fr) !important; } }
+          @media(max-width: 500px){ .five-steps-grid { grid-template-columns: 1fr !important; } }
+        `}</style>
         </div>
       </section>
 
       {/* ─── SCORING SYSTEM ──────────────────────────────────────────────── */}
-      <section className="element u-content-width" style={{ paddingTop:'4rem' }}>
+      <section style={{ background:'#fff', padding:'4rem 0' }}>
+        <div className="u-content-width">
         <ComponentIntro
           id="scoring-system"
+          eyebrow="Scoring system"
           heading="No black boxes. Every point explained."
           intro="Your StackRank Score is calculated transparently. Here is exactly how it works."
         />
@@ -479,7 +548,7 @@ export default function Landing({ onNavigate }) {
             <div style={{ background:'var(--color-primary-5)', padding:'1rem 1.5rem', borderBottom:'1px solid var(--color-primary-25)', fontSize:'0.78rem', fontWeight:700, textTransform:'uppercase', letterSpacing:'0.08em', color:'var(--color-primary-100)' }}>
               Points reference table
             </div>
-            <div style={{ padding:'0 1.5rem' }}>
+            <div>
               {[
                 ['Sign Up + Complete Profile',     'Founding',    '500 pts'],
                 ['Fundamentals Certification',     '×1.0',        '500 pts'],
@@ -492,10 +561,10 @@ export default function Landing({ onNavigate }) {
                 ['Microsoft MVP',                  'Prestige',    '1,500 pts'],
                 ['Peer Referral (both join)',      '×0.5',        '500 pts'],
               ].map(([name, weight, pts], i, arr) => (
-                <div key={name} style={{ display:'grid', gridTemplateColumns:'1fr auto auto', gap:'0.75rem', alignItems:'center', padding:'0.75rem 0', borderBottom: i < arr.length - 1 ? '1px solid var(--color-pale-charcoal)' : 'none' }}>
-                  <span style={{ fontSize:'0.95rem', color:'var(--color-secondary-100)' }}>{name}</span>
-                  <span style={{ fontSize:'0.75rem', color:'var(--color-charcoal)', background:'var(--color-secondary-5)', padding:'0.2rem 0.55rem', borderRadius:4, fontFamily:'ui-monospace, monospace' }}>{weight}</span>
-                  <span style={{ fontWeight:700, color:'var(--color-primary-100)', minWidth:'5rem', textAlign:'right' }}>{pts}</span>
+                <div key={name} style={{ display:'grid', gridTemplateColumns:'1fr auto auto', gap:'1rem', alignItems:'center', padding:'0.85rem 1.5rem', borderBottom: i < arr.length - 1 ? '1px solid var(--color-pale-charcoal)' : 'none', background: i % 2 === 1 ? 'var(--color-primary-5)' : 'transparent' }}>
+                  <span style={{ fontSize:'0.95rem', color:'var(--color-secondary-100)', fontWeight:500 }}>{name}</span>
+                  <span style={{ fontSize:'0.78rem', color:'var(--color-primary-100)', background:'#fff', border:'1px solid var(--color-primary-25)', padding:'0.3rem 0.7rem', borderRadius:999, fontWeight:600, fontFamily:'ui-monospace, monospace', whiteSpace:'nowrap' }}>{weight}</span>
+                  <span style={{ fontWeight:700, color:'var(--color-accent-110)', minWidth:'5rem', textAlign:'right', fontSize:'0.95rem' }}>{pts}</span>
                 </div>
               ))}
             </div>
@@ -506,20 +575,38 @@ export default function Landing({ onNavigate }) {
           </div>
         </div>
         <style>{`@media(min-width: 1024px){ .scoring-twho-grid { grid-template-columns: 1fr 1fr !important; gap: 2.5rem !important; } }`}</style>
+        </div>
       </section>
 
-      {/* ─── NAVY CTA STRIP (founding member) ────────────────────────────── */}
-      <CTABlock
-        title="Become a founding member"
-        description="Join the early-access waitlist now and receive +500 bonus Stack Points, a founding-member badge, and priority placement when profile creation opens."
-        ctaLabel="Join the waitlist"
-        onClick={() => window.scrollTo({ top:0, behavior:'smooth' })}
-      />
+      {/* ─── NAVY CTA STRIP (founding member) + demo cards ──────────────── */}
+      <section style={{ position:'relative', padding:'4rem 0', color:'#fff', background:'var(--color-secondary-100)', overflow:'hidden' }}>
+        <svg aria-hidden="true" width="100%" height="100%" style={{ position:'absolute', inset:0, opacity:0.18, color:'var(--color-bg-pattern-dark-theme)', pointerEvents:'none' }}>
+          <pattern id="cta-hex-2" patternUnits="userSpaceOnUse" width="60" height="52" x="0" y="0">
+            <use xlinkHref="#divider-pattern" width="60" height="52"/>
+          </pattern>
+          <rect width="100%" height="100%" fill="url(#cta-hex-2)"/>
+        </svg>
+        <div className="u-content-width" style={{ position:'relative' }}>
+          <div style={{ maxWidth:760, margin:'0 auto', textAlign:'center' }}>
+            <h2 style={{ color:'#fff', marginBottom:'1rem' }}>Become a founding member</h2>
+            <div style={{ fontSize:'1.0625rem', lineHeight:1.65, color:'rgba(255,255,255,0.92)', marginBottom:'1.75rem' }}>
+              Join the early-access waitlist now and receive +500 bonus Stack Points, a founding-member badge, and priority placement when profile creation opens.
+            </div>
+            <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({ top:0, behavior:'smooth' }); }}
+              style={{ display:'inline-flex', alignItems:'center', gap:'0.5rem', padding:'0.85rem 1.5rem', background:'#fff', color:'var(--color-secondary-100)', borderRadius:4, fontWeight:600, textDecoration:'none' }}>
+              Join the waitlist
+              <svg width="18" height="16" aria-hidden="true"><use xlinkHref="#arrow"/></svg>
+            </a>
+          </div>
+        </div>
+      </section>
 
       {/* ─── LIVE RANKINGS PREVIEW ───────────────────────────────────────── */}
-      <section className="element u-content-width" style={{ paddingTop:'4rem' }}>
+      <section style={{ background:'var(--color-primary-5)', padding:'4rem 0' }}>
+        <div className="u-content-width">
         <ComponentIntro
           id="live-rankings"
+          eyebrow="Live rankings"
           heading="Your rank is waiting. Where will you place?"
           intro="The leaderboard updates as professionals verify skills and validate projects. This is what you're joining."
         />
@@ -527,8 +614,11 @@ export default function Landing({ onNavigate }) {
           {/* Power Platform UK panel */}
           <div className="card" style={{ padding:0, overflow:'hidden' }}>
             <div style={{ background:'var(--color-primary-5)', padding:'0.85rem 1.4rem', display:'flex', justifyContent:'space-between', alignItems:'center', borderBottom:'1px solid var(--color-primary-25)' }}>
-              <span style={{ fontWeight:700, fontSize:'0.9rem', color:'var(--color-secondary-100)' }}>⚡ Power Platform</span>
-              <span style={{ fontSize:'0.7rem', textTransform:'uppercase', letterSpacing:'0.08em', color:'var(--color-charcoal)' }}>United Kingdom</span>
+              <span style={{ display:'flex', alignItems:'center', gap:'0.5rem', fontWeight:700, fontSize:'1.05rem', color:'var(--color-secondary-100)' }}>
+                <img src="/icons/microsoft/power-platform.svg" alt="" width="22" height="22" style={{ display:'block' }} />
+                Power Platform
+              </span>
+              <span style={{ fontSize:'0.85rem', textTransform:'uppercase', letterSpacing:'0.08em', color:'var(--color-charcoal)' }}>United Kingdom</span>
             </div>
             {[
               { initials:'SK', name:'Sarah K.',  pts:9840, tags:['PL-600','MVP'] },
@@ -539,18 +629,18 @@ export default function Landing({ onNavigate }) {
             ].map((row, i) => {
               const medals = ['🥇','🥈','🥉'];
               return (
-                <div key={row.name} style={{ display:'flex', alignItems:'center', gap:'0.85rem', padding:'0.75rem 1.4rem', borderBottom:'1px solid var(--color-pale-charcoal)' }}>
-                  <span style={{ width:'1.5rem', textAlign:'center', fontSize:'0.85rem', color:'var(--color-charcoal)' }}>{i < 3 ? medals[i] : i + 1}</span>
-                  <div style={{ width:36, height:36, borderRadius:'50%', background:'var(--color-secondary-100)', color:'#fff', display:'flex', alignItems:'center', justifyContent:'center', fontWeight:700, fontSize:'0.78rem' }}>{row.initials}</div>
+                <div key={row.name} style={{ display:'flex', alignItems:'center', gap:'0.85rem', padding:'0.85rem 1.4rem', borderBottom:'1px solid var(--color-pale-charcoal)' }}>
+                  <span style={{ width:'2rem', textAlign:'center', fontSize:'1.1rem', color:'var(--color-charcoal)' }}>{i < 3 ? medals[i] : i + 1}</span>
+                  <div style={{ width:38, height:38, borderRadius:'50%', background:'var(--color-secondary-100)', color:'#fff', display:'flex', alignItems:'center', justifyContent:'center', fontWeight:700, fontSize:'0.85rem' }}>{row.initials}</div>
                   <div style={{ flex:1, minWidth:0 }}>
-                    <div style={{ fontWeight:600, color:'var(--color-secondary-100)' }}>{row.name}</div>
-                    <div style={{ display:'flex', gap:'0.3rem', marginTop:'0.2rem', flexWrap:'wrap' }}>
-                      {row.tags.map(t => <span key={t} style={{ fontSize:'0.65rem', padding:'0.15rem 0.45rem', borderRadius:3, background:'var(--color-primary-5)', color:'var(--color-primary-100)' }}>{t}</span>)}
+                    <div style={{ fontWeight:600, fontSize:'1rem', color:'var(--color-secondary-100)' }}>{row.name}</div>
+                    <div style={{ display:'flex', gap:'0.35rem', marginTop:'0.25rem', flexWrap:'wrap' }}>
+                      {row.tags.map(t => <span key={t} style={{ fontSize:'0.8rem', padding:'0.2rem 0.55rem', borderRadius:3, background:'var(--color-primary-5)', color:'var(--color-primary-100)' }}>{t}</span>)}
                     </div>
                   </div>
                   <div style={{ textAlign:'right' }}>
-                    <div style={{ fontWeight:700, color:'var(--color-primary-100)' }}>{row.pts.toLocaleString()}</div>
-                    <div style={{ fontSize:'0.6rem', textTransform:'uppercase', letterSpacing:'0.06em', color:'var(--color-charcoal)' }}>Stack pts</div>
+                    <div style={{ fontWeight:700, fontSize:'1.05rem', color:'var(--color-primary-100)' }}>{row.pts.toLocaleString()}</div>
+                    <div style={{ fontSize:'0.75rem', textTransform:'uppercase', letterSpacing:'0.06em', color:'var(--color-charcoal)' }}>Stack pts</div>
                   </div>
                 </div>
               );
@@ -566,25 +656,28 @@ export default function Landing({ onNavigate }) {
           {/* Copilot Studio panel */}
           <div className="card" style={{ padding:0, overflow:'hidden' }}>
             <div style={{ background:'var(--color-primary-5)', padding:'0.85rem 1.4rem', display:'flex', justifyContent:'space-between', alignItems:'center', borderBottom:'1px solid var(--color-primary-25)' }}>
-              <span style={{ fontWeight:700, fontSize:'0.9rem', color:'var(--color-secondary-100)' }}>🤖 Copilot Studio</span>
-              <span style={{ fontSize:'0.7rem', textTransform:'uppercase', letterSpacing:'0.08em', color:'var(--color-charcoal)' }}>Global · Emerging</span>
+              <span style={{ display:'flex', alignItems:'center', gap:'0.5rem', fontWeight:700, fontSize:'1.05rem', color:'var(--color-secondary-100)' }}>
+                <img src="/icons/microsoft/copilot-studio.svg" alt="" width="22" height="22" style={{ display:'block' }} />
+                Copilot Studio
+              </span>
+              <span style={{ fontSize:'0.85rem', textTransform:'uppercase', letterSpacing:'0.08em', color:'var(--color-charcoal)' }}>Global · Emerging</span>
             </div>
             {SAMPLE_USERS.filter(u => u.specialization === 'Copilot Studio').slice(0, 4).map((u, i) => {
               const medals = ['🥇','🥈','🥉'];
               return (
                 <div key={u.id} onClick={() => onNavigate('profile', { userData:u })}
-                  style={{ display:'flex', alignItems:'center', gap:'0.85rem', padding:'0.75rem 1.4rem', borderBottom:'1px solid var(--color-pale-charcoal)', cursor:'pointer' }}>
-                  <span style={{ width:'1.5rem', textAlign:'center', fontSize:'0.85rem', color:'var(--color-charcoal)' }}>{i < 3 ? medals[i] : i + 1}</span>
-                  <div style={{ width:36, height:36, borderRadius:'50%', background:'var(--color-accent-110)', color:'#fff', display:'flex', alignItems:'center', justifyContent:'center', fontWeight:700, fontSize:'0.78rem' }}>{(u.name||'?').split(' ').map(n => n[0]).join('')}</div>
+                  style={{ display:'flex', alignItems:'center', gap:'0.85rem', padding:'0.85rem 1.4rem', borderBottom:'1px solid var(--color-pale-charcoal)', cursor:'pointer' }}>
+                  <span style={{ width:'2rem', textAlign:'center', fontSize:'1.1rem', color:'var(--color-charcoal)' }}>{i < 3 ? medals[i] : i + 1}</span>
+                  <div style={{ width:38, height:38, borderRadius:'50%', background:'var(--color-accent-110)', color:'#fff', display:'flex', alignItems:'center', justifyContent:'center', fontWeight:700, fontSize:'0.85rem' }}>{avatarInitials(u.name)}</div>
                   <div style={{ flex:1, minWidth:0 }}>
-                    <div style={{ fontWeight:600, color:'var(--color-secondary-100)' }}>{u.name}</div>
-                    <div style={{ display:'flex', gap:'0.3rem', marginTop:'0.2rem', flexWrap:'wrap' }}>
-                      {(u.certifications || []).slice(0, 2).map(c => <span key={c.code} style={{ fontSize:'0.65rem', padding:'0.15rem 0.45rem', borderRadius:3, background:'var(--color-primary-5)', color:'var(--color-primary-100)' }}>{c.code}</span>)}
+                    <div style={{ fontWeight:600, fontSize:'1rem', color:'var(--color-secondary-100)' }}>{displayName(u.name)}</div>
+                    <div style={{ display:'flex', gap:'0.35rem', marginTop:'0.25rem', flexWrap:'wrap' }}>
+                      {(u.certifications || []).slice(0, 2).map(c => <span key={c.code} style={{ fontSize:'0.8rem', padding:'0.2rem 0.55rem', borderRadius:3, background:'var(--color-primary-5)', color:'var(--color-primary-100)' }}>{c.code}</span>)}
                     </div>
                   </div>
                   <div style={{ textAlign:'right' }}>
-                    <div style={{ fontWeight:700, color:'var(--color-primary-100)' }}>{u.score.toLocaleString()}</div>
-                    <div style={{ fontSize:'0.6rem', textTransform:'uppercase', letterSpacing:'0.06em', color:'var(--color-charcoal)' }}>Stack pts</div>
+                    <div style={{ fontWeight:700, fontSize:'1.05rem', color:'var(--color-primary-100)' }}>{u.score.toLocaleString()}</div>
+                    <div style={{ fontSize:'0.75rem', textTransform:'uppercase', letterSpacing:'0.06em', color:'var(--color-charcoal)' }}>Stack pts</div>
                   </div>
                 </div>
               );
@@ -601,30 +694,12 @@ export default function Landing({ onNavigate }) {
         <div style={{ textAlign:'center', marginTop:'2rem' }}>
           <button className="btn btn-outline btn-lg" onClick={() => onNavigate('leaderboard')}>View full leaderboard →</button>
         </div>
-      </section>
-
-      {/* ─── DEMO CTA ────────────────────────────────────────────────────── */}
-      <section className="element u-content-width" style={{ paddingTop:'4rem' }}>
-        <ul className="tiles" style={{ gridTemplateColumns:'repeat(3, 1fr)' }}>
-          {[
-            { label:'Live leaderboard', desc:'See 15 sample professionals ranked',  btn:'View rankings',   page:'leaderboard' },
-            { label:'Sample profile',   desc:'Explore a detailed pro profile',       btn:'Browse profile',  page:'profile', profileUser:SAMPLE_USERS[0] },
-            { label:'Full scoring',     desc:'35+ certs explained with point values',btn:'See the math',    page:'scoring' },
-          ].map(d => (
-            <li key={d.label} className="tile" style={{ alignItems:'center', textAlign:'center' }}>
-              <h3 className="tile__heading">{d.label}</h3>
-              <p className="tile__description">{d.desc}</p>
-              <button className="btn btn-outline btn-sm"
-                onClick={() => d.profileUser ? onNavigate(d.page, { userData:d.profileUser }) : onNavigate(d.page)}>
-                {d.btn}
-              </button>
-            </li>
-          ))}
-        </ul>
+        </div>
       </section>
 
       {/* ─── FINAL WAITLIST ──────────────────────────────────────────────── */}
-      <section className="element u-content-width" style={{ paddingTop:'4rem', paddingBottom:'5rem' }}>
+      <section style={{ background:'var(--color-secondary-100)', padding:'4rem 0' }}>
+        <div className="u-content-width">
         <div className="final-waitlist-grid" style={{ display:'grid', gridTemplateColumns:'1.4fr 1fr', gap:'2.5rem', alignItems:'center', background:'var(--color-bg-pattern-light-theme)', border:'1px solid var(--color-primary-25)', borderRadius:6, padding:'1.75rem 2.5rem' }}>
           <div>
             <h2 style={{ marginTop:0, marginBottom:'0.75rem' }}>Claim your rank before everyone else does</h2>
@@ -637,11 +712,13 @@ export default function Landing({ onNavigate }) {
           </div>
         </div>
         <style>{`@media(max-width: 900px){ .final-waitlist-grid { grid-template-columns: 1fr !important; padding: 1.75rem !important; } }`}</style>
+        </div>
       </section>
 
       {/* ─── DATA &amp; STATISTICS ────────────────────────────────────────── */}
-      <section className="element u-content-width" style={{ paddingTop:'4rem', paddingBottom:'5rem' }}>
-        <ComponentIntro id="data-and-statistics" heading="Data and statistics" intro="StackRank365 by the numbers." />
+      <section style={{ background:'#fff', padding:'4rem 0 5rem' }}>
+        <div className="u-content-width">
+        <ComponentIntro id="data-and-statistics" eyebrow="By the numbers" heading="Data and statistics" intro="StackRank365 by the numbers." />
         <div style={{ display:'grid', gridTemplateColumns:'repeat(4, 1fr)', gap:'2rem' }}>
           {[
             ['35+',  'Microsoft cert types tracked'],
@@ -654,6 +731,7 @@ export default function Landing({ onNavigate }) {
               <p style={{ margin:0, fontSize:'1rem', lineHeight:1.5, color:'var(--color-charcoal)' }}>{label}</p>
             </div>
           ))}
+        </div>
         </div>
       </section>
     </div>
