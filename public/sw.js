@@ -1,18 +1,13 @@
-// StackRank365 Service Worker
-// Clean passthrough — no caching, fixes the Response clone error
-const CACHE_NAME = 'sr365-v2';
-
+// Self-unregistering kill-switch — clears all caches and unregisters.
+// The browser auto-fetches sw.js periodically; when it sees this version,
+// the old SW is replaced and immediately removed.
 self.addEventListener('install', () => self.skipWaiting());
-
-self.addEventListener('activate', e => {
-  e.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(keys.map(k => caches.delete(k)))
-    ).then(() => self.clients.claim())
-  );
-});
-
-// Pure passthrough — no caching, no clone
-self.addEventListener('fetch', e => {
-  e.respondWith(fetch(e.request));
+self.addEventListener('activate', async (e) => {
+  e.waitUntil((async () => {
+    const keys = await caches.keys();
+    await Promise.all(keys.map(k => caches.delete(k)));
+    await self.registration.unregister();
+    const clients = await self.clients.matchAll({ type: 'window' });
+    clients.forEach(c => c.navigate(c.url));
+  })());
 });

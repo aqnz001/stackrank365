@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { SAMPLE_USERS, getRankTier, getNextRankTier } from '../data/data';
 import { useApp } from '../context/AppContext';
+import { displayName, avatarInitials } from '../lib/displayName';
 
 const TIER_BADGE = {
   Fundamentals:    'badge-muted',
@@ -246,7 +247,7 @@ export default function Profile({ onNavigate, profileUser }) {
                 <h1 style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', marginBottom: '0.2rem', lineHeight: 1.1 }}>
                   {displayUser.name}
                   {displayUser.isMe && (
-                    <span style={{ fontSize: '1rem', color: 'var(--blue)', marginLeft: '0.6rem', fontFamily: 'Outfit', fontWeight: 500 }}>
+                    <span style={{ fontSize: '1rem', color: 'var(--blue)', marginLeft: '0.6rem', fontFamily: 'Poppins', fontWeight: 500 }}>
                       (you)
                     </span>
                   )}
@@ -319,7 +320,7 @@ export default function Profile({ onNavigate, profileUser }) {
                   <div style={{ marginBottom: '1.1rem' }}>
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.72rem', color: 'rgba(255,255,255,0.45)', marginBottom: '0.35rem' }}>
                       <span>→ {nextTier.icon} {nextTier.name}</span>
-                      <span style={{ fontFamily: 'Open Sans' }}>{pointsToNext.toLocaleString()} pts</span>
+                      <span style={{ fontFamily: 'Poppins' }}>{pointsToNext.toLocaleString()} pts</span>
                     </div>
                     <div className="progress-track" style={{ height: 6 }}>
                       <div className="progress-fill" style={{ width: `${progressPct}%` }} />
@@ -344,7 +345,7 @@ export default function Profile({ onNavigate, profileUser }) {
                       padding: '0.4rem 0.85rem', borderRadius: 8, cursor: 'pointer',
                       background: '#0077b5', border: '1px solid #0077b5',
                       color: '#fff', fontSize: '0.82rem', fontWeight: 600,
-                      fontFamily: 'Outfit, sans-serif', transition: 'background 0.15s',
+                      fontFamily: 'Poppins, sans-serif', transition: 'background 0.15s',
                     }}
                     onMouseEnter={e => e.currentTarget.style.background = '#005f8e'}
                     onMouseLeave={e => e.currentTarget.style.background = '#0077b5'}
@@ -413,7 +414,7 @@ export default function Profile({ onNavigate, profileUser }) {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1.25rem' }}>
                   <span style={{ fontSize: '1.3rem' }}>🎓</span>
                   <h3 style={{ margin: 0, fontSize: '1.15rem' }}>Certifications</h3>
-                  <span style={{ marginLeft: 'auto', fontFamily: 'Open Sans', fontSize: '0.8rem', color: 'var(--green)' }}>
+                  <span style={{ marginLeft: 'auto', fontFamily: 'Poppins', fontSize: '0.8rem', color: 'var(--green)' }}>
                     +{certPts.toLocaleString()} pts
                   </span>
                 </div>
@@ -439,10 +440,10 @@ export default function Profile({ onNavigate, profileUser }) {
                           {cert.name}
                         </div>
                         <div style={{ display: 'flex', gap: '0.35rem', flexWrap: 'wrap', alignItems: 'center' }}>
-                          <span style={{ fontFamily: 'Open Sans', fontSize: '0.68rem', color: 'var(--muted)' }}>{cert.code}</span>
+                          <span style={{ fontFamily: 'Poppins', fontSize: '0.68rem', color: 'var(--muted)' }}>{cert.code}</span>
                           <span className={`badge ${TIER_BADGE[cert.tier] || 'badge-muted'}`} style={{ fontSize: '0.62rem' }}>{cert.tier}</span>
                           {cert.scarcityMultiplier && <span className="badge badge-purple" style={{ fontSize: '0.58rem' }}>1.25×</span>}
-                          <span style={{ marginLeft: 'auto', fontFamily: 'Open Sans', fontSize: '0.72rem', color: 'var(--green)', fontWeight: 700 }}>+{cert.points}</span>
+                          <span style={{ marginLeft: 'auto', fontFamily: 'Poppins', fontSize: '0.72rem', color: 'var(--green)', fontWeight: 700 }}>+{cert.points}</span>
                         </div>
                       </div>
                     </div>
@@ -457,7 +458,7 @@ export default function Profile({ onNavigate, profileUser }) {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1.25rem' }}>
                   <span style={{ fontSize: '1.3rem' }}>🏗️</span>
                   <h3 style={{ margin: 0, fontSize: '1.15rem' }}>Projects</h3>
-                  <span style={{ marginLeft: 'auto', fontFamily: 'Open Sans', fontSize: '0.8rem', color: 'var(--blue)' }}>
+                  <span style={{ marginLeft: 'auto', fontFamily: 'Poppins', fontSize: '0.8rem', color: 'var(--blue)' }}>
                     {projects.length} logged
                   </span>
                 </div>
@@ -579,15 +580,15 @@ export default function Profile({ onNavigate, profileUser }) {
                         onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--border-blue)'; e.currentTarget.style.transform = 'translateY(-1px)'; }}
                         onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.transform = ''; }}
                       >
-                        <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'var(--surface3)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.9rem', fontWeight: 700, color: '#fff', flexShrink: 0 }}>
-                          {(u.name || '?')[0]}
+                        <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'var(--surface3)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.78rem', fontWeight: 700, color: '#fff', flexShrink: 0 }}>
+                          {avatarInitials(u.name)}
                         </div>
                         <div style={{ flex: 1, minWidth: 0 }}>
-                          <div style={{ fontWeight: 600, fontSize: '0.82rem', color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{u.name}</div>
+                          <div style={{ fontWeight: 600, fontSize: '0.82rem', color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{displayName(u.name)}</div>
                           <div style={{ fontSize: '0.7rem', color: 'var(--muted2)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{u.headline}</div>
                         </div>
                         <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                          <div style={{ fontFamily: 'Open Sans', fontSize: '0.72rem', color: 'var(--blue)', fontWeight: 700 }}>#{uRank}</div>
+                          <div style={{ fontFamily: 'Poppins', fontSize: '0.72rem', color: 'var(--blue)', fontWeight: 700 }}>#{uRank}</div>
                           <div style={{ fontSize: '0.68rem', color: 'var(--muted)' }}>{(u.score || 0).toLocaleString()}</div>
                         </div>
                       </div>
@@ -613,7 +614,7 @@ export default function Profile({ onNavigate, profileUser }) {
                 <div key={item.label} style={{ marginBottom: '0.95rem' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.28rem', alignItems: 'center' }}>
                     <span style={{ fontSize: '0.8rem', color: 'var(--muted2)' }}>{item.icon} {item.label}</span>
-                    <span style={{ fontFamily: 'Open Sans', fontSize: '0.78rem', color: item.color, fontWeight: 700 }}>
+                    <span style={{ fontFamily: 'Poppins', fontSize: '0.78rem', color: item.color, fontWeight: 700 }}>
                       {item.pts.toLocaleString()}
                     </span>
                   </div>
@@ -628,7 +629,7 @@ export default function Profile({ onNavigate, profileUser }) {
               <div className="divider" style={{ margin: '1rem 0 0.75rem' }} />
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <span style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--text)' }}>Total</span>
-                <span style={{ fontFamily: 'Open Sans', fontWeight: 700, color: 'var(--blue)', fontSize: '1rem' }}>
+                <span style={{ fontFamily: 'Poppins', fontWeight: 700, color: 'var(--blue)', fontSize: '1rem' }}>
                   {score.toLocaleString()} pts
                 </span>
               </div>
@@ -644,7 +645,7 @@ export default function Profile({ onNavigate, profileUser }) {
                     <div style={{ fontFamily: 'Rajdhani', fontWeight: 700, fontSize: '0.95rem', color: t.name === tier.name ? t.color : 'var(--muted2)' }}>
                       {t.name} {t.name === tier.name && '← current'}
                     </div>
-                    <div style={{ fontSize: '0.7rem', color: 'var(--muted)', fontFamily: 'Open Sans' }}>
+                    <div style={{ fontSize: '0.7rem', color: 'var(--muted)', fontFamily: 'Poppins' }}>
                       {t.minScore.toLocaleString()}{t.maxScore === Infinity ? '+' : `–${t.maxScore.toLocaleString()}`} pts
                     </div>
                   </div>
@@ -652,7 +653,7 @@ export default function Profile({ onNavigate, profileUser }) {
               ))}
               {nextTier && (
                 <div style={{ background: 'var(--surface2)', borderRadius: 8, padding: '0.65rem 0.85rem', fontSize: '0.78rem', color: 'var(--muted2)' }}>
-                  <span style={{ color: 'var(--blue)', fontWeight: 700, fontFamily: 'Open Sans' }}>{pointsToNext.toLocaleString()} pts</span>
+                  <span style={{ color: 'var(--blue)', fontWeight: 700, fontFamily: 'Poppins' }}>{pointsToNext.toLocaleString()} pts</span>
                   {' '}to reach {nextTier.icon} {nextTier.name}
                 </div>
               )}
@@ -677,15 +678,15 @@ export default function Profile({ onNavigate, profileUser }) {
                       }}
                       onClick={() => onNavigate('profile', { userData: u })}
                     >
-                      <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'var(--surface2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.85rem', fontWeight: 700, color: '#fff', flexShrink: 0 }}>
-                        {(u.name || '?')[0]}
+                      <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'var(--surface2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.72rem', fontWeight: 700, color: '#fff', flexShrink: 0 }}>
+                        {avatarInitials(u.name)}
                       </div>
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontSize: '0.82rem', fontWeight: 600, color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{u.name}</div>
+                        <div style={{ fontSize: '0.82rem', fontWeight: 600, color: '#fff', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{displayName(u.name)}</div>
                         <div style={{ fontSize: '0.7rem', color: 'var(--muted2)' }}>{u.location}</div>
                       </div>
                       <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                        <div style={{ fontFamily: 'Open Sans', fontSize: '0.72rem', color: 'var(--blue)', fontWeight: 700 }}>
+                        <div style={{ fontFamily: 'Poppins', fontSize: '0.72rem', color: 'var(--blue)', fontWeight: 700 }}>
                           {(u.score || 0).toLocaleString()}
                         </div>
                         <div style={{ fontSize: '0.62rem' }}>{uTier.icon}</div>

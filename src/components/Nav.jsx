@@ -31,6 +31,7 @@ const NAV_LINKS = [
   { id: 'scoring',      label: 'Scoring'      },
   { id: 'leaderboard',  label: 'Leaderboard'  },
   { id: 'about',        label: 'About'         },
+  { id: 'survey',       label: 'Feedback'      },
 ];
 
 export default function Nav({ currentPage, onNavigate }) {
@@ -55,6 +56,9 @@ export default function Nav({ currentPage, onNavigate }) {
     : '?';
 
   return (
+    <div style={{ position: 'sticky', top: 0, zIndex: 100 }}>
+    {/* TWHO-style teal utility strip above main nav */}
+    <div style={{ background: '#0c818f', height: 6, width: '100%' }} />
     <nav className="nav">
       <div className="nav-inner">
 
@@ -102,7 +106,7 @@ export default function Nav({ currentPage, onNavigate }) {
                     display: 'flex', alignItems: 'center', gap: '0.5rem',
                     background: 'var(--surface2)', border: '1px solid var(--border)',
                     borderRadius: 10, padding: '0.35rem 0.75rem 0.35rem 0.45rem',
-                    cursor: 'pointer', color: 'var(--text)', fontFamily: 'Outfit, sans-serif',
+                    cursor: 'pointer', color: 'var(--text)', fontFamily: 'Poppins, sans-serif',
                     fontSize: '0.88rem', fontWeight: 600, transition: 'background 0.15s',
                   }}
                   onMouseEnter={e => e.currentTarget.style.background = 'var(--surface)'}
@@ -141,7 +145,7 @@ export default function Nav({ currentPage, onNavigate }) {
                         display: 'block', width: '100%', textAlign: 'left',
                         padding: '0.5rem 0.75rem', background: 'none', border: 'none',
                         color: 'var(--text)', fontSize: '0.85rem', cursor: 'pointer',
-                        borderRadius: 8, fontFamily: 'Outfit, sans-serif', transition: 'background 0.15s',
+                        borderRadius: 8, fontFamily: 'Poppins, sans-serif', transition: 'background 0.15s',
                       }}
                       onMouseEnter={e => e.currentTarget.style.background = 'var(--surface2)'}
                       onMouseLeave={e => e.currentTarget.style.background = 'none'}
@@ -152,7 +156,7 @@ export default function Nav({ currentPage, onNavigate }) {
                         display: 'block', width: '100%', textAlign: 'left',
                         padding: '0.5rem 0.75rem', background: 'none', border: 'none',
                         color: 'var(--red, #f87171)', fontSize: '0.85rem', cursor: 'pointer',
-                        borderRadius: 8, fontFamily: 'Outfit, sans-serif', transition: 'background 0.15s',
+                        borderRadius: 8, fontFamily: 'Poppins, sans-serif', transition: 'background 0.15s',
                       }}
                       onMouseEnter={e => e.currentTarget.style.background = 'var(--surface2)'}
                       onMouseLeave={e => e.currentTarget.style.background = 'none'}
@@ -210,7 +214,7 @@ export default function Nav({ currentPage, onNavigate }) {
                   onClick={() => navTo('profile')}>👤 My Profile</button>
                 <button className="btn btn-primary btn-sm" style={{ width: '100%', justifyContent: 'center' }}
                   onClick={() => navTo('dashboard')}>📊 Dashboard</button>
-                <button style={{ width: '100%', padding: '0.45rem', background: 'none', border: '1px solid rgba(248,113,113,0.3)', borderRadius: 8, color: '#f87171', cursor: 'pointer', fontFamily: 'Outfit, sans-serif', fontSize: '0.85rem' }}
+                <button style={{ width: '100%', padding: '0.45rem', background: 'none', border: '1px solid rgba(248,113,113,0.3)', borderRadius: 8, color: '#f87171', cursor: 'pointer', fontFamily: 'Poppins, sans-serif', fontSize: '0.85rem' }}
                   onClick={handleSignOut}>🚪 Sign Out</button>
               </div>
             ) : (
@@ -231,5 +235,6 @@ export default function Nav({ currentPage, onNavigate }) {
         }
       `}</style>
     </nav>
+    </div>
   );
 }
