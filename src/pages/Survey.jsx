@@ -32,7 +32,7 @@ const BLOCKERS = [
   'Other',
 ];
 
-const TOTAL_STEPS = 4;
+const TOTAL_STEPS = 3;
 
 function ProgressBar({ step }) {
   const pct = Math.round(((step - 1) / TOTAL_STEPS) * 100);
@@ -206,12 +206,7 @@ export default function Survey({ onNavigate }) {
     clarity: null,
     industry_need: null,
     biggest_blocker: '',
-    feature_stack_points: null,
-    feature_cert_verify: null,
-    feature_cv_analyser: null,
     most_important: '',
-    will_revisit: '',
-    overall_rating: null,
   });
 
   const set = (key, val) => setForm(f => ({ ...f, [key]: val }));
@@ -224,8 +219,7 @@ export default function Survey({ onNavigate }) {
   const canAdvance = () => {
     if (step === 1) return form.tech_areas.length > 0 && form.role;
     if (step === 2) return form.first_impression && form.clarity && form.industry_need;
-    if (step === 3) return form.biggest_blocker && form.feature_stack_points && form.feature_cert_verify && form.feature_cv_analyser;
-    if (step === 4) return form.will_revisit && form.overall_rating;
+    if (step === 3) return !!form.biggest_blocker;
     return true;
   };
 
@@ -234,8 +228,7 @@ export default function Survey({ onNavigate }) {
     setError('');
     try {
       const { supabase } = await import('../lib/supabase.js');
-      const payload = { ...form, will_revisit: form.will_revisit.toLowerCase().replace(' ', '_') };
-      const { error: dbErr } = await supabase.from('survey_responses').insert([payload]);
+      const { error: dbErr } = await supabase.from('survey_responses').insert([form]);
       if (dbErr) throw dbErr;
       setSubmitted(true);
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -251,7 +244,6 @@ export default function Survey({ onNavigate }) {
   const STEP_TITLES = [
     'About You',
     'First Impressions',
-    'Value & Features',
     'Final Thoughts',
   ];
 
@@ -309,34 +301,13 @@ export default function Survey({ onNavigate }) {
             </>
           )}
 
-          {/* ── STEP 3: Value & Features ── */}
+          {/* ── STEP 3: Final Thoughts ── */}
           {step === 3 && (
             <>
               <Question number="6" text="What is the biggest reason you might NOT use StackRank365, even if you liked it?">
                 <RadioList options={BLOCKERS} selected={form.biggest_blocker} onSelect={v => set('biggest_blocker', v)} />
               </Question>
-              <Question number="7" text="Rate these features from 1 (not valuable) to 7 (essential):">
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-                  {[
-                    { key: 'feature_stack_points', label: 'Stack Points score based on certifications' },
-                    { key: 'feature_cert_verify',  label: 'Certification verification via MS Learn' },
-                    { key: 'feature_cv_analyser',  label: 'CV Analyser — AI-generated profile summary' },
-                  ].map(f => (
-                    <div key={f.key}>
-                      <p style={{ margin: '0 0 0.6rem', fontSize: '0.9rem', color: 'var(--muted2)', fontWeight: 500 }}>{f.label}</p>
-                      <Likert value={form[f.key]} onChange={v => set(f.key, v)}
-                        low="Not valuable" high="Essential" />
-                    </div>
-                  ))}
-                </div>
-              </Question>
-            </>
-          )}
-
-          {/* ── STEP 4: Final Thoughts ── */}
-          {step === 4 && (
-            <>
-              <Question number="8" text="What is the single most important thing StackRank365 must get right to earn your trust and regular use?">
+              <Question number="7" text="What is the single most important thing StackRank365 must get right to earn your trust and regular use?">
                 <textarea
                   className="input"
                   style={{ height: 110, padding: '0.75rem 1rem', resize: 'vertical' }}
@@ -344,17 +315,6 @@ export default function Survey({ onNavigate }) {
                   value={form.most_important}
                   onChange={e => set('most_important', e.target.value)}
                 />
-              </Question>
-              <Question number="9" text="Will you revisit StackRank365 in the next 30 days without being prompted?">
-                <RadioList
-                  options={['Yes', 'No', 'Not sure']}
-                  selected={form.will_revisit}
-                  onSelect={v => set('will_revisit', v)}
-                />
-              </Question>
-              <Question number="10" text="Overall, how would you rate StackRank365 at this stage?">
-                <Likert value={form.overall_rating} onChange={v => set('overall_rating', v)}
-                  low="Very poor" high="Excellent" />
               </Question>
             </>
           )}
