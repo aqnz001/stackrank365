@@ -40,7 +40,7 @@ function Footer({ onNavigate }) {
             </p>
             <div style={{ marginTop: '1.25rem' }}>
               <button className="btn btn-gold btn-sm" onClick={() => onNavigate('landing')}>
-                ð Join the Waitlist
+                Join the Waitlist
               </button>
             </div>
           </div>
@@ -64,8 +64,8 @@ function Footer({ onNavigate }) {
           </div>
         </div>
         <div style={{ borderTop: '1px solid var(--border)', paddingTop: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.75rem' }}>
-          <div style={{ fontSize: '0.78rem', color: 'var(--muted)' }}>Â© 2025 StackRank365. All rights reserved.</div>
-          <div style={{ fontSize: '0.78rem', color: 'var(--muted)' }}>Built for the Microsoft community ð</div>
+          <div style={{ fontSize: '0.78rem', color: 'var(--muted)' }}>© 2026 StackRank365. All rights reserved.</div>
+          <div style={{ fontSize: '0.78rem', color: 'var(--muted)' }}>Built for the Microsoft community</div>
         </div>
       </div>
       <style>{`@media(max-width:768px){ footer .container > div:first-child { grid-template-columns: 1fr !important; } }`}</style>
@@ -73,63 +73,149 @@ function Footer({ onNavigate }) {
   );
 }
 
+// URL ↔ page-state mapping. New pages need an entry in both maps.
+const PATH_TO_PAGE = {
+  '/':                    'landing',
+  '/leaderboard':         'leaderboard',
+  '/how-it-works':        'how-it-works',
+  '/scoring':             'scoring',
+  '/about':               'about',
+  '/for-recruiters':      'for-recruiters',
+  '/dashboard':           'dashboard',
+  '/signup':              'signup',
+  '/signin':              'signin',
+  '/reset-password':      'reset-password',
+  '/validate':            'validate',
+  '/pricing':             'pricing',
+  '/privacy':             'privacy',
+  '/feedback':            'survey',
+  '/survey':              'survey',
+  '/jobs':                'jobs',
+  '/post-job':            'post-job',
+  '/my-applications':     'my-applications',
+  '/my-jobs':             'my-jobs',
+  '/recruiter-dashboard': 'recruiter-dashboard',
+  '/admin-fraud':         'admin-fraud',
+  '/sr365-sitemap':       'sr365-sitemap',
+  '/sr365-admin-tools':   'sr365-admin-tools',
+};
+const PAGE_TO_PATH = {
+  landing: '/', leaderboard: '/leaderboard', 'how-it-works': '/how-it-works',
+  scoring: '/scoring', about: '/about', 'for-recruiters': '/for-recruiters',
+  dashboard: '/dashboard', signup: '/signup', signin: '/signin',
+  'reset-password': '/reset-password', validate: '/validate',
+  pricing: '/pricing', privacy: '/privacy', survey: '/feedback',
+  jobs: '/jobs', 'post-job': '/post-job',
+  'my-applications': '/my-applications', 'my-jobs': '/my-jobs',
+  'recruiter-dashboard': '/recruiter-dashboard',
+  'admin-fraud': '/admin-fraud',
+  'sr365-sitemap': '/sr365-sitemap',
+  'sr365-admin-tools': '/sr365-admin-tools',
+};
+
 function AppInner() {
   const { user, loading } = useApp();
   const [page, setPage] = useState('landing');
   const [profileUsername, setProfileUsername] = useState(null);
   const [pageData, setPageData] = useState(null);
 
-  // âââ Handle URL hash routing for early-adopter links + Supabase callbacks ââ
-  useEffect(() => {
-    const handleHash = () => {
-      // Query string routing: ?page=xxx
-      const _params = new URLSearchParams(window.location.search);
-      const qPage = _params.get('page');
-      const qUser = _params.get('u');
-      if (qPage) { setPage(qPage); if (qUser) setProfileUsername(qUser); return; }
-      const hash = window.location.hash.replace('#', '');
-      const search = window.location.search;
-      const fullHash = window.location.hash;
+  // Build the URL for a (page, data) pair. Profile is /profile/:username.
+  const pathForPage = (p, data) => {
+    if (p === 'profile') {
+      const username = data?.userData?.username || profileUsername;
+      return username ? `/profile/${encodeURIComponent(username)}` : '/profile';
+    }
+    return PAGE_TO_PATH[p] || '/';
+  };
 
-      // Supabase OAuth/magic link callback â token arrives in the hash fragment
-      if (fullHash.includes('access_token=') || fullHash.includes('refresh_token=')) {
-        // Do NOT clear URL — Supabase SDK needs the hash to establish session
-        setPage('dashboard');
-        return;
-      }
-      // Supabase password recovery
-      if (search.includes('type=recovery') || fullHash.includes('type=recovery')) {
-        setPage('reset-password');
-        return;
-      }
-      // Validation link: /#validate?token=ABC123
-      if (hash.startsWith('validate')) {
-        const params = new URLSearchParams(fullHash.replace(/^#validate\??/, ''));
-        setPageData({ token: params.get('token') });
-        setPage('validate');
-        return;
-      }
-      // Hash-based routing for early-adopter links
-      if (['signup','signin','dashboard','early-access','reset-password'].includes(hash)) {
-        setPage(hash === 'early-access' ? 'signup' : hash);
-        window.history.replaceState({}, '', '/');
-      }
+  // Parse the current URL into React state. Used on initial mount + back/forward.
+  // Auth-callback flows take precedence over path routing because the Supabase
+  // SDK and validation tokens need their query/hash payloads intact.
+  const resolveLocation = () => {
+    const fullHash = window.location.hash;
+    const search   = window.location.search;
+    const params   = new URLSearchParams(search);
+
+    // Supabase OAuth / magic-link callback — token in hash fragment.
+    // Must NOT alter the URL: the Supabase SDK reads the hash to establish session.
+    if (fullHash.includes('access_token=') || fullHash.includes('refresh_token=')) {
+      setPage('dashboard');
+      return;
+    }
+    // Supabase password recovery
+    if (search.includes('type=recovery') || fullHash.includes('type=recovery')) {
+      setPage('reset-password');
+      return;
+    }
+    // Validation link: /#validate?token=ABC123  (legacy share format)
+    if (fullHash.startsWith('#validate')) {
+      const hp = new URLSearchParams(fullHash.replace(/^#validate\??/, ''));
+      setPageData({ token: hp.get('token') });
+      setPage('validate');
+      return;
+    }
+    // Legacy query-string routing: ?page=xxx (older share links)
+    const qPage = params.get('page');
+    if (qPage) {
+      setPage(qPage);
+      const qUser = params.get('u');
+      if (qUser) setProfileUsername(qUser);
+      return;
+    }
+    // Legacy hash shortcuts (#signup etc) — rewrite to clean path.
+    const hash = fullHash.replace('#', '');
+    if (['signup','signin','dashboard','early-access','reset-password'].includes(hash)) {
+      const next = hash === 'early-access' ? 'signup' : hash;
+      setPage(next);
+      window.history.replaceState({}, '', PAGE_TO_PATH[next] || '/');
+      return;
+    }
+    // Path-based routing — the normal case.
+    const rawPath = window.location.pathname.replace(/\/+$/, '') || '/';
+    const profileMatch = rawPath.match(/^\/profile\/(.+)$/);
+    if (profileMatch) {
+      setProfileUsername(decodeURIComponent(profileMatch[1]));
+      setPage('profile');
+      return;
+    }
+    if (PATH_TO_PAGE[rawPath]) {
+      setPage(PATH_TO_PAGE[rawPath]);
+      return;
+    }
+    // Unknown path — Vercel's catch-all served the SPA, so just show landing.
+    setPage('landing');
+  };
+
+  useEffect(() => {
+    resolveLocation();
+    const onPop = () => resolveLocation();
+    window.addEventListener('popstate', onPop);
+    window.addEventListener('hashchange', onPop); // legacy share links
+    return () => {
+      window.removeEventListener('popstate', onPop);
+      window.removeEventListener('hashchange', onPop);
     };
-    handleHash();
-    window.addEventListener('hashchange', handleHash);
-    return () => window.removeEventListener('hashchange', handleHash);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // Redirect to dashboard if already signed in and on auth pages
+  // Redirect to dashboard if already signed in and on auth pages.
+  // Replace (not push) so back-button doesn't bounce back to /signin.
   useEffect(() => {
     if (user && (page === 'signup' || page === 'signin')) {
-      setPage('dashboard');
+      navigate('dashboard', null, { replace: true });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, page]);
 
-  const navigate = (newPage, data = null) => {
+  const navigate = (newPage, data = null, { replace = false } = {}) => {
     setPage(newPage);
     setPageData(data);
+    if (data?.userData?.username) setProfileUsername(data.userData.username);
+    const path = pathForPage(newPage, data);
+    if (window.location.pathname !== path) {
+      const method = replace ? 'replaceState' : 'pushState';
+      window.history[method]({ page: newPage }, '', path);
+    }
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
